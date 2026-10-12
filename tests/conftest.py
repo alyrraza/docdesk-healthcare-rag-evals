@@ -6,6 +6,8 @@ import os
 from pathlib import Path
 
 import pytest
+from alembic import command
+from alembic.config import Config
 from dotenv import dotenv_values
 from sqlalchemy.engine import make_url
 
@@ -24,3 +26,13 @@ def test_database_url() -> str:
     if not name.endswith("_test"):
         pytest.fail(f"TEST_DATABASE_URL must point at a database ending in _test, got {name!r}")
     return url
+
+
+@pytest.fixture(scope="session")
+def migrated_url(test_database_url: str) -> str:
+    """Build the schema from scratch with the real migrations, so tests check them too."""
+    config = Config(str(ROOT / "alembic.ini"))
+    config.attributes["url"] = test_database_url
+    command.downgrade(config, "base")
+    command.upgrade(config, "head")
+    return test_database_url
