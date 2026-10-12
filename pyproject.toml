@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Healthcare RAG service with a built-in evaluation harness"
 requires-python = ">=3.11,<3.12"
 dependencies = [
+    "fastapi>=0.110,<1",
     "pydantic-settings>=2.2,<3",
 ]
 
