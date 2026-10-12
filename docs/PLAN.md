@@ -38,7 +38,7 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 - [x] T021 `require_admin` (AC-AUTH-04)
 - [x] T022 `POST /auth/register`
 - [x] T023 `POST /auth/login`
-- [ ] T024 `api/public.py` allowlist and the route walk test (AC-AUTH-05)
+- [x] T024 `api/public.py` allowlist and the route walk test (AC-AUTH-05)
 - [ ] T025 `documents` model, migration and repository
 - [ ] T026 `chunks` model with vector and tsvector columns, migration
 - [ ] T027 vector index choice, measured, recorded in `DECISIONS.md`
