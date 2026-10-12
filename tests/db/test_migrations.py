@@ -13,6 +13,13 @@ from docdesk.db.session import make_engine
 
 pytestmark = pytest.mark.integration
 
+
+@pytest.fixture(autouse=True)
+def restore_schema_afterwards(test_database_url: str):
+    """These tests walk the schema down to base, so rebuild it for tests that run later."""
+    yield
+    command.upgrade(alembic_config(test_database_url), "head")
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
