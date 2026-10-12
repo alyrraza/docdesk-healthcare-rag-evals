@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Secrets and local config
+.env
+.env.*
+!.env.example
+
+# Local notes (interview prep, never pushed)
+PROJECT_NOTES.md
+
+# Caches and data (live on D:, never in the repo)
+.hf-cache/
+.cache/
+*.onnx
+*.safetensors
+data/
+evals/cache/
+
+# Node
+node_modules/
+frontend/dist/
+
+# OS and editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
