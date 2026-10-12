@@ -82,3 +82,13 @@ def test_merge_commits_pass_through() -> None:
 
 def test_comment_lines_are_skipped_when_reading_subject() -> None:
     assert commit.first_line("# comment\n\nfix(api): handle 401\n") == "fix(api): handle 401"
+
+
+def test_cache_dir_is_skipped_by_both_scans(tmp_path: Path, monkeypatch) -> None:
+    cached = tmp_path / ".cache" / "tmp"
+    cached.mkdir(parents=True)
+    (cached / "a.md").write_text(f"x {EM} y\n", encoding="utf-8")
+    (cached / "big.py").write_text("x = 1\n" * 500, encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    assert docs.collect([]) == []
+    assert length.find_offenders([cached / "big.py"]) == []
