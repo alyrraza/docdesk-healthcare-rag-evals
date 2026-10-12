@@ -6,8 +6,9 @@ expensive to rediscover.
 ## Disk and environment
 - Everything goes on drive D:. C: has under 2 GB free. Put these on D: before the first install:
   - the project folder and the virtual environment
-  - `PIP_CACHE_DIR`, for example `D:\dev-cache\pip`
-  - `HF_HOME`, for example `D:\dev-cache\huggingface` (the embedding model cache)
+  - `PIP_CACHE_DIR`, set to `.cache\pip` inside the project folder
+  - `TEMP` and `TMP`, set to `.cache	mp` inside the project folder
+  - `HF_HOME`, set to `.cache\hf` inside the project folder (the embedding model cache)
   - `npm config set cache D:\dev-cache\npm` for the frontend
 - D: had about 9 GB free on 2026-10-13. This stack without Docker needs roughly 2 to 3 GB. If free
   space drops under 2 GB, stop and clean before installing anything.
@@ -34,6 +35,8 @@ expensive to rediscover.
 - Windows line endings: keep `.gitattributes` with `* text=auto` and `*.sh text eol=lf`
   (the hook scripts must be LF or they fail).
 - Shell is Git Bash or PowerShell. Use `python`, not `python3`, in commands.
+- On Windows always pass encoding='utf-8' when reading or writing files.
+- All caches live in `.cache/` inside the project (git-ignored), not in `D:\dev-cache`.
 
 ## Owner expectations
 - Ali must be able to explain every function in an interview. Explain after writing, in plain
