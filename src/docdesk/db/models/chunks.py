@@ -24,6 +24,13 @@ class ChunkRow(Base):
         UniqueConstraint("document_id", "position", name="uq_chunks_document_position"),
         Index("ix_chunks_tsv", "tsv", postgresql_using="gin"),
         Index("ix_chunks_document_id", "document_id"),
+        Index(
+            "ix_chunks_embedding_hnsw",
+            "embedding",
+            postgresql_using="hnsw",
+            postgresql_with={"m": 16, "ef_construction": 64},
+            postgresql_ops={"embedding": "vector_cosine_ops"},
+        ),
     )
 
     id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
