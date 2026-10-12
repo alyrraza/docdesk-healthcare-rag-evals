@@ -32,7 +32,7 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 - [x] T015 Alembic init and first empty migration
 - [x] T016 migration: enable pgvector extension
 - [x] T017 `users` model, migration and repository
-- [ ] T018 `auth/passwords.py` hash and verify (AC-AUTH-01)
+- [x] T018 `auth/passwords.py` hash and verify (AC-AUTH-01)
 - [ ] T019 `auth/jwt.py` create and decode (AC-AUTH-02)
 - [ ] T020 `auth/roles.py` and `auth/deps.py` require_user (AC-AUTH-03)
 - [ ] T021 `require_admin` (AC-AUTH-04)
