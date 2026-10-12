@@ -33,3 +33,17 @@ class UserOut(BaseModel):
     id: str
     email: str
     role: str
+
+
+class LoginRequest(BaseModel):
+    """Credentials posted to /auth/login."""
+
+    email: str = Field(max_length=320)
+    password: str = Field(min_length=1, max_length=128)
+
+
+class TokenOut(BaseModel):
+    """The login result."""
+
+    access_token: str
+    token_type: str = "bearer"
