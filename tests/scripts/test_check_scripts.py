@@ -18,45 +18,45 @@ EN = "–"
 def test_file_over_limit_is_reported(tmp_path: Path) -> None:
     big = tmp_path / "src" / "big.py"
     big.parent.mkdir()
-    big.write_text("x = 1\n" * (length.SRC_LIMIT + 1))
+    big.write_text("x = 1\n" * (length.SRC_LIMIT + 1), encoding="utf-8")
     assert length.find_offenders([big])
 
 
 def test_file_at_limit_passes(tmp_path: Path) -> None:
     ok = tmp_path / "src" / "ok.py"
     ok.parent.mkdir()
-    ok.write_text("x = 1\n" * length.SRC_LIMIT)
+    ok.write_text("x = 1\n" * length.SRC_LIMIT, encoding="utf-8")
     assert length.find_offenders([ok]) == []
 
 
 def test_tests_get_a_larger_limit(tmp_path: Path) -> None:
     t = tmp_path / "tests" / "test_big.py"
     t.parent.mkdir()
-    t.write_text("x = 1\n" * (length.SRC_LIMIT + 50))
+    t.write_text("x = 1\n" * (length.SRC_LIMIT + 50), encoding="utf-8")
     assert length.find_offenders([t]) == []
 
 
 def test_unchecked_suffix_is_ignored(tmp_path: Path) -> None:
     f = tmp_path / "notes.txt"
-    f.write_text("x\n" * 5000)
+    f.write_text("x\n" * 5000, encoding="utf-8")
     assert length.find_offenders([f]) == []
 
 
 def test_em_dash_is_flagged(tmp_path: Path) -> None:
     f = tmp_path / "a.md"
-    f.write_text(f"hello {EM} world\n")
+    f.write_text(f"hello {EM} world\n", encoding="utf-8")
     assert docs.scan_file(f) == [(1, "em dash")]
 
 
 def test_en_dash_is_flagged(tmp_path: Path) -> None:
     f = tmp_path / "a.md"
-    f.write_text(f"pages 1{EN}5\n")
+    f.write_text(f"pages 1{EN}5\n", encoding="utf-8")
     assert docs.scan_file(f) == [(1, "en dash")]
 
 
 def test_plain_hyphen_is_fine(tmp_path: Path) -> None:
     f = tmp_path / "a.md"
-    f.write_text("well-known - fine\n")
+    f.write_text("well-known - fine\n", encoding="utf-8")
     assert docs.scan_file(f) == []
 
 
