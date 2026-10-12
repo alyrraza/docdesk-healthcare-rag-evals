@@ -61,6 +61,29 @@ models planned (MiniLM and bge-small class). Why: pgvector needs a fixed size an
 chosen until T037. If E6 picks a second model with another size, it gets its own column or table
 through a new migration. The model name and revision are stored on every chunk.
 
+## 2026-10-13: vector index is HNSW with cosine distance
+Decision: `chunks.embedding` gets an HNSW index (m 16, ef_construction 64), query time
+`hnsw.ef_search` 40. Measured with `scripts/bench_vector_index.py` on 20000 synthetic clustered
+vectors of 384 dimensions, 50 queries, top 10, server side time from EXPLAIN ANALYZE, on the
+hosted test database:
+
+| Setting | Median ms | p95 ms | Recall at 10 | Build s |
+|---|---|---|---|---|
+| exact scan, no index | 9.25 | 13.32 | 1.00 | 0 |
+| HNSW ef_search 40 | 0.38 | 0.50 | 1.00 | 6.8 |
+| HNSW ef_search 100 | 0.63 | 0.93 | 1.00 | 6.8 |
+| IVFFlat lists 141, probes 1 | 0.20 | 0.26 | 1.00 | 2.2 |
+| IVFFlat lists 141, probes 10 | 0.70 | 0.90 | 1.00 | 2.2 |
+| IVFFlat lists 141, probes 30 | 1.86 | 2.23 | 1.00 | 2.2 |
+
+Why HNSW: IVFFlat builds its lists from the rows present, so it should be built after the corpus
+is loaded and rebuilt as it grows. HNSW can be created on an empty table and stays valid while
+documents are added. Both were fast enough. Caveat: the data is synthetic and easy (recall 1.00
+everywhere). An earlier run on uniform random vectors, which has no structure, gave recall 0.19
+for HNSW and 0.20 for IVFFlat at probes 10, so the result depends on how clustered the real
+embeddings are. Re-measure recall on the real corpus at T052 and record the number here. At 20000
+rows an exact scan costs only 9 ms, so the index is a scaling choice, not a necessity yet.
+
 ## Parked ideas (not in scope, do not build)
 - Multi-turn conversation memory (adds context clash risk; revisit after the baseline)
 - Query rewriting and HyDE (matrix item E7, optional)
