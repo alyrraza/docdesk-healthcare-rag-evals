@@ -29,7 +29,7 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 
 ## Phase 1: database and auth
 - [x] T014 `db/session.py` engine and per-request session
-- [ ] T015 Alembic init and first empty migration
+- [x] T015 Alembic init and first empty migration
 - [ ] T016 migration: enable pgvector extension
 - [ ] T017 `users` model, migration and repository
 - [ ] T018 `auth/passwords.py` hash and verify (AC-AUTH-01)
