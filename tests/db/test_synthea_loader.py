@@ -138,3 +138,20 @@ def test_ac_sql_03_readonly_role_can_select_synthea_tables(
         with engine.begin() as connection:
             connection.execute(text("DELETE FROM synthea_patients"))
         engine.dispose()
+
+
+def test_loader_handles_more_rows_than_one_batch(
+    db_session: Session, csv_dir: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from docdesk.db import synthea
+
+    monkeypatch.setattr(synthea, "BATCH_SIZE", 2)
+    rows = [[f"2000-01-{day:02d}", "", PATIENT, ENCOUNTER, str(day), f"condition {day}"]
+            for day in range(1, 8)]
+    write_csv(
+        csv_dir / "conditions.csv",
+        ["START", "STOP", "PATIENT", "ENCOUNTER", "CODE", "DESCRIPTION"],
+        rows,
+    )
+    assert load_synthea(db_session, csv_dir)["conditions"] == 7
+    assert count(db_session, "synthea_conditions") == 7
