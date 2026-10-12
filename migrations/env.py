@@ -4,6 +4,7 @@ from logging.config import fileConfig
 
 from alembic import context
 
+from docdesk.db.models import Base
 from docdesk.db.session import make_engine
 
 config = context.config
@@ -11,8 +12,8 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name, disable_existing_loggers=False)
 
-# Models are added in later tasks; until then autogenerate has nothing to compare.
-target_metadata = None
+# Every table model hangs off Base, so autogenerate can compare against the database.
+target_metadata = Base.metadata
 
 
 def database_url() -> str:
