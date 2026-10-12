@@ -77,7 +77,7 @@ def test_deleting_a_run_deletes_its_results(db_session: Session) -> None:
 
 def test_unknown_split_is_rejected(db_session: Session) -> None:
     run = make_run()
-    run.split = "validation"
+    run.split = "other"
     db_session.add(run)
     with pytest.raises(IntegrityError):
         db_session.flush()
