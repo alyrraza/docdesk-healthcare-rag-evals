@@ -7,8 +7,8 @@ from datetime import UTC, datetime, timedelta
 
 import jwt as pyjwt
 import pytest
-from docdesk.auth.jwt import TokenError, create_token, decode_token
 
+from docdesk.auth.jwt import TokenError, create_token, decode_token
 from docdesk.core import clock
 from docdesk.core.config import Settings
 from docdesk.db.repositories.users import User
