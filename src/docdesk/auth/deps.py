@@ -6,6 +6,7 @@ from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from docdesk.auth.jwt import TokenClaims, TokenError, decode_token
+from docdesk.auth.roles import Role
 from docdesk.core.config import Settings, get_settings
 from docdesk.core.errors import AppError
 
@@ -29,3 +30,10 @@ def require_user(
         return decode_token(credentials.credentials, settings)
     except TokenError as error:
         raise unauthorized("Invalid or expired token") from error
+
+
+def require_admin(claims: TokenClaims = Depends(require_user)) -> TokenClaims:
+    """Allow only admins (AC-AUTH-04); a valid non-admin token is 403, a bad token stays 401."""
+    if claims.role != Role.ADMIN:
+        raise AppError(code="forbidden", message="Admin role required", status=403)
+    return claims
