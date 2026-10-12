@@ -41,10 +41,13 @@ def test_readonly_role_cannot_write_even_to_a_temp_table(readonly_test_url: str)
             conn.execute("CREATE TEMP TABLE t (id int)")
 
 
-def test_readonly_role_holds_no_table_privileges_on_public_tables(readonly_test_url: str) -> None:
+def test_readonly_role_holds_only_select_on_synthea_tables(readonly_test_url: str) -> None:
     sql = (
-        "SELECT count(*) FROM information_schema.table_privileges "
+        "SELECT table_name, privilege_type FROM information_schema.table_privileges "
         "WHERE grantee = 'docdesk_readonly' AND table_schema = 'public'"
     )
     with connect(readonly_test_url) as conn:
-        assert conn.execute(sql).fetchone()[0] == 0
+        grants = conn.execute(sql).fetchall()
+    assert grants, "expected SELECT grants on the synthea tables"
+    assert {privilege for _, privilege in grants} == {"SELECT"}
+    assert all(table.startswith("synthea_") for table, _ in grants)
