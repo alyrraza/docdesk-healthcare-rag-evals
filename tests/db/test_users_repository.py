@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import pytest
-from docdesk.db.repositories.users import DuplicateEmailError, UserRepository
 from sqlalchemy.orm import Session
+
+from docdesk.db.repositories.users import DuplicateEmailError, UserRepository
 
 pytestmark = pytest.mark.integration
 
@@ -38,6 +39,6 @@ def test_duplicate_email_is_rejected_case_insensitively(db_session: Session) -> 
         repo.add("C@EXAMPLE.COM", "h", "user")
 
 
-def test_unknown_role_is_rejected_by_the_database(db_session: Session) -> None:
+def test_unknown_role_is_rejected(db_session: Session) -> None:
     with pytest.raises(ValueError):
         UserRepository(db_session).add("d@example.com", "h", "superuser")
