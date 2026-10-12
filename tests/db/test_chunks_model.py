@@ -96,3 +96,10 @@ def test_keyword_search_uses_a_gin_index(db_session: Session) -> None:
         text("SELECT indexdef FROM pg_indexes WHERE tablename = 'chunks'")
     ).scalars()
     assert any("USING gin" in definition and "tsv" in definition for definition in names)
+
+
+def test_ac_ret_01_embedding_column_has_an_hnsw_cosine_index(db_session: Session) -> None:
+    definitions = db_session.execute(
+        text("SELECT indexdef FROM pg_indexes WHERE tablename = 'chunks'")
+    ).scalars()
+    assert any("USING hnsw" in d and "vector_cosine_ops" in d for d in definitions)
