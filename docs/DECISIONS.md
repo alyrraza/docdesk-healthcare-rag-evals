@@ -38,6 +38,16 @@ RAG engineering and evaluation instead. JWT auth, roles, rate limit and a daily 
 Why: no Docker on the laptop and no budget for a cloud host. Dockerfiles and compose are
 validated by building in GitHub Actions. CV wording stays honest: "containerized, image built in CI".
 
+## 2026-10-13: route walk reads the OpenAPI schema
+Decision: the public route test (AC-AUTH-05) lists routes from `app.openapi()` and treats an
+operation with a bearer security requirement as protected. Why: FastAPI 0.143 wraps included
+routers, so `app.routes` no longer lists their routes and a walk over it passed without checking
+anything. Limit: a route declared with `include_in_schema=False` is not seen, so do not use that flag.
+
+## 2026-10-13: tests use a separate database
+Decision: integration tests read `TEST_DATABASE_URL` only, and the fixture refuses a database whose
+name does not end in `_test`. Why: tests drop and recreate tables, which must never touch real data.
+
 ## Parked ideas (not in scope, do not build)
 - Multi-turn conversation memory (adds context clash risk; revisit after the baseline)
 - Query rewriting and HyDE (matrix item E7, optional)
