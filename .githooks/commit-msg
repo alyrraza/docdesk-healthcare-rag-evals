@@ -1,0 +1,3 @@
+#!/bin/sh
+# Rejects commit subjects that do not follow docs/COMMITS.md.
+python scripts/check_commit_msg.py "$1"

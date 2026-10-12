@@ -1,0 +1,17 @@
+#!/bin/sh
+# Cheap enforced checks on STAGED files only. Install once per clone with:
+#   git config core.hooksPath .githooks
+# Activate the venv first so `python` and ruff resolve to the project ones.
+set -e
+
+staged=$(git diff --cached --name-only --diff-filter=ACM)
+[ -z "$staged" ] && exit 0
+
+code=$(echo "$staged" | grep -E '\.(py|ts|tsx)$' || true)
+py=$(echo "$staged" | grep -E '\.py$' || true)
+docs=$(echo "$staged" | grep -E '\.md$' || true)
+
+# Each guard matters: with no arguments the scripts scan the whole repo.
+if [ -n "$code" ]; then python scripts/check_file_length.py $code; fi
+if [ -n "$docs" ]; then python scripts/check_docs_style.py $docs; fi
+if [ -n "$py" ]; then python -m ruff check $py; fi
