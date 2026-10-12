@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 BANNED = {"—": "em dash", "–": "en dash"}
-SKIP_DIRS = {".git", ".venv", "venv", "node_modules", ".hf-cache"}
+SKIP_DIRS = {".git", ".venv", "venv", "node_modules", ".hf-cache", ".cache"}
 
 
 def scan_file(path: Path) -> list[tuple[int, str]]:

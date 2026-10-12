@@ -19,7 +19,7 @@ SRC_LIMIT = 200
 TEST_LIMIT = 300
 CHECKED_SUFFIXES = {".py", ".ts", ".tsx"}
 SKIP_DIRS = {
-    ".git", ".venv", "venv", "node_modules", "__pycache__", ".hf-cache",
+    ".git", ".venv", "venv", "node_modules", "__pycache__", ".hf-cache", ".cache",
     "versions",  # alembic migration files are generated
     "dist", "build",
 }
