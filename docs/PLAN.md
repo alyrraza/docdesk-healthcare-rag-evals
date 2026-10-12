@@ -48,7 +48,7 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 - [x] T031 read-only database role migration
 - [x] T032 Synthea loader script and tables
 - [x] T033 seed admin user script
-- [ ] T034 integration test fixtures against a real Postgres
+- [x] T034 integration test fixtures against a real Postgres
 - [ ] T035 phase review in a fresh session against the PRD
 
 ## Phase 2: ingestion
