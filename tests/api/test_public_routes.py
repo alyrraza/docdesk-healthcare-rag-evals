@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from docdesk.api.public import PUBLIC_ROUTES, find_unprotected_routes
-from fastapi import Depends, FastAPI
+from fastapi import Depends
 
 from docdesk.api.app import create_app
+from docdesk.api.public import PUBLIC_ROUTES, all_operations, find_unprotected_routes
 from docdesk.auth.deps import require_user
 
 
@@ -34,15 +34,9 @@ def test_ac_auth_05_a_route_with_require_user_is_not_flagged() -> None:
 
 
 def test_ac_auth_05_allowlist_has_no_stale_entries() -> None:
-    app = create_app()
-    existing = {
-        (method, route.path)
-        for route in app.routes
-        for method in (getattr(route, "methods", None) or [])
-    }
-    assert {entry for entry in PUBLIC_ROUTES if entry[0] != "ANY"} <= existing
+    assert PUBLIC_ROUTES <= set(all_operations(create_app()))
 
 
-def test_a_bare_fastapi_app_has_only_its_docs_routes_unprotected() -> None:
-    assert all(path in {"/docs", "/redoc", "/openapi.json", "/docs/oauth2-redirect"}
-               for _, path in find_unprotected_routes(FastAPI()))
+def test_ac_auth_05_the_walk_sees_the_real_routes() -> None:
+    seen = set(all_operations(create_app()))
+    assert {("GET", "/health"), ("POST", "/auth/login")} <= seen
