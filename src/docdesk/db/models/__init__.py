@@ -4,6 +4,7 @@ from docdesk.db.models.base import Base
 from docdesk.db.models.chunks import ChunkRow
 from docdesk.db.models.documents import DocumentRow
 from docdesk.db.models.prompts import ActivePromptRow, PromptVersionRow
+from docdesk.db.models.traces import QueryTraceRow
 from docdesk.db.models.users import UserRow
 
 __all__ = [
@@ -12,5 +13,6 @@ __all__ = [
     "ChunkRow",
     "DocumentRow",
     "PromptVersionRow",
+    "QueryTraceRow",
     "UserRow",
 ]
