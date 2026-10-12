@@ -21,6 +21,12 @@ API_SETTINGS = Settings(
 
 
 @pytest.fixture
+def api_settings() -> Settings:
+    """The settings the test client uses, so tests can verify tokens it issued."""
+    return API_SETTINGS
+
+
+@pytest.fixture
 def client(migrated_url: str) -> Iterator[TestClient]:
     """App whose sessions use the test database; users written by a test are removed after."""
     engine = make_engine(migrated_url)
