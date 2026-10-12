@@ -43,7 +43,7 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 - [x] T026 `chunks` model with vector and tsvector columns, migration
 - [x] T027 vector index choice, measured, recorded in `DECISIONS.md`
 - [x] T028 `prompt_versions` and `active_prompts` models, migration
-- [ ] T029 `query_traces` model, migration
+- [x] T029 `query_traces` model, migration
 - [ ] T030 `eval_runs` and `eval_results` models, migration
 - [ ] T031 read-only database role migration
 - [ ] T032 Synthea loader script and tables
