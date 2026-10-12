@@ -6,12 +6,12 @@ import uuid
 from datetime import UTC, datetime, timedelta
 
 import pytest
-from docdesk.auth.deps import require_user
-from docdesk.auth.roles import Role
 from fastapi import Depends, FastAPI
 from fastapi.testclient import TestClient
 
+from docdesk.auth.deps import require_user
 from docdesk.auth.jwt import TokenClaims, create_token
+from docdesk.auth.roles import Role
 from docdesk.core import clock
 from docdesk.core.config import Settings, get_settings
 from docdesk.core.errors import register_error_handlers
