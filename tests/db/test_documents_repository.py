@@ -5,10 +5,10 @@ from __future__ import annotations
 import uuid
 
 import pytest
-from docdesk.db.models.documents import DocumentStatus
-from docdesk.db.repositories.documents import DocumentRepository, DuplicateDocumentError
 from sqlalchemy.orm import Session
 
+from docdesk.db.models.documents import DocumentStatus
+from docdesk.db.repositories.documents import DocumentRepository, DuplicateDocumentError
 from docdesk.db.repositories.users import User, UserRepository
 
 pytestmark = pytest.mark.integration
