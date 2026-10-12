@@ -5,6 +5,12 @@ from docdesk.db.models.chunks import ChunkRow
 from docdesk.db.models.documents import DocumentRow
 from docdesk.db.models.evals import EvalResultRow, EvalRunRow
 from docdesk.db.models.prompts import ActivePromptRow, PromptVersionRow
+from docdesk.db.models.synthea import (
+    SyntheaConditionRow,
+    SyntheaEncounterRow,
+    SyntheaMedicationRow,
+    SyntheaPatientRow,
+)
 from docdesk.db.models.traces import QueryTraceRow
 from docdesk.db.models.users import UserRow
 
@@ -17,5 +23,9 @@ __all__ = [
     "EvalRunRow",
     "PromptVersionRow",
     "QueryTraceRow",
+    "SyntheaConditionRow",
+    "SyntheaEncounterRow",
+    "SyntheaMedicationRow",
+    "SyntheaPatientRow",
     "UserRow",
 ]
