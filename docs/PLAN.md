@@ -36,7 +36,7 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 - [x] T019 `auth/jwt.py` create and decode (AC-AUTH-02)
 - [x] T020 `auth/roles.py` and `auth/deps.py` require_user (AC-AUTH-03)
 - [x] T021 `require_admin` (AC-AUTH-04)
-- [ ] T022 `POST /auth/register`
+- [x] T022 `POST /auth/register`
 - [ ] T023 `POST /auth/login`
 - [ ] T024 `api/public.py` allowlist and the route walk test (AC-AUTH-05)
 - [ ] T025 `documents` model, migration and repository
