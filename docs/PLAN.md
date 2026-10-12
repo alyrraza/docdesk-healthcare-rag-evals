@@ -28,7 +28,7 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 - [x] T013 `.env.example`, README setup section for D: paths
 
 ## Phase 1: database and auth
-- [ ] T014 `db/session.py` engine and per-request session
+- [x] T014 `db/session.py` engine and per-request session
 - [ ] T015 Alembic init and first empty migration
 - [ ] T016 migration: enable pgvector extension
 - [ ] T017 `users` model, migration and repository
