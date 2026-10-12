@@ -24,7 +24,7 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 - [x] T009 `core/errors.py` error envelope and handler (AC-AUTH-03 shape)
 - [x] T010 `core/logging.py` JSON logs with trace id context
 - [x] T011 `core/ids.py` and `core/clock.py`
-- [ ] T012 `api/app.py` factory and `GET /health`
+- [x] T012 `api/app.py` factory and `GET /health`
 - [ ] T013 `.env.example`, README setup section for D: paths
 
 ## Phase 1: database and auth
