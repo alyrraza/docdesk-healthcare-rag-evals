@@ -26,6 +26,18 @@ def database_url() -> str:
     return get_settings().database_url
 
 
+def readonly_password() -> str | None:
+    """Password for the read-only role: from the caller, else from settings, else none."""
+    if "readonly_password" in config.attributes:
+        return config.attributes["readonly_password"]
+    from sqlalchemy.engine import make_url
+
+    from docdesk.core.config import get_settings
+
+    url = get_settings().readonly_database_url
+    return make_url(url).password if url else None
+
+
 def run_migrations_offline() -> None:
     """Emit SQL without a connection, useful for reviewing a migration."""
     context.configure(
@@ -40,6 +52,7 @@ def run_migrations_offline() -> None:
 
 def run_migrations_online() -> None:
     """Run migrations on a real connection inside one transaction."""
+    config.attributes["readonly_password"] = readonly_password()
     with make_engine(database_url()).connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata)
         with context.begin_transaction():
