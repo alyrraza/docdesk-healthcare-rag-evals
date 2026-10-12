@@ -6,7 +6,7 @@ from collections.abc import Awaitable, Callable
 
 from fastapi import FastAPI, Request, Response
 
-from docdesk.api.routers import health
+from docdesk.api.routers import auth, health
 from docdesk.core.errors import register_error_handlers
 from docdesk.core.ids import new_trace_id
 from docdesk.core.logging import bind_trace_id
@@ -30,4 +30,5 @@ def create_app() -> FastAPI:
     app.middleware("http")(add_trace_id)
     register_error_handlers(app)
     app.include_router(health.router)
+    app.include_router(auth.router)
     return app
