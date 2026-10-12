@@ -29,9 +29,18 @@ def limit_for(path: Path) -> int | None:
     """Return the line limit for this file, or None if it is not checked."""
     if path.suffix not in CHECKED_SUFFIXES:
         return None
-    if any(part in SKIP_DIRS for part in path.parts):
+    parts = relative_parts(path)
+    if any(part in SKIP_DIRS for part in parts):
         return None
-    return TEST_LIMIT if "tests" in path.parts else SRC_LIMIT
+    return TEST_LIMIT if "tests" in parts else SRC_LIMIT
+
+
+def relative_parts(path: Path) -> tuple[str, ...]:
+    """Path parts below the working directory, so a parent like .cache does not hide a file."""
+    try:
+        return path.resolve().relative_to(Path.cwd().resolve()).parts
+    except ValueError:
+        return path.parts
 
 
 def count_lines(path: Path) -> int:

@@ -5,6 +5,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 import check_commit_msg as commit  # noqa: E402
@@ -13,6 +15,12 @@ import check_file_length as length  # noqa: E402
 
 EM = "—"
 EN = "–"
+
+
+@pytest.fixture(autouse=True)
+def _run_inside_tmp(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Scan rules look at paths below the cwd, so run each test from its own temp folder."""
+    monkeypatch.chdir(tmp_path)
 
 
 def test_file_over_limit_is_reported(tmp_path: Path) -> None:
@@ -84,11 +92,10 @@ def test_comment_lines_are_skipped_when_reading_subject() -> None:
     assert commit.first_line("# comment\n\nfix(api): handle 401\n") == "fix(api): handle 401"
 
 
-def test_cache_dir_is_skipped_by_both_scans(tmp_path: Path, monkeypatch) -> None:
+def test_cache_dir_is_skipped_by_both_scans(tmp_path: Path) -> None:
     cached = tmp_path / ".cache" / "tmp"
     cached.mkdir(parents=True)
     (cached / "a.md").write_text(f"x {EM} y\n", encoding="utf-8")
     (cached / "big.py").write_text("x = 1\n" * 500, encoding="utf-8")
-    monkeypatch.chdir(tmp_path)
     assert docs.collect([]) == []
     assert length.find_offenders([cached / "big.py"]) == []
