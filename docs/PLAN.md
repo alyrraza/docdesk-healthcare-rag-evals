@@ -13,13 +13,13 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 - A new idea mid-phase goes to "Parked ideas" in `DECISIONS.md`, not into the code.
 
 ## Phase 0: scaffold and guardrails for the repo itself
-- [ ] T001 init repo, `.gitignore`, `.gitattributes`, README stub, first commit
-- [ ] T002 `pyproject.toml`, src layout, ruff and pytest config
-- [ ] T003 add `scripts/check_file_length.py` with tests
-- [ ] T004 add `scripts/check_docs_style.py` with tests
-- [ ] T005 add `scripts/check_commit_msg.py` with tests
-- [ ] T006 add `.githooks`, set `core.hooksPath`, verify a bad commit is rejected
-- [ ] T007 add `CLAUDE.md`, `.claude/rules/` and the docs folder
+- [x] T001 init repo, `.gitignore`, `.gitattributes`, README stub, first commit
+- [x] T002 `pyproject.toml`, src layout, ruff and pytest config
+- [x] T003 add `scripts/check_file_length.py` with tests
+- [x] T004 add `scripts/check_docs_style.py` with tests
+- [x] T005 add `scripts/check_commit_msg.py` with tests
+- [x] T006 add `.githooks`, set `core.hooksPath`, verify a bad commit is rejected
+- [x] T007 add `CLAUDE.md`, `.claude/rules/` and the docs folder
 - [ ] T008 `core/config.py` settings from environment, fail fast on missing values
 - [ ] T009 `core/errors.py` error envelope and handler (AC-AUTH-03 shape)
 - [ ] T010 `core/logging.py` JSON logs with trace id context
