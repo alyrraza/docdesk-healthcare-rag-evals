@@ -5,6 +5,9 @@ description = "Healthcare RAG service with a built-in evaluation harness"
 requires-python = ">=3.11,<3.12"
 dependencies = [
     "fastapi>=0.110,<1",
+    "psycopg[binary]>=3.1,<4",
+    "sqlalchemy>=2,<3",
+    "alembic>=1.13,<2",
     "pydantic-settings>=2.2,<3",
 ]
 
