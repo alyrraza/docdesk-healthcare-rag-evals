@@ -33,6 +33,30 @@ def migrated_url(test_database_url: str) -> str:
     """Build the schema from scratch with the real migrations, so tests check them too."""
     config = Config(str(ROOT / "alembic.ini"))
     config.attributes["url"] = test_database_url
+    config.attributes["readonly_password"] = readonly_password()
     command.downgrade(config, "base")
     command.upgrade(config, "head")
     return test_database_url
+
+
+def readonly_url() -> str | None:
+    """Read READONLY_DATABASE_URL from the environment or .env, or None if it is not set."""
+    return os.environ.get("READONLY_DATABASE_URL") or dotenv_values(ROOT / ".env").get(
+        "READONLY_DATABASE_URL"
+    )
+
+
+def readonly_password() -> str | None:
+    """Password the migration gives the read-only role; None leaves the role unable to log in."""
+    url = readonly_url()
+    return make_url(url).password if url else None
+
+
+@pytest.fixture(scope="session")
+def readonly_test_url(migrated_url: str) -> str:
+    """Connection url for the read-only role, pointed at the test database."""
+    url = readonly_url()
+    if not url:
+        pytest.fail("READONLY_DATABASE_URL is missing from the environment and .env")
+    test_name = make_url(migrated_url).database
+    return make_url(url).set(database=test_name).render_as_string(hide_password=False)
