@@ -48,6 +48,13 @@ anything. Limit: a route declared with `include_in_schema=False` is not seen, so
 Decision: integration tests read `TEST_DATABASE_URL` only, and the fixture refuses a database whose
 name does not end in `_test`. Why: tests drop and recreate tables, which must never touch real data.
 
+## 2026-10-13: documents table adds chunk_count and is_shared
+Decision: `documents` has `chunk_count` (AC-ING-02 says the count is stored) and `is_shared`.
+Seeded public corpus documents are owned by the admin user and marked shared, so every user can
+retrieve them. Uploaded documents are private to the owner. Why: the data model listed neither
+column, and the access filter (AC-RET-05) needs a rule for the shared corpus. Easy to change
+before T056 if the plan should differ.
+
 ## Parked ideas (not in scope, do not build)
 - Multi-turn conversation memory (adds context clash risk; revisit after the baseline)
 - Query rewriting and HyDE (matrix item E7, optional)
