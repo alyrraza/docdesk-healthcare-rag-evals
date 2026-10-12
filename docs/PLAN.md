@@ -21,7 +21,7 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 - [x] T006 add `.githooks`, set `core.hooksPath`, verify a bad commit is rejected
 - [x] T007 add `CLAUDE.md`, `.claude/rules/` and the docs folder
 - [x] T008 `core/config.py` settings from environment, fail fast on missing values
-- [ ] T009 `core/errors.py` error envelope and handler (AC-AUTH-03 shape)
+- [x] T009 `core/errors.py` error envelope and handler (AC-AUTH-03 shape)
 - [ ] T010 `core/logging.py` JSON logs with trace id context
 - [ ] T011 `core/ids.py` and `core/clock.py`
 - [ ] T012 `api/app.py` factory and `GET /health`
