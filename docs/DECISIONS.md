@@ -55,6 +55,12 @@ retrieve them. Uploaded documents are private to the owner. Why: the data model 
 column, and the access filter (AC-RET-05) needs a rule for the shared corpus. Easy to change
 before T056 if the plan should differ.
 
+## 2026-10-13: embedding column is vector(384)
+Decision: `chunks.embedding` is `vector(384)`, the output size of the small sentence embedding
+models planned (MiniLM and bge-small class). Why: pgvector needs a fixed size and the model is not
+chosen until T037. If E6 picks a second model with another size, it gets its own column or table
+through a new migration. The model name and revision are stored on every chunk.
+
 ## Parked ideas (not in scope, do not build)
 - Multi-turn conversation memory (adds context clash risk; revisit after the baseline)
 - Query rewriting and HyDE (matrix item E7, optional)

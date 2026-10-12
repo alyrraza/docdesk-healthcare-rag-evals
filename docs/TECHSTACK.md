@@ -10,7 +10,7 @@ record them in the README. Versions are not guessed in this document.
 | API | FastAPI + Uvicorn | async, typed, automatic OpenAPI |
 | Validation and settings | Pydantic v2, pydantic-settings | one schema layer for API, LLM output and config |
 | Database access | SQLAlchemy 2.x + Alembic + psycopg | explicit sessions, real migrations |
-| Vector search | pgvector extension | vectors and relational data in one database |
+| Vector search | pgvector extension + `pgvector` Python package | vectors and relational data in one database; the package gives SQLAlchemy a `Vector` column type (added 2026-10-13, T026) |
 | Keyword search | Postgres full text search | second retrieval leg without a new service |
 | Queue and cache | Redis (Memurai on Windows dev) | broker, rate limiter, semantic cache |
 | Background jobs | Celery | async ingestion and nightly evals |
