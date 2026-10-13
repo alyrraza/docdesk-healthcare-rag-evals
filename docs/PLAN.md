@@ -69,7 +69,7 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 - [x] T050 seed corpus fetcher: openFDA labels
 - [x] T051 seed corpus fetcher: MedlinePlus topics
 - [x] T052 seed corpus loader and a 200 to 400 document ingest run
-- [ ] T053 phase review
+- [x] T053 phase review
 
 Added during the build (not in the original task list; all recorded in DECISIONS.md):
 - `pypdf` as the PDF text extractor (also listed in TECHSTACK.md)
