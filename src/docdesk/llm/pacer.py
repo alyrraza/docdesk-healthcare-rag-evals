@@ -88,6 +88,11 @@ class Pacer:
         return wait
 
 
+def estimate_tokens(request: LLMRequest) -> int:
+    """Worst case size of a call before it is made: the prompt plus the full output allowance."""
+    return (len(request.system) + len(request.user)) // CHARS_PER_TOKEN + request.max_output_tokens
+
+
 class PacedClient:
     """Wraps any client so each call waits for its turn first."""
 
@@ -98,9 +103,7 @@ class PacedClient:
 
     def complete(self, request: LLMRequest) -> LLMResult:
         """Wait for room, call, then record the real tokens; a failed call keeps its estimate."""
-        prompt_chars = len(request.system) + len(request.user)
-        estimate = prompt_chars // CHARS_PER_TOKEN + request.max_output_tokens
-        reservation = self._pacer.acquire(request.model, estimate)
+        reservation = self._pacer.acquire(request.model, estimate_tokens(request))
         result = self._inner.complete(request)
         self._pacer.settle(reservation, result.tokens_in + result.tokens_out)
         return result
