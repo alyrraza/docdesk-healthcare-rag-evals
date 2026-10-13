@@ -43,5 +43,8 @@ class FakeStore:
     def __init__(self) -> None:
         self.files: dict[uuid.UUID, bytes] = {}
 
+    def save(self, document_id: uuid.UUID, data: bytes) -> None:
+        self.files[document_id] = data
+
     def read(self, document_id: uuid.UUID) -> bytes:
         return self.files[document_id]
