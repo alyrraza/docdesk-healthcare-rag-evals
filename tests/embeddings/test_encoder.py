@@ -96,3 +96,8 @@ def test_ac_ing_05_a_tokenizer_without_a_pad_token_is_refused() -> None:
     tokenizer = Tokenizer(models.WordLevel({"the": 0, "[UNK]": 1}, unk_token="[UNK]"))
     with pytest.raises(ValueError, match="PAD"):
         Encoder(FakeSession(), tokenizer, model_name="fake", revision="r1")
+
+
+def test_ac_ing_05_max_length_is_exposed_so_callers_can_size_chunks_to_fit() -> None:
+    encoder, _ = build_encoder(max_length=16)
+    assert encoder.max_length == 16
