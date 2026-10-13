@@ -78,3 +78,16 @@ def submit_document(
     session.commit()
     queue_job(session, repo, enqueue, document.id)
     return document, False
+
+
+def list_documents(session: Session, user_id: uuid.UUID) -> list[Document]:
+    """List what this user may see: their own documents and the shared corpus."""
+    return DocumentRepository(session).list_visible(user_id)
+
+
+def get_visible_document(session: Session, user_id: uuid.UUID, document_id: uuid.UUID) -> Document:
+    """Fetch one document, answering 404 for another user's private one so it is not revealed."""
+    document = DocumentRepository(session).get(document_id)
+    if document is None or not (document.owner_id == user_id or document.is_shared):
+        raise AppError("not_found", "Document not found", 404)
+    return document

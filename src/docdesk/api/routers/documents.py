@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import uuid
+
 from fastapi import APIRouter, Depends, Query, Request, Response
 from sqlalchemy.orm import Session
 from starlette.concurrency import run_in_threadpool
@@ -49,3 +51,30 @@ async def upload_document(
         response.status_code = 200
     out = UploadOut(**DocumentOut.from_document(document).model_dump(), duplicate=duplicate)
     return {"data": out.model_dump(), "trace_id": request.state.trace_id}
+
+
+@router.get("")
+def list_documents(
+    request: Request,
+    claims: TokenClaims = Depends(require_user),
+    session: Session = Depends(get_session),
+) -> dict[str, object]:
+    """Show the caller's documents and the shared corpus, newest first."""
+    documents = service.list_documents(session, claims.user_id)
+    data = [DocumentOut.from_document(document).model_dump() for document in documents]
+    return {"data": data, "trace_id": request.state.trace_id}
+
+
+@router.get("/{document_id}")
+def get_document(
+    document_id: uuid.UUID,
+    request: Request,
+    claims: TokenClaims = Depends(require_user),
+    session: Session = Depends(get_session),
+) -> dict[str, object]:
+    """Show one document's status, so the page can poll until it is ready or failed."""
+    document = service.get_visible_document(session, claims.user_id, document_id)
+    return {
+        "data": DocumentOut.from_document(document).model_dump(),
+        "trace_id": request.state.trace_id,
+    }

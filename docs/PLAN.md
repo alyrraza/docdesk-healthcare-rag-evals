@@ -65,7 +65,7 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 - [x] T046 `ingestion/pipeline.py` transactional ingest (AC-ING-02, AC-ING-03, AC-ING-05)
 - [x] T047 Celery app and task, Windows `--pool=solo` note
 - [x] T048 `POST /documents` returns 202 (AC-ING-01)
-- [ ] T049 `GET /documents` and status
+- [x] T049 `GET /documents` and status
 - [ ] T050 seed corpus fetcher: openFDA labels
 - [ ] T051 seed corpus fetcher: MedlinePlus topics
 - [ ] T052 seed corpus loader and a 200 to 400 document ingest run
