@@ -71,6 +71,14 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 - [x] T052 seed corpus loader and a 200 to 400 document ingest run
 - [ ] T053 phase review
 
+Added during the build (not in the original task list; all recorded in DECISIONS.md):
+- `pypdf` as the PDF text extractor (also listed in TECHSTACK.md)
+- `chunks.page` column and migration 0012, so PDF chunks keep their page number
+- Re-upload retry: uploading content whose earlier copy failed re-queues that document
+- E1 chunk sizes are 128, 200 and 256 tokens (MiniLM truncates above 256)
+- Baseline B0 chunk size is 200 tokens
+- Upload is the raw request body, not multipart (`python-multipart` is not in TECHSTACK.md)
+
 ## Phase 3: naive RAG end to end
 - [ ] T054 `retrieval/dense.py` (AC-RET-01)
 - [ ] T055 `retrieval/keyword.py` (AC-RET-02)
