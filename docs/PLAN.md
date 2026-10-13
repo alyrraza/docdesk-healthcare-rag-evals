@@ -60,7 +60,7 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 - [x] T041 `ingestion/cleaner.py`
 - [x] T042 `chunkers/fixed.py` with invariants tests
 - [x] T043 `chunkers/recursive.py`
-- [ ] T044 `chunkers/parent_child.py`
+- [x] T044 `chunkers/parent_child.py`
 - [ ] T045 `ingestion/hashing.py` duplicate detection (AC-ING-04)
 - [ ] T046 `ingestion/pipeline.py` transactional ingest (AC-ING-02, AC-ING-03, AC-ING-05)
 - [ ] T047 Celery app and task, Windows `--pool=solo` note

@@ -31,3 +31,5 @@ class Chunk:
     text: str
     token_count: int
     chunker_version: str
+    # Only the parent-child chunker fills this: the larger text to hand to the model.
+    parent_text: str | None = None
