@@ -153,3 +153,27 @@ stands. Chunks and index take 31 MB; the whole main database is 39 MB.
 - Query rewriting and HyDE (matrix item E7, optional)
 - Canary and shadow rollout of prompt versions (offline replay of traces is the cheap version)
 - Real hosted deployment (Hugging Face Spaces with hosted Postgres and Redis, when budget allows)
+
+## 2026-10-13: LLM models and limits for phases 3 to 5
+Checked live on this date (Groq `/models`, OpenRouter `/models`, a tiny Groq call for headers, Groq docs).
+- Generator: Groq `openai/gpt-oss-120b` (OpenAI family). Price $0.15 per 1M input and $0.60 per 1M
+  output tokens.
+- Daily judge: Groq `qwen/qwen3.8-27b` (Alibaba family). Price $0.80 per 1M input and $4.00 per 1M
+  output tokens. Different family from the generator, as the plan requires.
+- Calibration cross check judge (40 items only): OpenRouter `google/gemma-4-31b-it:free`, fallback
+  `nvidia/nemotron-3-super-120b-a12b:free`. Both exist in the live list. The `openrouter/free` router
+  is never used, because it hides which model answered.
+- Limits seen on the Groq account: 8,000 tokens per minute and 1,000 requests per day for each of the
+  two models; the docs list 200,000 tokens per day per model (the headers do not show the daily token
+  limit, so this is the documented figure). Working budget: about 200K generator tokens and 200K judge
+  tokens per day. One answer call is roughly 1.5K to 3K tokens, so a day allows about 70 to 130 real
+  answers. A full eval of 75 items with a judge call each will not fit in one day on the free tier, so
+  eval runs must use the disk cache and may be spread over two days.
+- OpenRouter: about 50 requests per day, free models only (ids end in `:free`).
+- Weakness to remember: the generator and the daily judge both run on Groq. They are different model
+  families, but an outage, a rate limit or a change of Groq's serving setup hits both at once, and the
+  shared serving stack can share quirks. The 40 item cross check on OpenRouter is how we measure
+  whether the daily judge can be trusted.
+- Data rule: only the public seed corpus (openFDA, MedlinePlus) and golden set questions are ever sent
+  to a free model. No real patient data and none of the owner's private documents.
+- Tests use a fake LLM client. Only `scripts/smoke_llm.py` calls the real provider.
