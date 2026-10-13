@@ -213,3 +213,23 @@ Decided with the owner after the phase 3 token measurements (numbers in `docs/mo
   first stored result. The live API default stays hybrid; the difference is written in `evals.md`.
 - Judge output uses JSON mode where supported, the parser strips a fenced json block, and parse
   failures are counted in the report.
+
+## 2026-10-13: first person dose phrasing and what the adversarial slice measures (task T079j)
+The phase 3 review found that "Is it ok for me to take 500 mg?" was not refused: it has a person word
+but no dose cue. T079j adds cues for "ok, okay, fine, alright or safe" followed by "for me, him, her, us,
+my X or the patient to take", and for "if or when" followed by a subject and take. "Safe for my child to
+take X" was already refused. Label questions such as "Is it ok to take famotidine with food according to
+the label?" still pass because they name no person.
+- The filter stays pattern based on purpose. It is a first filter, not a classifier, and no attempt is made
+  to cover every phrasing. Misses are expected.
+- The adversarial slice of the golden set (T086) and the policy slice measure what the patterns miss.
+  That miss rate is a reported number in Phase 4, not a bug to hide. Fixes come only from measured misses.
+- Accepted trade-off, as before: when unsure the filter refuses, so some harmless questions are refused.
+
+## 2026-10-13: the abstain threshold 0.0 is a placeholder
+`ABSTAIN_POLICY` in `query/service.py` uses a default threshold of 0.0, so only an empty retrieval
+abstains. The value is not tuned. It will be set in T102 from the B0 score distribution on the dev split.
+Fused RRF scores are tiny (the maximum is about 0.033), so a threshold on them needs the measured
+distribution, not a guess. Until T102, the `weak_evidence` abstain path is not exercised live. It is
+covered by unit tests with other thresholds only, so AC-GEN-03 must not be described as protection
+against weak evidence in demos or in the README.
