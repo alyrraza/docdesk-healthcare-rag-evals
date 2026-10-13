@@ -93,17 +93,17 @@ Added during the build (not in the original task list; all recorded in DECISIONS
 - [x] T064 `prompts/renderer.py` delimiters and escaping (AC-CTX-03)
 - [x] T065 `prompts/registry.py` sync and active pointer (AC-PRM-01)
 - [x] T066 `prompts/bundle.py` bundle id (AC-PRM-03)
-- [ ] T067 `context/budget.py` and `context/packer.py` (AC-CTX-01, AC-CTX-02)
-- [ ] T068 `generation/schema.py` from `OUTPUTS.md`
-- [ ] T069 `guardrails/output.py` three layers (AC-GEN-01)
-- [ ] T070 `guardrails/citations.py` (AC-GEN-02)
-- [ ] T071 `generation/repair.py` and retry once, typed fallback (AC-GEN-04)
-- [ ] T072 abstain on weak retrieval (AC-GEN-03)
-- [ ] T073 `guardrails/policy.py` disclaimer by code (AC-GEN-06)
-- [ ] T074 `generation/answer.py` full flow
-- [ ] T075 `observability/trace.py` builder and writer (AC-OBS-01)
-- [ ] T076 `POST /query` end to end
-- [ ] T077 prompt unit tests for `answer.v1` (AC-PRM-04)
+- [x] T067 `context/budget.py` and `context/packer.py` (AC-CTX-01, AC-CTX-02)
+- [x] T068 `generation/schema.py` from `OUTPUTS.md`
+- [x] T069 `guardrails/output.py` three layers (AC-GEN-01)
+- [x] T070 `guardrails/citations.py` (AC-GEN-02)
+- [x] T071 `generation/repair.py` and retry once, typed fallback (AC-GEN-04)
+- [x] T072 abstain on weak retrieval (AC-GEN-03)
+- [x] T073 `guardrails/policy.py` disclaimer by code (AC-GEN-06)
+- [x] T074 `generation/answer.py` full flow
+- [x] T075 `observability/trace.py` builder and writer (AC-OBS-01)
+- [x] T076 `POST /query` end to end
+- [x] T077 prompt unit tests for `answer.v1` (AC-PRM-04)
 - [ ] T078 manual smoke test, ten questions, notes in `PROJECT_NOTES.md`
 - [ ] T079 phase review
 
