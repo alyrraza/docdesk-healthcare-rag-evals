@@ -83,7 +83,7 @@ Run in two modes: retrieval-only (free, used in CI) and full (generator plus jud
 - Gating compares to a stored baseline run, not to an absolute number, because absolute scores drift with the judge and dataset.
 
 ## Technique matrix (experiments)
-Baseline B0: recursive chunking at 512 tokens with overlap, dense top-5, no rerank, prompt answer.v1,
+Baseline B0: recursive chunking at 200 tokens with overlap, dense top-5, no rerank, prompt answer.v1,
 the cheap generator. One factor at a time: E1 chunk size, E2 strategy, E3 retrieval mode, E4 reranker,
 E5 top-k and budget, E6 embedding model, E7 query rewriting (optional), E8 prompt version, E9 generator
 model, E10 semantic cache (check for wrong cache hits).

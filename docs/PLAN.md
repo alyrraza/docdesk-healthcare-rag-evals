@@ -128,8 +128,8 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 
 ## Phase 5: technique matrix
 - [ ] T105 config variants plumbing: chunk size, strategy, mode, rerank, top-k as config only
-- [ ] T106 E1 chunk size 256, 512, 1024: run and record
-- [ ] T107 E2 chunking strategy: run and record
+- [ ] T106 E1 chunk size 128, 200, 256 tokens: run and record
+- [ ] T107 E2 chunking strategy (fixed vs recursive): run and record
 - [ ] T108 E3 dense, keyword, hybrid: run and record
 - [ ] T109 `embeddings/reranker.py` ONNX cross-encoder and `retrieval/rerank_stage.py` (AC-RET-04)
 - [ ] T110 E4 reranker on and off: run and record

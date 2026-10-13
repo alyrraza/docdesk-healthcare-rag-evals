@@ -109,19 +109,25 @@ Experiment E6 still compares it with a bge-small class model before the final ch
 ## 2026-10-13: ingestion design choices from Phase 2
 - Uploads are the raw request body (`POST /documents?title=...`), not multipart. Why: multipart
   needs `python-multipart`, which is not in TECHSTACK. A browser can send a `File` as the body.
+  Revisit at the frontend phase.
 - Uploaded bytes live in `UPLOAD_DIR` (default `data/uploads`, git-ignored), one file per document
   id, behind `LocalFileStore`. The parser is chosen from the file bytes (a `%PDF-` header), never
   from the file name or mime type.
 - A chunk may not be larger than the encoder's `max_length` (256 tokens for MiniLM). The pipeline
   refuses a bigger size instead of letting the model cut the end off silently. Consequence: E1 sizes
-  512 and 1024 need an embedding model with a longer limit (bge-small allows 512).
-- Chunks do not store the page number, and the `parent_child` chunker cannot be used yet because the
-  table has no parent text column. Both need a new migration; the pipeline refuses `parent_child`
-  until then.
+  are 128, 200 and 256 tokens (changed from 256, 512, 1024), and the baseline B0 chunk size is 200.
+- `chunks.page` (nullable integer, migration 0012) holds the PDF page; text and JSON sources leave it
+  null. Parent-child chunking is deferred, see the next entry.
 - Seed corpus: one openFDA label per common generic drug (`drug_names.py`, about 160 names) and 150
   MedlinePlus topics spread evenly across the alphabet. About 300 documents, all under `data/corpus/`.
 - Re-uploading content whose earlier copy failed re-queues that same document instead of returning
   it as a duplicate.
+
+## 2026-10-13: parent-child chunking is deferred
+Decision: none of the experiments E1 to E10 in `docs/modules/evals.md` needs parent-child chunking:
+E2 compares fixed and recursive chunking only. `chunkers/parent_child.py` stays in the code with its
+tests, but the pipeline refuses `parent_child` and there is no `parent_text` column. Revisit only if
+E2 shows chunk context is the weak point; it would need a migration then.
 
 ## Parked ideas (not in scope, do not build)
 - Multi-turn conversation memory (adds context clash risk; revisit after the baseline)

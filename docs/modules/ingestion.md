@@ -22,8 +22,9 @@ so Celery records it (AC-ING-03).
   `embeddings/reranker.py`: ONNX cross-encoder, `score(query, passages)`.
 
 ## Decisions to make with data, not opinion
-- Chunk size and overlap: experiment E1 (256, 512, 1024 tokens).
-- Strategy: fixed, recursive, parent-child (retrieve small, return the parent): E2.
+- Chunk size and overlap: experiment E1 (128, 200, 256 tokens; MiniLM truncates above 256).
+- Strategy: fixed vs recursive: E2. Parent-child (retrieve small, return the parent) is built but
+  deferred, see `DECISIONS.md`.
 - Embedding model: two small open models compared in E6. Record the model name and revision on each chunk.
 
 ## Edge cases to handle
