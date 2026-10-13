@@ -197,3 +197,19 @@ are a first filter, not the whole defense. The refusal skips retrieval and the m
 Known limits: patterns miss unusual phrasings and can refuse harmless questions such as "How much
 should I know about aspirin dose?". A mixed question ("According to the label, what dose should I
 take?") is refused, on purpose. Measure on the policy slice of the golden set in phase 4.
+
+## 2026-10-13: eval pacing, cache and budget guard
+Decided with the owner after the phase 3 token measurements (numbers in `docs/modules/evals.md`).
+- The pacer (`llm/pacer.py`) works inside one process. Limit of that choice: two processes using the
+  same key (for example an eval run and the API, or two parallel runs) do not see each other, so
+  together they can pass the per minute or per day limit. For now run one eval at a time and keep the
+  API idle during a full run. A shared limiter in Redis is the fix if this becomes a problem.
+- The daily budget guard stops at 85 percent of the documented daily token limit and keeps its own
+  ledger of tokens used in the last 24 hours. Groq's docs do not say when the daily limit resets; the
+  reset header (1 minute 26.4 seconds for 1,000 requests a day) suggests continuous refill, so the
+  guard uses a rolling 24 hour window. Unverified until a real daily 429 shows its wait time.
+- OpenRouter free models: 20 requests per minute, 50 requests per day, counted per UTC day.
+- B0 is dense top-5 and is pinned in `evals/configs/b0.toml` with a content hash, frozen after its
+  first stored result. The live API default stays hybrid; the difference is written in `evals.md`.
+- Judge output uses JSON mode where supported, the parser strips a fenced json block, and parse
+  failures are counted in the report.
