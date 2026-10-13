@@ -121,7 +121,8 @@ def main(rows: int, query_count: int) -> None:
         for ef_search in (40, 100):
             conn.execute(f"SET hnsw.ef_search = {ef_search}")
             report[f"hnsw_m16_ef{ef_search}"] = {
-                "build_s": seconds, **measure(conn, queries, truth)
+                "build_s": seconds,
+                **measure(conn, queries, truth),
             }
         conn.execute("DROP INDEX bench_hnsw")
         lists = max(10, int(rows**0.5))
@@ -132,7 +133,8 @@ def main(rows: int, query_count: int) -> None:
         for probes in (1, 10, 30):
             conn.execute(f"SET ivfflat.probes = {probes}")
             report[f"ivfflat_lists{lists}_probes{probes}"] = {
-                "build_s": seconds, **measure(conn, queries, truth)
+                "build_s": seconds,
+                **measure(conn, queries, truth),
             }
     finally:
         conn.execute(f"DROP TABLE IF EXISTS {TABLE}")

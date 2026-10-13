@@ -14,14 +14,18 @@ fields fail more often and make constrained decoding slower.
 ## AnswerOutput (generation)
 ```python
 class AnswerOutput(BaseModel):
-    evidence_used: list[str]          # chunk ids the answer relies on, written first
-    answer: str                       # the answer text, no disclaimer
-    citations: list[str]              # subset of evidence_used
+    evidence_used: list[str]  # chunk ids the answer relies on, written first
+    answer: str  # the answer text, no disclaimer
+    citations: list[str]  # subset of evidence_used
     confidence: Literal["high", "medium", "low"]
     abstained: bool
     abstain_reason: Literal[
-        "none", "no_evidence", "weak_evidence",
-        "out_of_scope", "unsafe_request", "system_error",
+        "none",
+        "no_evidence",
+        "weak_evidence",
+        "out_of_scope",
+        "unsafe_request",
+        "system_error",
     ]
 ```
 Field rules (checked in code, layer 2):
@@ -32,15 +36,15 @@ Field rules (checked in code, layer 2):
 ## RouterOutput
 ```python
 class RouterOutput(BaseModel):
-    reason: str                       # one short sentence, first
+    reason: str  # one short sentence, first
     route: Literal["documents", "structured", "both"]
 ```
 
 ## SqlOutput
 ```python
 class SqlOutput(BaseModel):
-    tables_used: list[str]            # first, so the model commits to tables before writing SQL
-    sql: str                          # a single SELECT statement
+    tables_used: list[str]  # first, so the model commits to tables before writing SQL
+    sql: str  # a single SELECT statement
 ```
 
 ## Judge outputs (labels only, code computes scores)
@@ -50,15 +54,18 @@ class ClaimLabel(BaseModel):
     supported: bool
     evidence_id: str | None
 
+
 class FaithfulnessJudgement(BaseModel):
-    claims: list[ClaimLabel]          # score = supported / total, computed by code
+    claims: list[ClaimLabel]  # score = supported / total, computed by code
+
 
 class FactLabel(BaseModel):
-    fact: str                         # one gold fact from the golden item
+    fact: str  # one gold fact from the golden item
     present: bool
 
+
 class CorrectnessJudgement(BaseModel):
-    facts: list[FactLabel]            # score = present / total, computed by code
+    facts: list[FactLabel]  # score = present / total, computed by code
     contradicts_gold: bool
 ```
 

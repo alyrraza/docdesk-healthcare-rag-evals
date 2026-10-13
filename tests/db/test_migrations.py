@@ -20,6 +20,7 @@ def restore_schema_afterwards(test_database_url: str):
     yield
     command.upgrade(alembic_config(test_database_url), "head")
 
+
 ROOT = Path(__file__).resolve().parents[2]
 
 

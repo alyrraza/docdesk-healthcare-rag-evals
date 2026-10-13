@@ -32,21 +32,74 @@ def write_csv(path: Path, header: list[str], rows: list[list[str]]) -> None:
 def csv_dir(tmp_path: Path) -> Path:
     write_csv(
         tmp_path / "patients.csv",
-        ["Id", "BIRTHDATE", "DEATHDATE", "SSN", "FIRST", "LAST", "RACE", "ETHNICITY", "GENDER",
-         "CITY", "STATE"],
         [
-            [PATIENT, "1978-01-16", "", "999-55-9547", "Guillermo", "Von", "white", "nonhispanic",
-             "M", "Salem", "Massachusetts"],
-            [OTHER, "2001-02-11", "2020-05-01", "999-32-1995", "Jayne", "Bruen", "asian",
-             "nonhispanic", "F", "Bedford", "Massachusetts"],
+            "Id",
+            "BIRTHDATE",
+            "DEATHDATE",
+            "SSN",
+            "FIRST",
+            "LAST",
+            "RACE",
+            "ETHNICITY",
+            "GENDER",
+            "CITY",
+            "STATE",
+        ],
+        [
+            [
+                PATIENT,
+                "1978-01-16",
+                "",
+                "999-55-9547",
+                "Guillermo",
+                "Von",
+                "white",
+                "nonhispanic",
+                "M",
+                "Salem",
+                "Massachusetts",
+            ],
+            [
+                OTHER,
+                "2001-02-11",
+                "2020-05-01",
+                "999-32-1995",
+                "Jayne",
+                "Bruen",
+                "asian",
+                "nonhispanic",
+                "F",
+                "Bedford",
+                "Massachusetts",
+            ],
         ],
     )
     write_csv(
         tmp_path / "encounters.csv",
-        ["Id", "START", "STOP", "PATIENT", "ENCOUNTERCLASS", "CODE", "DESCRIPTION",
-         "TOTAL_CLAIM_COST", "REASONDESCRIPTION"],
-        [[ENCOUNTER, "1996-03-11T08:35:36Z", "1996-03-11T09:21:33Z", PATIENT, "wellness",
-          "162673000", "General examination of patient (procedure)", "704.20", ""]],
+        [
+            "Id",
+            "START",
+            "STOP",
+            "PATIENT",
+            "ENCOUNTERCLASS",
+            "CODE",
+            "DESCRIPTION",
+            "TOTAL_CLAIM_COST",
+            "REASONDESCRIPTION",
+        ],
+        [
+            [
+                ENCOUNTER,
+                "1996-03-11T08:35:36Z",
+                "1996-03-11T09:21:33Z",
+                PATIENT,
+                "wellness",
+                "162673000",
+                "General examination of patient (procedure)",
+                "704.20",
+                "",
+            ]
+        ],
     )
     write_csv(
         tmp_path / "conditions.csv",
@@ -55,10 +108,19 @@ def csv_dir(tmp_path: Path) -> Path:
     )
     write_csv(
         tmp_path / "medications.csv",
-        ["START", "STOP", "PATIENT", "ENCOUNTER", "CODE", "DESCRIPTION", "DISPENSES",
-         "TOTALCOST"],
-        [["2018-02-05T12:22:02Z", "", PATIENT, ENCOUNTER, "1535362", "sodium fluoride gel", "1",
-          "129.94"]],
+        ["START", "STOP", "PATIENT", "ENCOUNTER", "CODE", "DESCRIPTION", "DISPENSES", "TOTALCOST"],
+        [
+            [
+                "2018-02-05T12:22:02Z",
+                "",
+                PATIENT,
+                ENCOUNTER,
+                "1535362",
+                "sodium fluoride gel",
+                "1",
+                "129.94",
+            ]
+        ],
     )
     return tmp_path
 
@@ -81,9 +143,7 @@ def test_loader_parses_dates_numbers_and_blanks(db_session: Session, csv_dir: Pa
         {"id": PATIENT},
     ).one()
     assert (str(row.birthdate), row.deathdate, row.gender) == ("1978-01-16", None, "M")
-    cost = db_session.execute(
-        text("SELECT total_claim_cost FROM synthea_encounters")
-    ).scalar_one()
+    cost = db_session.execute(text("SELECT total_claim_cost FROM synthea_encounters")).scalar_one()
     assert float(cost) == 704.20
 
 
@@ -146,8 +206,10 @@ def test_loader_handles_more_rows_than_one_batch(
     from docdesk.db import synthea
 
     monkeypatch.setattr(synthea, "BATCH_SIZE", 2)
-    rows = [[f"2000-01-{day:02d}", "", PATIENT, ENCOUNTER, str(day), f"condition {day}"]
-            for day in range(1, 8)]
+    rows = [
+        [f"2000-01-{day:02d}", "", PATIENT, ENCOUNTER, str(day), f"condition {day}"]
+        for day in range(1, 8)
+    ]
     write_csv(
         csv_dir / "conditions.csv",
         ["START", "STOP", "PATIENT", "ENCOUNTER", "CODE", "DESCRIPTION"],

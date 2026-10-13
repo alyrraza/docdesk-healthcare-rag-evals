@@ -49,4 +49,3 @@ def test_login_with_missing_fields_gives_422_envelope(client: TestClient) -> Non
     response = client.post("/auth/login", json={"email": "a@example.com"})
     assert response.status_code == 422
     assert response.json()["error"]["code"] == "invalid_request"
-

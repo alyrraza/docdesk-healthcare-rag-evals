@@ -34,10 +34,7 @@ def scan_file(path: Path) -> list[tuple[int, str]]:
 def collect(argv: list[str]) -> list[Path]:
     if argv:
         return [Path(a) for a in argv if a.endswith(".md")]
-    return [
-        p for p in Path(".").rglob("*.md")
-        if not any(part in SKIP_DIRS for part in p.parts)
-    ]
+    return [p for p in Path(".").rglob("*.md") if not any(part in SKIP_DIRS for part in p.parts)]
 
 
 def main(argv: list[str]) -> int:
