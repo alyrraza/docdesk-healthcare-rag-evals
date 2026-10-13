@@ -19,6 +19,7 @@ record them in the README. Versions are not guessed in this document.
 | HTTP client | httpx | async, timeouts by default |
 | Metrics | prometheus-client | `/metrics` endpoint |
 | Logging | stdlib logging with a JSON formatter | no extra dependency |
+| Golden set files | PyYAML, `safe_load` only | `evals.md` defines the golden items as YAML; quotes and nested lists are awkward to write by hand in JSON (added 2026-10-14, T081) |
 
 ## ML
 | Need | Choice | Why |
