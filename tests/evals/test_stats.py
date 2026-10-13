@@ -19,7 +19,7 @@ def test_ac_evl_05_the_estimate_is_the_plain_mean_and_lies_inside_the_interval()
 
 
 def test_ac_evl_05_the_same_seed_gives_the_same_interval_and_another_seed_may_not() -> None:
-    values = [float(n % 3) for n in range(30)]
+    values = [(n * 0.37) % 1.0 for n in range(30)]  # many distinct values
     assert bootstrap_ci(values, seed=7) == bootstrap_ci(values, seed=7)
     assert bootstrap_ci(values, seed=7) != bootstrap_ci(values, seed=8)
 
