@@ -43,6 +43,9 @@ class Settings(BaseSettings):
     redis_url: str
     # Login for the SQL branch's read-only role; optional until that branch exists.
     readonly_database_url: str | None = None
+    # Where uploaded files and the downloaded embedding model live (both git-ignored).
+    upload_dir: str = "data/uploads"
+    model_dir: str = ".cache/models/all-MiniLM-L6-v2"
     jwt_secret: str = Field(min_length=32)
     jwt_lifetime_minutes: int = Field(default=30, gt=0)
     # Only scripts/seed_admin.py uses these; checked here so a placeholder never gets seeded.
