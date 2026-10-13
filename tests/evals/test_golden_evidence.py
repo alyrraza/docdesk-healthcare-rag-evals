@@ -29,14 +29,18 @@ def test_ac_evl_01_a_quote_that_is_an_exact_substring_passes() -> None:
     check_quote(DOC, "Epsilon zeta eta")
 
 
-def test_ac_evl_01_a_quote_with_different_whitespace_is_not_an_exact_substring() -> None:
+def test_ac_evl_01_a_quote_across_a_line_break_needs_no_newline_in_it() -> None:
+    check_quote("one two\nthree  four", "one two three four")
+
+
+def test_ac_evl_01_a_quote_with_different_words_still_fails_after_folding() -> None:
     with pytest.raises(QuoteNotFound):
-        check_quote("one two\nthree four", "one two three")
+        check_quote("one two\nthree four", "one two four")
 
 
 def test_ac_evl_01_a_quote_missing_after_a_cleaner_change_is_an_error() -> None:
-    with pytest.raises(QuoteNotFound, match="lambda  mu"):
-        check_quote(DOC, "lambda  mu")
+    with pytest.raises(QuoteNotFound, match="lambda nu"):
+        check_quote(DOC, "lambda nu")
     with pytest.raises(QuoteNotFound):
         gold_chunk_ids(DOC, "not in the text", chunks(DOC))
 

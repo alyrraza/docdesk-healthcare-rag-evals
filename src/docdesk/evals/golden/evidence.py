@@ -32,9 +32,9 @@ def normalize(text: str) -> str:
 
 
 def check_quote(document_text: str, quote: str) -> None:
-    """Require a quote to be an exact substring of the cleaned text, so a human can verify it."""
-    if quote not in document_text:
-        raise QuoteNotFound(f"quote is not an exact substring of the document: {quote!r}")
+    """Require the quote in the cleaned text with whitespace folded, as the resolver does."""
+    if normalize(quote) not in normalize(document_text):
+        raise QuoteNotFound(f"quote is not in the document text: {quote!r}")
 
 
 def quote_spans(document_text: str, quote: str) -> list[Span]:

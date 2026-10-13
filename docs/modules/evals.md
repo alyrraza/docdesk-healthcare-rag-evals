@@ -40,8 +40,9 @@ golden item never stores one. It points at evidence in the documents instead.
   The loader resolves it to a database id at load time. A key that matches no document is a
   validation error.
 - **Quote.** `text` is a verbatim quote of at most 300 characters. The validator checks that it is
-  an exact substring of the stored cleaned text of the document (parse, then the ingestion cleaner,
-  blocks joined by a blank line). It must have no leading or trailing whitespace. Hand verification
+  a substring of the stored cleaned text of the document (parse, then the ingestion cleaner,
+  blocks joined by a blank line), with whitespace runs folded to one space on both sides
+  (decided 2026-10-14). It must have no leading or trailing whitespace. Hand verification
   is reading the question, the gold facts and the quotes.
 - **Which chunks are gold.** Whitespace is collapsed to one space on both sides, then every chunk is
   located in the document by position. A chunk is gold for an evidence entry if it contains the

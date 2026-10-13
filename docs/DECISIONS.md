@@ -3,6 +3,22 @@
 Newest first. Each entry: date, decision, why, what it supersedes. Specs older than their
 decisions are marked superseded in the spec file, so nobody builds from stale text.
 
+## 2026-10-14: the quote validator folds whitespace like the resolver
+Decision: `check_quote` collapses every whitespace run to one space on both the quote and the document
+text before comparing, the same way `quote_spans` does. A quote that crosses a line break is written
+with a single space. Quotes still need real matching words, and still have no leading or trailing
+whitespace (schema rule). Supersedes the "exact substring" wording in `docs/modules/evals.md` for the
+whitespace part only.
+Why: the validator was stricter than the resolver. A quote that the validator rejected would have been
+found by the resolver, and a quote copied from a wrapped label would need a newline inside a YAML string.
+Test change: `test_ac_evl_01_a_quote_with_different_whitespace_is_not_an_exact_substring` asserted the old
+rule and was replaced by two tests (a line break folds; different words still fail). The test that a
+missing quote fails now uses a different word instead of a doubled space, which folding makes legal.
+
+## 2026-10-14: PyYAML stays as an allowed dependency
+Accepted by the owner. It is declared in `pyproject.toml` and `TECHSTACK.md` (entry of the same day below)
+and golden files are read with `yaml.safe_load` only.
+
 ## 2026-10-14: smoke test leftovers removed from the main database
 The main database held two upload documents from the phase 2 and 3 smoke tests ("FDA sample PDF smoke",
 36 chunks made by the fixed chunker, and "Damaged PDF smoke", failed) and 598 files under `data/uploads`
