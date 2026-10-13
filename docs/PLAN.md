@@ -56,7 +56,7 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 - [x] T037 `embeddings/encoder.py` ONNX session, batching
 - [x] T038 encoder test with a tiny fixture and shape checks
 - [x] T039 `ingestion/parsers/text.py`
-- [ ] T040 `ingestion/parsers/pdf.py` and the no-text-layer failure
+- [x] T040 `ingestion/parsers/pdf.py` and the no-text-layer failure
 - [x] T041 `ingestion/cleaner.py`
 - [x] T042 `chunkers/fixed.py` with invariants tests
 - [x] T043 `chunkers/recursive.py`
