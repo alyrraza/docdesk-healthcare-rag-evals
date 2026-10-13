@@ -143,3 +143,16 @@ def test_ac_ing_01_the_uploaded_route_needs_login_in_the_openapi_schema(
     operation = client.app.openapi()["paths"]["/documents"]["post"]
     assert operation["security"]
 
+
+def test_ac_ing_03_uploading_again_after_a_failure_queues_the_same_document_again(
+    client: TestClient, store: FakeStore, queue: Queue
+) -> None:
+    headers = sign_in(client)
+    queue.fail = True
+    assert upload(client, headers).status_code == 503
+    queue.fail = False
+    response = upload(client, headers)
+    assert response.status_code == 202
+    data = response.json()["data"]
+    assert data["status"] == "queued" and data["duplicate"] is False
+    assert queue.ids == [uuid.UUID(data["id"])]
