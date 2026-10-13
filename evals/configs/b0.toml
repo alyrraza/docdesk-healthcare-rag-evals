@@ -1,11 +1,6 @@
 # Baseline B0, pinned 2026-10-13. Frozen after its first stored result (T097): a change means a
 # new file with a new id (b1, b2), never an edit. content_hash covers every value below.
 # Print it with: python -m docdesk.evals.config evals/configs/b0.toml
-#
-# OPEN ISSUE, found while writing this file: the corpus loaded so far was chunked with the
-# "fixed" chunker, because IngestConfig() defaults to it and scripts/load_corpus.py uses that
-# default. B0 as written in docs/modules/evals.md is "recursive". Before T097 the corpus must be
-# re-ingested with "recursive", or this file must say "fixed". Decide it before the first result.
 id = "b0"
 content_hash = "ec66619a5a99a1adb5968b76526e76d0e12e967ebd4e1874b6c13a1a5b7c19a6"
 
