@@ -21,7 +21,7 @@ def mock_client() -> httpx.Client:
     return httpx.Client(transport=httpx.MockTransport(handler), base_url="https://api.test")
 
 
-def test_ac_ing_01_the_script_downloads_into_a_data_folder(tmp_path: Path) -> None:
+def test_fetch_script_the_script_downloads_into_a_data_folder(tmp_path: Path) -> None:
     saved = main(
         ["--limit", "1"], project_root=tmp_path, client=mock_client(), sleep=lambda _: None
     )
@@ -29,6 +29,6 @@ def test_ac_ing_01_the_script_downloads_into_a_data_folder(tmp_path: Path) -> No
     assert (tmp_path / "data" / "corpus" / "openfda" / "manifest.json").is_file()
 
 
-def test_ac_ing_01_the_script_refuses_a_folder_outside_data_and_cache(tmp_path: Path) -> None:
+def test_fetch_script_the_script_refuses_a_folder_outside_data_and_cache(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="data/ or .cache/"):
         main(["--out", "docs"], project_root=tmp_path, client=mock_client(), sleep=lambda _: None)

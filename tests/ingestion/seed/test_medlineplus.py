@@ -62,21 +62,21 @@ def make_zip(xml: str = XML) -> bytes:
     return buffer.getvalue()
 
 
-def test_ac_ing_01_html_becomes_plain_text_with_list_dashes_and_no_tags() -> None:
+def test_seed_html_becomes_plain_text_with_list_dashes_and_no_tags() -> None:
     text = html_to_text('<p>Hello <a href="x">there</a>.</p><ul><li>One</li><li>Two</li></ul>')
     assert text == "Hello there.\n\n- One\n- Two"
 
 
-def test_ac_ing_01_html_entities_are_decoded() -> None:
+def test_seed_html_entities_are_decoded() -> None:
     assert html_to_text("<p>Fish &amp; chips &gt; 5%</p>") == "Fish & chips > 5%"
 
 
-def test_ac_ing_01_only_english_topics_with_enough_text_are_kept() -> None:
+def test_seed_only_english_topics_with_enough_text_are_kept() -> None:
     topics = parse_topics(XML.encode())
     assert [t.title for t in topics] == ["Diabetes"]
 
 
-def test_ac_ing_01_a_topic_keeps_its_nicknames_source_line_and_list() -> None:
+def test_seed_a_topic_keeps_its_nicknames_source_line_and_list() -> None:
     topic = parse_topics(XML.encode())[0]
     assert topic.source_id == "medlineplus-1"
     assert topic.source_url == "https://medlineplus.gov/t1.html"
@@ -85,28 +85,28 @@ def test_ac_ing_01_a_topic_keeps_its_nicknames_source_line_and_list() -> None:
     assert "Source: MedlinePlus, National Library of Medicine" in topic.text
 
 
-def test_ac_ing_01_spread_picks_evenly_across_the_list() -> None:
+def test_seed_spread_picks_evenly_across_the_list() -> None:
     assert spread(list(range(10)), 5) == [0, 2, 4, 6, 8]
     assert spread(list(range(3)), 10) == [0, 1, 2]
     assert spread([], 5) == []
 
 
-def test_ac_ing_01_the_newest_compressed_file_is_chosen_from_the_page() -> None:
+def test_seed_the_newest_compressed_file_is_chosen_from_the_page() -> None:
     assert find_latest_zip_url(PAGE).endswith("mplus_topics_compressed_2026-10-13.zip")
 
 
-def test_ac_ing_01_a_page_without_a_download_link_is_an_error() -> None:
+def test_seed_a_page_without_a_download_link_is_an_error() -> None:
     with pytest.raises(SeedFetchError, match="no compressed"):
         find_latest_zip_url("<html></html>")
 
 
-def test_ac_ing_01_the_xml_is_read_out_of_the_zip(tmp_path: Path) -> None:
+def test_seed_the_xml_is_read_out_of_the_zip(tmp_path: Path) -> None:
     path = tmp_path / "t.zip"
     path.write_bytes(make_zip())
     assert b"<health-topics" in read_zip_xml(path)
 
 
-def test_ac_ing_01_the_zip_is_downloaded_once_and_reused(tmp_path: Path) -> None:
+def test_seed_the_zip_is_downloaded_once_and_reused(tmp_path: Path) -> None:
     calls = []
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -120,14 +120,14 @@ def test_ac_ing_01_the_zip_is_downloaded_once_and_reused(tmp_path: Path) -> None
     assert len(calls) == 1
 
 
-def test_ac_ing_01_a_failed_download_leaves_no_partial_file(tmp_path: Path) -> None:
+def test_seed_a_failed_download_leaves_no_partial_file(tmp_path: Path) -> None:
     client = httpx.Client(transport=httpx.MockTransport(lambda r: httpx.Response(503)))
     with pytest.raises(SeedFetchError, match="503"):
         download_zip(client, "https://x.test/a_2026.zip", tmp_path)
     assert list(tmp_path.iterdir()) == []
 
 
-def test_ac_ing_01_download_topics_saves_documents_and_a_rerun_adds_none(tmp_path: Path) -> None:
+def test_seed_download_topics_saves_documents_and_a_rerun_adds_none(tmp_path: Path) -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         if str(request.url).endswith("xml.html"):
             return httpx.Response(200, text=PAGE)

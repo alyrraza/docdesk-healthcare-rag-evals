@@ -10,14 +10,14 @@ import pytest
 from docdesk.ingestion.filestore import LocalFileStore
 
 
-def test_ac_ing_01_saved_bytes_are_read_back_unchanged(tmp_path: Path) -> None:
+def test_filestore_saved_bytes_are_read_back_unchanged(tmp_path: Path) -> None:
     store = LocalFileStore(tmp_path)
     document_id = uuid.uuid4()
     store.save(document_id, b"\x00binary\xffbytes")
     assert store.read(document_id) == b"\x00binary\xffbytes"
 
 
-def test_ac_ing_01_the_folder_is_created_on_first_save(tmp_path: Path) -> None:
+def test_filestore_the_folder_is_created_on_first_save(tmp_path: Path) -> None:
     store = LocalFileStore(tmp_path / "uploads" / "nested")
     document_id = uuid.uuid4()
     store.save(document_id, b"hi")

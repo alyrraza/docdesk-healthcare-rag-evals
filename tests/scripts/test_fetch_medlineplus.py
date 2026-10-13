@@ -35,14 +35,14 @@ def mock_client() -> httpx.Client:
     return httpx.Client(transport=httpx.MockTransport(handler), base_url="https://medlineplus.gov")
 
 
-def test_ac_ing_01_the_script_saves_topics_and_keeps_the_zip_in_the_cache(tmp_path: Path) -> None:
+def test_fetch_script_saves_topics_and_keeps_the_zip_in_the_cache(tmp_path: Path) -> None:
     assert main([], project_root=tmp_path, client=mock_client()) == 1
     assert (tmp_path / "data" / "corpus" / "medlineplus" / "manifest.json").is_file()
     assert list((tmp_path / ".cache" / "downloads" / "medlineplus").glob("*.zip"))
 
 
 @pytest.mark.parametrize("flag", ["--out", "--cache"])
-def test_ac_ing_01_the_script_refuses_folders_outside_data_and_cache(
+def test_fetch_script_the_script_refuses_folders_outside_data_and_cache(
     tmp_path: Path, flag: str
 ) -> None:
     with pytest.raises(ValueError, match="data/ or .cache/"):

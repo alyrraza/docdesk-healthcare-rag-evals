@@ -19,22 +19,22 @@ def doc(source_id: str = "abc-123", text: str = "Some label text.") -> SeedDocum
     return SeedDocument(source_id=source_id, title="Aspirin label", text=text, source_url="u")
 
 
-def test_ac_ing_01_a_download_folder_under_data_is_allowed(tmp_path: Path) -> None:
+def test_seed_a_download_folder_under_data_is_allowed(tmp_path: Path) -> None:
     folder = tmp_path / "data" / "corpus"
     assert ensure_download_dir(folder, tmp_path) == folder.resolve()
 
 
-def test_ac_ing_01_a_download_folder_under_cache_is_allowed(tmp_path: Path) -> None:
+def test_seed_a_download_folder_under_cache_is_allowed(tmp_path: Path) -> None:
     ensure_download_dir(tmp_path / ".cache" / "x", tmp_path)
 
 
 @pytest.mark.parametrize("relative", ["docs", "src/stuff", ".", "data/../src", "../elsewhere"])
-def test_ac_ing_01_any_other_download_folder_is_refused(tmp_path: Path, relative: str) -> None:
+def test_seed_any_other_download_folder_is_refused(tmp_path: Path, relative: str) -> None:
     with pytest.raises(ValueError, match="data/ or .cache/"):
         ensure_download_dir(tmp_path / relative, tmp_path)
 
 
-def test_ac_ing_01_save_writes_the_text_and_records_it_in_the_manifest(tmp_path: Path) -> None:
+def test_seed_save_writes_the_text_and_records_it_in_the_manifest(tmp_path: Path) -> None:
     path = save_document(tmp_path, doc())
     assert path.read_text(encoding="utf-8") == "Some label text."
     assert load_manifest(tmp_path)["abc-123"] == {
@@ -45,13 +45,13 @@ def test_ac_ing_01_save_writes_the_text_and_records_it_in_the_manifest(tmp_path:
     }
 
 
-def test_ac_ing_01_a_source_id_cannot_escape_the_folder(tmp_path: Path) -> None:
+def test_seed_a_source_id_cannot_escape_the_folder(tmp_path: Path) -> None:
     path = save_document(tmp_path / "out", doc(source_id="../../evil"))
     assert path.parent == (tmp_path / "out")
     assert not (tmp_path / "evil.txt").exists()
 
 
-def test_ac_ing_01_saving_a_second_document_keeps_the_first_in_the_manifest(
+def test_seed_saving_a_second_document_keeps_the_first_in_the_manifest(
     tmp_path: Path,
 ) -> None:
     save_document(tmp_path, doc("one"))
@@ -59,11 +59,11 @@ def test_ac_ing_01_saving_a_second_document_keeps_the_first_in_the_manifest(
     assert set(load_manifest(tmp_path)) == {"one", "two"}
 
 
-def test_ac_ing_01_a_missing_manifest_reads_as_empty(tmp_path: Path) -> None:
+def test_seed_a_missing_manifest_reads_as_empty(tmp_path: Path) -> None:
     assert load_manifest(tmp_path) == {}
 
 
-def test_ac_ing_01_a_corrupt_manifest_is_reported_not_ignored(tmp_path: Path) -> None:
+def test_seed_a_corrupt_manifest_is_reported_not_ignored(tmp_path: Path) -> None:
     (tmp_path / "manifest.json").write_text("{not json", encoding="utf-8")
     with pytest.raises(json.JSONDecodeError):
         load_manifest(tmp_path)

@@ -30,7 +30,7 @@ def client_for(handler) -> httpx.Client:
     return httpx.Client(transport=httpx.MockTransport(handler), base_url="https://api.test")
 
 
-def test_ac_ing_01_a_label_becomes_titled_text_with_section_headings() -> None:
+def test_seed_a_label_becomes_titled_text_with_section_headings() -> None:
     document = label_to_document(record())
     assert document.source_id == "set-1"
     assert document.title == "Bayer (aspirin) drug label"
@@ -39,28 +39,28 @@ def test_ac_ing_01_a_label_becomes_titled_text_with_section_headings() -> None:
     assert "Reye's syndrome in children." in document.text
 
 
-def test_ac_ing_01_sections_the_label_lacks_are_left_out() -> None:
+def test_seed_sections_the_label_lacks_are_left_out() -> None:
     text = label_to_document(record()).text
     assert "Contraindications" not in text
 
 
-def test_ac_ing_01_a_very_long_section_is_cut_to_the_cap() -> None:
+def test_seed_a_very_long_section_is_cut_to_the_cap() -> None:
     long = record(warnings=["word " * 10000])
     text = label_to_document(long).text
     assert len(text) < 2 * MAX_SECTION_CHARS + 500
 
 
-def test_ac_ing_01_a_label_with_no_usable_section_is_skipped() -> None:
+def test_seed_a_label_with_no_usable_section_is_skipped() -> None:
     assert label_to_document({"set_id": "x", "openfda": {"generic_name": ["A"]}}) is None
 
 
-def test_ac_ing_01_the_title_falls_back_to_the_generic_name() -> None:
+def test_seed_the_title_falls_back_to_the_generic_name() -> None:
     bare = record()
     bare["openfda"] = {"generic_name": ["METFORMIN"]}
     assert label_to_document(bare).title == "metformin drug label"
 
 
-def test_ac_ing_01_fetch_label_asks_for_one_label_by_generic_name() -> None:
+def test_seed_fetch_label_asks_for_one_label_by_generic_name() -> None:
     seen = []
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -72,14 +72,14 @@ def test_ac_ing_01_fetch_label_asks_for_one_label_by_generic_name() -> None:
     assert seen[0].params["limit"] == "1"
 
 
-def test_ac_ing_01_a_drug_openfda_does_not_know_is_none_not_an_error() -> None:
+def test_seed_a_drug_openfda_does_not_know_is_none_not_an_error() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(404, json={"error": {"code": "NOT_FOUND"}})
 
     assert fetch_label(client_for(handler), "nothingium") is None
 
 
-def test_ac_ing_01_a_server_error_stops_with_a_typed_error() -> None:
+def test_seed_a_server_error_stops_with_a_typed_error() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(500, text="boom")
 
@@ -98,7 +98,7 @@ def make_handler(calls: list[str], missing: set[str] = frozenset()):
     return handler
 
 
-def test_ac_ing_01_download_saves_each_label_and_waits_between_requests(tmp_path: Path) -> None:
+def test_seed_download_saves_each_label_and_waits_between_requests(tmp_path: Path) -> None:
     calls: list[str] = []
     pauses: list[float] = []
     saved = download_labels(
@@ -109,7 +109,7 @@ def test_ac_ing_01_download_saves_each_label_and_waits_between_requests(tmp_path
     assert pauses == [0.5, 0.5]
 
 
-def test_ac_ing_01_a_second_run_does_not_fetch_labels_it_already_has(tmp_path: Path) -> None:
+def test_seed_a_second_run_does_not_fetch_labels_it_already_has(tmp_path: Path) -> None:
     first: list[str] = []
     download_labels(client_for(make_handler(first)), ["aspirin"], tmp_path, lambda _: None, 0)
     second: list[str] = []
@@ -120,7 +120,7 @@ def test_ac_ing_01_a_second_run_does_not_fetch_labels_it_already_has(tmp_path: P
     assert saved == 1
 
 
-def test_ac_ing_01_two_names_that_return_the_same_label_save_it_once(tmp_path: Path) -> None:
+def test_seed_two_names_that_return_the_same_label_save_it_once(tmp_path: Path) -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(200, json={"results": [record(set_id="same")]})
 
@@ -128,7 +128,7 @@ def test_ac_ing_01_two_names_that_return_the_same_label_save_it_once(tmp_path: P
     assert saved == 1
 
 
-def test_ac_ing_01_unknown_drugs_are_skipped_and_the_rest_still_download(tmp_path: Path) -> None:
+def test_seed_unknown_drugs_are_skipped_and_the_rest_still_download(tmp_path: Path) -> None:
     saved = download_labels(
         client_for(make_handler([], missing={"nothingium"})),
         ["aspirin", "nothingium"],
