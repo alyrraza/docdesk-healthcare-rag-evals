@@ -2,96 +2,17 @@
 
 from __future__ import annotations
 
-import json
-import uuid
-from pathlib import Path
-
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import select
 
-from docdesk.api.query_deps import get_answer_prompt, get_encoder, get_llm, get_token_counter
+from docdesk.api.query_deps import get_llm
 from docdesk.core.config import Settings
 from docdesk.core.errors import AppError
-from docdesk.db.models.traces import QueryTraceRow
-from docdesk.db.session import make_engine, make_session_factory
 from docdesk.guardrails.policy import REFUSAL_MESSAGE
 from docdesk.llm.errors import LLMTimeoutError
-from docdesk.prompts.loader import load_prompt
-from fakes.corpus import Corpus, FixedEncoder
-from fakes.ingestion import WordCounter
-from fakes.llm import FakeLLMClient
+from fakes.query_api import REPLY, ask, trace_for
 
 pytestmark = pytest.mark.integration
-
-ROOT = Path(__file__).resolve().parents[2]
-CREDS = {"email": "asker@example.com", "password": "a-long-enough-password"}
-REPLY = json.dumps(
-    {
-        "evidence_used": ["c1"],
-        "answer": "Aspirin may cause stomach bleeding.",
-        "citations": ["c1"],
-        "confidence": "high",
-        "abstained": False,
-        "abstain_reason": "none",
-    }
-)
-
-
-@pytest.fixture
-def me(client: TestClient) -> dict[str, str]:
-    user_id = client.post("/auth/register", json=CREDS).json()["data"]["id"]
-    token = client.post("/auth/login", json=CREDS).json()["data"]["access_token"]
-    return {"authorization": f"Bearer {token}", "user_id": user_id}
-
-
-@pytest.fixture
-def wire(client: TestClient):
-    """Replace the model, encoder and prompt lookup with fakes; return the fake LLM."""
-
-    def install(replies: list[str | Exception]) -> FakeLLMClient:
-        fake = FakeLLMClient(replies)
-        overrides = client.app.dependency_overrides  # type: ignore[attr-defined]
-        overrides[get_llm] = lambda: fake
-        overrides[get_encoder] = lambda: FixedEncoder(0)
-        overrides[get_token_counter] = lambda: WordCounter()
-        overrides[get_answer_prompt] = lambda: load_prompt(ROOT / "prompts/answer/answer.v1.md")
-        return fake
-
-    return install
-
-
-@pytest.fixture
-def seed(migrated_url: str):
-    """Write one ready document with one chunk for an owner, committed for the API to read."""
-    engine = make_engine(migrated_url)
-
-    def make(owner_id: str | None = None, text: str = "Aspirin may cause stomach bleeding."):
-        with make_session_factory(engine)() as session:
-            corpus = Corpus(session)
-            owner = uuid.UUID(owner_id) if owner_id else corpus.user()
-            corpus.chunk(corpus.document(owner, "Aspirin label"), text, hot=0)
-            session.commit()
-            return owner
-
-    yield make
-    engine.dispose()
-
-
-def trace_for(migrated_url: str, trace_id: str) -> QueryTraceRow:
-    engine = make_engine(migrated_url)
-    with make_session_factory(engine)() as session:
-        row = session.execute(
-            select(QueryTraceRow).where(QueryTraceRow.trace_id == trace_id)
-        ).scalar_one()
-    engine.dispose()
-    return row
-
-
-def ask(client: TestClient, me: dict[str, str], question: str = "What are aspirin risks?"):
-    return client.post(
-        "/query", json={"question": question}, headers={"authorization": me["authorization"]}
-    )
 
 
 def test_ac_gen_01_a_question_gets_an_answer_with_citations_and_the_disclaimer(
