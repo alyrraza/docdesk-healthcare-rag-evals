@@ -18,6 +18,11 @@ from docdesk.llm.retry import RetryingClient
 from docdesk.prompts.loader import PromptFile
 from docdesk.prompts.registry import NoActivePromptError, get_active
 
+# Nothing syncs prompts at startup yet, so a fresh database has no active prompt (review G5).
+NO_PROMPT_MESSAGE = (
+    "No answer prompt is active. Operator: run scripts/smoke_llm.py once to sync and activate it."
+)
+
 
 @lru_cache
 def build_llm(api_key: str) -> RetryingClient:
@@ -59,4 +64,4 @@ def get_answer_prompt(session: Session = Depends(get_session)) -> PromptFile:
     try:
         return get_active(session, "answer")
     except NoActivePromptError as error:
-        raise AppError("prompt_not_active", "No answer prompt is active", 503) from error
+        raise AppError("prompt_not_active", NO_PROMPT_MESSAGE, 503) from error
