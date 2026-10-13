@@ -35,6 +35,7 @@ class Encoder:
         self._tokenizer = tokenizer
         self._input_names = [model_input.name for model_input in session.get_inputs()]
         self._batch_size = batch_size
+        self.max_length = max_length
         self.model_name = model_name
         self.revision = revision
 
