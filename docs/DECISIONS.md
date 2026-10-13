@@ -129,6 +129,11 @@ E2 compares fixed and recursive chunking only. `chunkers/parent_child.py` stays 
 tests, but the pipeline refuses `parent_child` and there is no `parent_text` column. Revisit only if
 E2 shows chunk context is the weak point; it would need a migration then.
 
+## 2026-10-13: HNSW recall on the real corpus (T052)
+Measured on the 5457 real chunks (298 documents): HNSW with ef_search 40 returned 99.9 percent of the
+exact scan's top 10 neighbours (100 random chunks as queries, themselves excluded). The index choice
+stands. Chunks and index take 31 MB; the whole main database is 39 MB.
+
 ## Parked ideas (not in scope, do not build)
 - Multi-turn conversation memory (adds context clash risk; revisit after the baseline)
 - Query rewriting and HyDE (matrix item E7, optional)
