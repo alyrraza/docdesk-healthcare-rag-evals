@@ -33,6 +33,8 @@ class LLMResult:
     # The model that answered, logged with every result.
     model: str
     cost_usd: Decimal
+    # True when the eval cache answered; tokens and latency are then the original call's.
+    cache_hit: bool = False
 
 
 class LLMClient(Protocol):
