@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from collections.abc import Callable, Iterator
 
 import pytest
@@ -36,8 +37,9 @@ def make_document(pipeline_session: Session, store: FakeStore) -> Callable[[byte
     """Create a queued document whose file content is the given bytes."""
 
     def make(data: bytes) -> Document:
-        owner = UserRepository(pipeline_session).add("ingest@example.com", "hash", "user")
-        document = DocumentRepository(pipeline_session).add(owner.id, "label", "upload", "hash-1")
+        unique = uuid.uuid4().hex
+        owner = UserRepository(pipeline_session).add(f"{unique}@example.com", "hash", "user")
+        document = DocumentRepository(pipeline_session).add(owner.id, "label", "upload", unique)
         pipeline_session.commit()
         store.files[document.id] = data
         return document

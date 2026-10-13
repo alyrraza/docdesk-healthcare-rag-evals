@@ -103,3 +103,13 @@ def test_ac_ret_01_embedding_column_has_an_hnsw_cosine_index(db_session: Session
         text("SELECT indexdef FROM pg_indexes WHERE tablename = 'chunks'")
     ).scalars()
     assert any("USING hnsw" in d and "vector_cosine_ops" in d for d in definitions)
+
+
+def test_ac_ing_05_chunk_page_is_a_nullable_integer(db_session: Session) -> None:
+    doc = make_document(db_session)
+    with_page = make_chunk(doc.id, position=0)
+    with_page.page = 7
+    db_session.add_all([with_page, make_chunk(doc.id, position=1)])
+    db_session.flush()
+    pages = db_session.execute(select(ChunkRow.page).order_by(ChunkRow.position)).scalars().all()
+    assert pages == [7, None]

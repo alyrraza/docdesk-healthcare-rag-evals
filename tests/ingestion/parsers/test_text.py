@@ -11,7 +11,7 @@ from docdesk.ingestion.types import Block
 
 def test_ac_ing_03_plain_text_becomes_one_block_on_page_one() -> None:
     assert parse_text(b"Aspirin lowers fever.\nTake with food.") == [
-        Block(page=1, text="Aspirin lowers fever.\nTake with food.")
+        Block(page=None, text="Aspirin lowers fever.\nTake with food.")
     ]
 
 

@@ -139,3 +139,24 @@ def test_ac_ing_05_parent_child_is_refused_until_parent_text_can_be_stored(
     config = IngestConfig(chunker="parent_child", size=20, overlap=0)
     with pytest.raises(ValueError, match="parent"):
         run(pipeline_session, document, store, config=config)
+
+
+def test_ac_ing_05_text_chunks_have_no_page_and_pdf_style_pages_are_stored(
+    pipeline_session, store, make_document, monkeypatch
+) -> None:
+    from docdesk.ingestion import pipeline
+    from docdesk.ingestion.types import Block
+
+    document = make_document(TEXT)
+    run(pipeline_session, document, store)
+    pages = pipeline_session.execute(select(ChunkRow.page)).scalars().all()
+    assert set(pages) == {None}
+
+    other = make_document(b"x")
+    blocks = [Block(page=3, text="First page text."), Block(page=4, text="Second page text.")]
+    monkeypatch.setattr(pipeline, "parse_document", lambda data: blocks)
+    run(pipeline_session, other, store)
+    query = (
+        select(ChunkRow.page).where(ChunkRow.document_id == other.id).order_by(ChunkRow.position)
+    )
+    assert pipeline_session.execute(query).scalars().all() == [3, 4]

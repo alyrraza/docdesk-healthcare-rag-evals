@@ -59,3 +59,19 @@ def test_second_migration_enables_and_removes_pgvector(test_database_url: str) -
     command.downgrade(config, "0001")
     assert extension_version(test_database_url) is None
     command.downgrade(config, "base")
+
+
+def test_ac_ing_05_migration_0012_adds_and_removes_the_chunks_page_column(
+    test_database_url: str,
+) -> None:
+    config = alembic_config(test_database_url)
+    sql = (
+        "SELECT is_nullable, data_type FROM information_schema.columns "
+        "WHERE table_name = 'chunks' AND column_name = 'page'"
+    )
+    command.downgrade(config, "0011")
+    with make_engine(test_database_url).connect() as connection:
+        assert connection.execute(text(sql)).fetchall() == []
+    command.upgrade(config, "0012")
+    with make_engine(test_database_url).connect() as connection:
+        assert connection.execute(text(sql)).fetchall() == [("YES", "integer")]
