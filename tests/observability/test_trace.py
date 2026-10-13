@@ -115,3 +115,10 @@ def test_ac_obs_01_a_written_trace_can_be_read_back(db_session: Session) -> None
     ).scalar_one()
     assert stored.prompt_bundle_id == "bundle-abc"
     assert stored.tokens["model"] == "openai/gpt-oss-120b"
+
+
+def test_ac_obs_01_guardrail_outcomes_are_recorded_on_the_row() -> None:
+    builder = TraceBuilder(TRACE_ID, None, "q")
+    builder.add_guardrail("input", "refused")
+    builder.add_guardrail("reason", "personal_dose")
+    assert builder.build().guardrails == {"input": "refused", "reason": "personal_dose"}

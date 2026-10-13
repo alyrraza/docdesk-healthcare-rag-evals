@@ -15,6 +15,7 @@ from docdesk.core.config import Settings
 from docdesk.core.errors import AppError
 from docdesk.db.models.traces import QueryTraceRow
 from docdesk.db.session import make_engine, make_session_factory
+from docdesk.guardrails.policy import REFUSAL_MESSAGE
 from docdesk.llm.errors import LLMTimeoutError
 from docdesk.prompts.loader import load_prompt
 from fakes.corpus import Corpus, FixedEncoder
@@ -169,3 +170,33 @@ def test_ac_gen_01_a_missing_groq_key_is_a_clear_503_not_a_crash() -> None:
     with pytest.raises(AppError) as caught:
         get_llm(settings)
     assert caught.value.status == 503 and caught.value.code == "llm_not_configured"
+
+
+def test_ac_gen_05_a_personal_dose_question_is_refused_with_the_policy_message_and_no_model_call(
+    client: TestClient, me: dict[str, str], wire, seed, migrated_url: str
+) -> None:
+    fake = wire([])
+    seed(me["user_id"])
+    response = ask(client, me, "What dose of famotidine should I take for my stomach pain?")
+    data = response.json()["data"]
+    assert response.status_code == 200
+    assert data["abstained"] is True and data["abstain_reason"] == "unsafe_request"
+    assert data["answer"] == REFUSAL_MESSAGE and "not medical advice" in data["disclaimer"]
+    assert data["citations"] == [] and fake.requests == []
+    row = trace_for(migrated_url, response.json()["trace_id"])
+    assert row.abstain_reason == "unsafe_request"
+    assert row.guardrails == {"input": "refused", "reason": "personal_dose"}
+    assert row.retrieved == []
+
+
+def test_ac_gen_05_a_what_does_the_label_say_dose_question_is_still_answered(
+    client: TestClient, me: dict[str, str], wire, seed, migrated_url: str
+) -> None:
+    fake = wire([REPLY])
+    seed(me["user_id"])
+    response = ask(client, me, "What does the aspirin label say about the recommended dose?")
+    data = response.json()["data"]
+    assert data["abstained"] is False and data["citations"]
+    assert len(fake.requests) == 1
+    row = trace_for(migrated_url, response.json()["trace_id"])
+    assert row.guardrails == {"input": "allowed"}
