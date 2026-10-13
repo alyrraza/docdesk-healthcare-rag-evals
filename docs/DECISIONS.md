@@ -84,6 +84,13 @@ for HNSW and 0.20 for IVFFlat at probes 10, so the result depends on how cluster
 embeddings are. Re-measure recall on the real corpus at T052 and record the number here. At 20000
 rows an exact scan costs only 9 ms, so the index is a scaling choice, not a necessity yet.
 
+## 2026-10-13: settings reject placeholder secrets
+Decision: `Settings` fails at startup when `JWT_SECRET`, `ADMIN_PASSWORD` or the password inside a
+database or Redis URL contains "change-me", "changeme", "example" or "placeholder" (any case). Only
+a test can switch this off, by setting `Settings.reject_placeholders` on the class, never through
+an environment variable. Why: a copied `.env.example` once left the JWT signing secret equal to a
+value committed to git.
+
 ## Parked ideas (not in scope, do not build)
 - Multi-turn conversation memory (adds context clash risk; revisit after the baseline)
 - Query rewriting and HyDE (matrix item E7, optional)
