@@ -55,7 +55,7 @@ class TraceBuilder:
         ]
         self._row.stage_ms = {**self._row.stage_ms, **result.timings_ms}
 
-    def add_answer(self, answer: AnswerResult, bundle_id: str) -> None:
+    def add_answer(self, answer: AnswerResult, bundle_id: str | None) -> None:
         """Record what the answer flow decided and what it cost."""
         row = self._row
         row.prompt_bundle_id = bundle_id
@@ -75,6 +75,10 @@ class TraceBuilder:
         row.error_code = answer.error_code or row.error_code
         row.validation = {"flags": answer.flags, "raw_output_kept": answer.raw_output is not None}
         row.stage_ms = {**row.stage_ms, **answer.stage_ms}
+
+    def add_guardrail(self, name: str, outcome: str) -> None:
+        """Record what an input or output guardrail decided, for review of refusals."""
+        self._row.guardrails = {**self._row.guardrails, name: outcome}
 
     def set_error(self, code: str) -> None:
         """Mark the request as failed, so a crash still leaves a trace."""

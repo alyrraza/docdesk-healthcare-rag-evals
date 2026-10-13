@@ -105,6 +105,7 @@ Added during the build (not in the original task list; all recorded in DECISIONS
 - [x] T076 `POST /query` end to end
 - [x] T077 prompt unit tests for `answer.v1` (AC-PRM-04)
 - [x] T078 manual smoke test, ten questions, notes in `PROJECT_NOTES.md`
+- [x] T078a input policy: refuse personal dose and diagnosis requests (AC-GEN-05)
 - [ ] T079 phase review
 
 ## Phase 4: golden set, eval harness, baseline

@@ -177,3 +177,23 @@ Checked live on this date (Groq `/models`, OpenRouter `/models`, a tiny Groq cal
 - Data rule: only the public seed corpus (openFDA, MedlinePlus) and golden set questions are ever sent
   to a free model. No real patient data and none of the owner's private documents.
 - Tests use a fake LLM client. Only `scripts/smoke_llm.py` calls the real provider.
+
+## 2026-10-13: how AC-GEN-05 is read (task T078a)
+PRD wording: "WHEN a question asks for a personal diagnosis or a dose THE system SHALL refuse with the
+policy message." The words "personal diagnosis" are clear, but "a dose" alone could mean any dose
+question, which would also block "what does the label say about the recommended dose". Reading used,
+as agreed with the owner:
+- Answer, with citation and disclaimer, when the question asks what a document or label says
+  (recommended dose, side effects, uses, how a condition is diagnosed in general).
+- Refuse with the policy message and point to a doctor or pharmacist when the question asks what THIS
+  person should take, or whether THEY have a condition. "This person" is the asker, a relative they
+  name, or "the patient".
+- When unsure, refuse.
+How it works: `guardrails/input.py` refuses only when two things are both present: a word that points at
+a specific person (I, my, me, we, he, she, the patient) and a cue for a dose decision (dose, how much,
+should I take, safe for me) or a diagnosis (do I have, diagnose, what is wrong with me). Simple patterns
+are a first filter, not the whole defense. The refusal skips retrieval and the model, uses the fixed
+`REFUSAL_MESSAGE` plus the disclaimer, and stores `unsafe_request` and the reason in the trace.
+Known limits: patterns miss unusual phrasings and can refuse harmless questions such as "How much
+should I know about aspirin dose?". A mixed question ("According to the label, what dose should I
+take?") is refused, on purpose. Measure on the policy slice of the golden set in phase 4.

@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from decimal import Decimal
 
 from docdesk.generation.schema import ABSTAIN_SENTENCE, AnswerOutput
+from docdesk.guardrails.policy import REFUSAL_MESSAGE, with_disclaimer
 
 
 @dataclass(frozen=True)
@@ -59,3 +60,16 @@ def abstain_output(reason: str) -> AnswerOutput:
         abstained=True,
         abstain_reason=reason,  # type: ignore[arg-type]
     )
+
+
+def refusal_result() -> AnswerResult:
+    """The fixed answer for a personal dose or diagnosis request; no model is called."""
+    output = AnswerOutput(
+        evidence_used=[],
+        answer=REFUSAL_MESSAGE,
+        citations=[],
+        confidence="high",
+        abstained=True,
+        abstain_reason="unsafe_request",
+    )
+    return AnswerResult(with_disclaimer(REFUSAL_MESSAGE), output)

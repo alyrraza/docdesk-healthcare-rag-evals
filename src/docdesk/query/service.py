@@ -10,7 +10,8 @@ from sqlalchemy.orm import Session
 from docdesk.context.budget import ContextBudget
 from docdesk.generation.abstain import AbstainPolicy
 from docdesk.generation.answer import generate_answer
-from docdesk.generation.result import AnswerResult
+from docdesk.generation.result import AnswerResult, refusal_result
+from docdesk.guardrails.input import check_policy
 from docdesk.ingestion.types import TokenCounting
 from docdesk.llm.client import LLMClient
 from docdesk.observability.trace import TraceBuilder, write_trace
@@ -43,6 +44,14 @@ def answer_question(
     """Answer from the user's own and shared documents, and always leave one trace row."""
     trace = TraceBuilder(trace_id, user_id, question)
     try:
+        decision = check_policy(question)
+        if decision.refused:
+            trace.add_guardrail("input", "refused")
+            trace.add_guardrail("reason", decision.reason)
+            result = refusal_result()
+            trace.add_answer(result, None)
+            return result
+        trace.add_guardrail("input", "allowed")
         retrieval = retrieve(session, encoder, question, user_id, RETRIEVAL_CONFIG)
         trace.add_retrieval(retrieval)
         result = generate_answer(
