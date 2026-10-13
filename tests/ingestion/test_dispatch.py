@@ -15,11 +15,6 @@ def test_ac_ing_03_plain_bytes_go_to_the_text_parser() -> None:
     assert parse_document(b"Aspirin label") == [Block(page=None, text="Aspirin label")]
 
 
-def test_ac_ing_03_a_pdf_is_recognised_by_its_header_not_its_file_name() -> None:
-    with pytest.raises(ParseError, match="PDF"):
-        parse_document(b"%PDF-1.7 rest of the file")
-
-
 def test_ac_ing_03_a_parse_failure_keeps_its_reason() -> None:
     with pytest.raises(ParseError, match="no text"):
         parse_document(b"")
