@@ -10,6 +10,7 @@ import pytest
 from docdesk.evals.golden.loader import (
     GoldenValidationError,
     SplitLockedError,
+    count_items,
     gold_sets,
     load_golden,
 )
@@ -29,6 +30,7 @@ ITEM = """
   gold_evidence:
     - source: {source}
       text: "{quote}"
+  verified: {verified}
   verified_by: ali
   verified_on: 2026-10-20
 """
@@ -56,7 +58,14 @@ class FakeCorpus:
 
 
 def write_item(directory: Path, name: str = "a.yaml", **values: str) -> Path:
-    fields = {"id": "gi-001", "split": "dev", "source": SOURCE, "quote": "dry place", **values}
+    fields = {
+        "id": "gi-001",
+        "split": "dev",
+        "source": SOURCE,
+        "quote": "dry place",
+        "verified": "true",
+        **values,
+    }
     path = directory / name
     path.write_text(ITEM.format(**fields), encoding="utf-8")
     return path
@@ -136,3 +145,31 @@ def test_ac_evl_01_gold_sets_gives_one_set_of_chunk_ids_per_evidence_entry(tmp_p
     write_item(tmp_path, quote="dry place")
     loaded = load_golden(tmp_path, "dev", FakeCorpus())
     assert gold_sets(loaded[0], FakeCorpus()) == [frozenset({"c1"})]
+
+
+def test_ac_evl_01_the_loader_returns_only_verified_items_unless_drafts_are_asked_for(
+    tmp_path: Path,
+) -> None:
+    write_item(tmp_path, "a.yaml", id="gi-001", verified="true")
+    write_item(tmp_path, "b.yaml", id="gi-002", verified="false")
+    assert [e.item.id for e in load_golden(tmp_path, "dev", FakeCorpus())] == ["gi-001"]
+    everything = load_golden(tmp_path, "dev", FakeCorpus(), include_drafts=True)
+    assert [e.item.id for e in everything] == ["gi-001", "gi-002"]
+
+
+def test_ac_evl_01_a_draft_with_a_bad_quote_is_still_a_validation_error(tmp_path: Path) -> None:
+    write_item(tmp_path, quote="a wet place", verified="false")
+    with pytest.raises(GoldenValidationError, match="a wet place"):
+        load_golden(tmp_path, "dev", FakeCorpus())
+
+
+def test_ac_evl_01_the_report_counts_verified_and_unverified_items_separately(
+    tmp_path: Path,
+) -> None:
+    write_item(tmp_path, "a.yaml", id="gi-001", verified="true")
+    write_item(tmp_path, "b.yaml", id="gi-002", verified="false", split="test")
+    write_item(tmp_path, "c.yaml", id="gi-003", verified="false")
+    report = count_items(tmp_path)
+    assert (report.verified, report.unverified) == (1, 2)
+    assert report.by_split == {"dev": (1, 1), "test": (0, 1)}
+    assert "verified 1, unverified 2" in report.summary()

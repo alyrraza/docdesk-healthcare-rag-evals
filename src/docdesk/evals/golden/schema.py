@@ -67,13 +67,19 @@ class GoldenItem(BaseModel):
     gold_sql: str | None = None
     gold_result: list[Any] | None = None
     adversarial_kind: AdversarialKind = "none"
-    verified_by: str = Field(min_length=1)
-    verified_on: date
+    verified: bool = False
+    verified_by: str | None = Field(default=None, min_length=1)
+    verified_on: date | None = None
 
     @model_validator(mode="after")
     def check_the_rules_between_fields(self) -> GoldenItem:
         """Collect rules that need several fields, so one error names what to fix."""
-        problems = [*self.answer_problems(), *self.evidence_problems(), *self.sql_problems()]
+        problems = [
+            *self.answer_problems(),
+            *self.evidence_problems(),
+            *self.sql_problems(),
+            *self.verification_problems(),
+        ]
         if problems:
             raise ValueError("; ".join(problems))
         return self
@@ -123,4 +129,10 @@ class GoldenItem(BaseModel):
             return [wrong] if has_sql else []
         if not self.gold_sql or self.gold_result is None:
             return ["a structured or mixed item needs gold_sql and gold_result"]
+        return []
+
+    def verification_problems(self) -> list[str]:
+        """A verified item says who checked it and when; a draft needs neither."""
+        if self.verified and (self.verified_by is None or self.verified_on is None):
+            return ["a verified item needs verified_by and verified_on"]
         return []

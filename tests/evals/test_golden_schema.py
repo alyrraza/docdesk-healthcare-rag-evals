@@ -23,6 +23,7 @@ def single_fact(**changes: Any) -> dict[str, Any]:
         "gold_route": "documents",
         "gold_facts": ["The maximum is 3 doses in 24 hours"],
         "gold_evidence": [{"source": SOURCE, "text": "do not take more than 3 doses"}],
+        "verified": True,
         "verified_by": "ali",
         "verified_on": "2026-10-20",
     }
@@ -57,6 +58,20 @@ def test_ac_evl_01_every_item_must_carry_verified_by_and_verified_on(missing: st
     del data[missing]
     with pytest.raises(ValidationError, match=missing):
         GoldenItem.model_validate(data)
+
+
+def test_ac_evl_01_a_draft_defaults_to_unverified_and_needs_no_verifier() -> None:
+    data = single_fact()
+    for name in ("verified", "verified_by", "verified_on"):
+        del data[name]
+    draft = GoldenItem.model_validate(data)
+    assert draft.verified is False
+    assert draft.verified_by is None
+
+
+def test_ac_evl_01_a_verified_false_item_may_carry_no_verifier_but_not_a_blank_one() -> None:
+    with pytest.raises(ValidationError):
+        GoldenItem.model_validate(single_fact(verified=False, verified_by=""))
 
 
 def test_ac_evl_01_an_unknown_field_is_rejected_so_a_typo_cannot_hide() -> None:

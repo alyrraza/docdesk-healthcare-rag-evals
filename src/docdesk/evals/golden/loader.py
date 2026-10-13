@@ -94,8 +94,9 @@ def load_golden(
     split: Literal["dev", "test"],
     corpus: GoldenCorpus,
     allow_test: bool = False,
+    include_drafts: bool = False,
 ) -> list[ResolvedItem]:
-    """Load one split, fully validated; the test split needs allow_test=True."""
+    """Load one split, fully validated; drafts and the test split each need an explicit flag."""
     if split == "test" and not allow_test:
         raise SplitLockedError("the test split is for final reports only, pass allow_test=True")
     found, problems = read_items(directory)
@@ -112,11 +113,40 @@ def load_golden(
         except (ValueError, QuoteNotFound) as error:
             problems.append(f"{path.name} {item.id}: {error}")
             continue
-        if item.split == split:
+        if item.split == split and (item.verified or include_drafts):
             loaded.append(resolved)
     if problems:
         raise GoldenValidationError(problems)
     return loaded
+
+
+@dataclass(frozen=True)
+class ItemCounts:
+    """How many items are hand verified and how many are still drafts, overall and per split."""
+
+    verified: int
+    unverified: int
+    by_split: dict[str, tuple[int, int]]
+
+    def summary(self) -> str:
+        """Verified and unverified counts on separate figures, so drafts are never mistaken."""
+        lines = [f"golden items: verified {self.verified}, unverified {self.unverified}"]
+        for split, (verified, unverified) in sorted(self.by_split.items()):
+            lines.append(f"  {split}: verified {verified}, unverified {unverified}")
+        return "\n".join(lines)
+
+
+def count_items(directory: Path) -> ItemCounts:
+    """Count verified and unverified items from the schema alone; raises on schema problems."""
+    found, problems = read_items(directory)
+    if problems:
+        raise GoldenValidationError(problems)
+    by_split: dict[str, tuple[int, int]] = {}
+    for _, item in found:
+        verified, unverified = by_split.get(item.split, (0, 0))
+        by_split[item.split] = (verified + item.verified, unverified + (not item.verified))
+    totals = [sum(pair[index] for pair in by_split.values()) for index in (0, 1)]
+    return ItemCounts(totals[0], totals[1], by_split)
 
 
 def gold_sets(resolved: ResolvedItem, corpus: GoldenCorpus) -> list[frozenset[str]]:
