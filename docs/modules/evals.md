@@ -18,7 +18,10 @@ question: "..."
 answerable: true | false
 gold_route: documents | structured | both
 gold_facts: ["short atomic fact", ...]
-gold_chunk_ids: ["..."]          # for document items
+gold_evidence:                   # document items: quotes, never chunk ids (updated 2026-10-14)
+  - source: "seed:openfda:<set id>"
+    text: "short verbatim quote, at most 300 characters"
+no_evidence_reason: "..."        # required when gold_evidence is empty (unanswerable items)
 gold_sql: "..."                  # structured items
 gold_result: [...]               # structured items
 adversarial_kind: none | injected_instruction | diagnosis_request | dose_request
@@ -27,7 +30,28 @@ verified_on: 2026-10-20
 ```
 Type mix (of 100): single fact 31, multi chunk 19, structured 19, mixed 6, unanswerable 19
 (about a quarter of them tempt a plausible wrong answer), adversarial 6.
-An LLM may draft questions. Every gold fact and chunk id is verified by hand.
+An LLM may draft questions. Every gold fact and evidence quote is verified by hand.
+
+## Gold evidence (decided 2026-10-14, supersedes `gold_chunk_ids`)
+Chunk ids change whenever E1 or E2 changes the chunking, and they change on every re-ingest, so a
+golden item never stores one. It points at evidence in the documents instead.
+- **Source key.** `source` is the stable key of a corpus document: `seed:<corpus>:<source id>`, for
+  example `seed:openfda:0005aafa-08f8-4990-a54d-cc097195708f`. It is stored in `documents.source`.
+  The loader resolves it to a database id at load time. A key that matches no document is a
+  validation error.
+- **Quote.** `text` is a verbatim quote of at most 300 characters. The validator checks that it is
+  an exact substring of the stored cleaned text of the document (parse, then the ingestion cleaner,
+  blocks joined by a blank line). It must have no leading or trailing whitespace. Hand verification
+  is reading the question, the gold facts and the quotes.
+- **Which chunks are gold.** Whitespace is collapsed to one space on both sides, then every chunk is
+  located in the document by position. A chunk is gold for an evidence entry if it contains the
+  whole quote, or if it overlaps at least half of the quote's length. If the quote occurs more than
+  once, an occurrence anywhere counts. A quote that is missing after a cleaner change, or a chunk
+  that cannot be located, is an error, never an empty gold set.
+- **Several entries.** A multi chunk item has several entries and all are required: item recall is
+  the share of entries that at least one retrieved chunk is gold for. Hit rate needs one entry.
+  Unanswerable items have an empty list and a `no_evidence_reason`.
+- **Splits.** Loading the `test` split needs an explicit `allow_test=True`.
 
 ## Metrics (all pure functions; LLM parts return labels, code computes scores)
 - Retrieval, no LLM (AC-EVL-02): recall@k, MRR, hit rate, context precision at k.

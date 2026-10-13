@@ -125,21 +125,21 @@ no eval run is safe without them (see "Eval budget and pacing" in `docs/modules/
 - [x] T079d `evals/budget.py` daily token guard and resume state, so a run stops cleanly and continues next day
 - [x] T079e `evals/configs/b0.toml` pinned baseline config with a content hash, frozen after the first B0 result
 - [x] T080a make the corpus match B0: `scripts/reingest_corpus.py` clears the seed documents and chunks, re-runs the normal ingest with the config from `b0.toml`, and stores a corpus fingerprint (chunker, chunk size, overlap, embedding model) that can be read from the database
-- [ ] T080 golden item schema and validator (AC-EVL-01)
+- [ ] T080 golden item schema and validator (AC-EVL-01), with `gold_evidence` quotes and their resolver instead of chunk ids
 - [ ] T081 golden loader with split handling
-- [ ] T082 golden items batch 1, single fact, 10 items, hand verified
-- [ ] T083 golden items batch 2, single fact, 21 items
-- [ ] T084 golden items batch 3, multi chunk, 19 items
-- [ ] T085 golden items batch 4, unanswerable, 19 items
+- [ ] T082 golden items batch 1, single fact, 10 items, hand verified, evidence quotes
+- [ ] T083 golden items batch 2, single fact, 21 items, evidence quotes
+- [ ] T084 golden items batch 3, multi chunk, 19 items, evidence quotes
+- [ ] T085 golden items batch 4, unanswerable, 19 items, empty evidence plus a reason
 - [ ] T086 golden items batch 5, adversarial, 6 items
 - [ ] T087 `evals/metrics/retrieval.py` recall@k, MRR, hit rate (AC-EVL-02)
 - [ ] T088 `evals/stats.py` bootstrap and paired comparison (AC-EVL-05)
-- [ ] T089 moved to T079b (the disk cache is built first)
+- [x] T089 moved to T079b (the disk cache is built first). Unit coverage of AC-EVL-04 is done there; wiring the cache into the real runner (cache outside budget outside pacer outside client) belongs to T094.
 - [ ] T090 `evals/judges/faithfulness.py` labels, code computes score
 - [ ] T091 `evals/judges/correctness.py`
 - [ ] T092 `evals/metrics/citation.py` and `abstention.py`
 - [ ] T093 `evals/labeler.py` failure labels (AC-EVL-03)
-- [ ] T094 `evals/runner.py` resumable, uses the pacer, cache and budget guard, with a fake pipeline test. The runner reads the corpus fingerprint (T080a) and refuses to start when it differs from the config it was given.
+- [ ] T094 `evals/runner.py` resumable, uses the pacer, cache and budget guard, with a fake pipeline test. The runner reads the corpus fingerprint (T080a) and refuses to start when it differs from the config it was given. It also wires the LLM cache around every call in this order, outermost first: cache, then budget guard, then pacer, then client, so a cache hit costs no budget and no wait (AC-EVL-04).
 - [ ] T095 `evals/report.py` tables with intervals
 - [ ] T096 `evals/cli.py`
 - [ ] T097 run baseline B0 retrieval-only, commit numbers

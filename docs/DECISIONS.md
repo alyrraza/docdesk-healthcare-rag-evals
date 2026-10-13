@@ -3,6 +3,21 @@
 Newest first. Each entry: date, decision, why, what it supersedes. Specs older than their
 decisions are marked superseded in the spec file, so nobody builds from stale text.
 
+## 2026-10-14: golden items use evidence quotes, not chunk ids
+Decision: a golden item has `gold_evidence`, a list of `{source, text}` entries, instead of
+`gold_chunk_ids`. `source` is the stable key `seed:<corpus>:<source id>` stored in `documents.source`,
+and `text` is a verbatim quote of at most 300 characters that must be an exact substring of the
+document's cleaned text. A chunk is gold for an entry if it contains the whole quote or overlaps at
+least half of it by position. All entries of a multi chunk item are required for its recall.
+Unanswerable items have an empty list and a `no_evidence_reason`. Full rules: `docs/modules/evals.md`.
+Why: E1 and E2 change the chunking and every re-ingest creates new ids, so chunk ids in the golden
+set would go stale after each experiment. A quote survives both, and it is what the owner reads
+when verifying an item.
+Supersedes: `gold_chunk_ids` in the golden item format of 2026-10-13.
+Side change: seed documents now store `seed:<corpus>:<source id>` in `documents.source` (it was
+only `seed:<corpus>`, which names a group and not a document). The prefix is unchanged, so the
+reset script still finds them.
+
 ## 2026-10-14: T087 and T088 are done before T082 to T086
 Decision: the retrieval metrics (T087) and the bootstrap statistics (T088) are built before the golden
 item batches. Task ids and acceptance criteria do not change.
