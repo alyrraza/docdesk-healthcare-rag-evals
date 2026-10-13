@@ -10,9 +10,15 @@ from docdesk.llm.client import LLMRequest, LLMResult
 class FakeLLMClient:
     """Returns the scripted replies in order; an exception in the script is raised instead."""
 
-    def __init__(self, replies: list[str | Exception], model: str = "fake-model") -> None:
+    def __init__(
+        self,
+        replies: list[str | Exception],
+        model: str = "fake-model",
+        finish_reasons: list[str] | None = None,
+    ) -> None:
         self.replies = list(replies)
         self.model = model
+        self.finish_reasons = list(finish_reasons or [])
         self.requests: list[LLMRequest] = []
 
     def complete(self, request: LLMRequest) -> LLMResult:
@@ -27,7 +33,7 @@ class FakeLLMClient:
             tokens_in=len((request.system + " " + request.user).split()),
             tokens_out=len(reply.split()),
             latency_ms=1.0,
-            finish_reason="stop",
+            finish_reason=self.finish_reasons.pop(0) if self.finish_reasons else "stop",
             model=self.model,
             cost_usd=Decimal("0"),
         )
