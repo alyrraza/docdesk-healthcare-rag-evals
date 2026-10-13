@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from docdesk.ingestion.chunkers.packing import cut_long_text, pack
+from docdesk.ingestion.chunkers.packing import check_limits, cut_long_text, pack
 from docdesk.ingestion.sentences import split_sentences
 from docdesk.ingestion.types import Block, Chunk, TokenCounting
 
@@ -22,10 +22,7 @@ def sentence_units(text: str, size: int, counter: TokenCounting) -> list[str]:
 
 def chunk(blocks: list[Block], size: int, overlap: int, counter: TokenCounting) -> list[Chunk]:
     """Split each page into chunks of at most `size` tokens, never mixing two pages."""
-    if size <= 0 or not 0 <= overlap < size:
-        raise ValueError(
-            f"need size > 0 and 0 <= overlap < size, got size={size} overlap={overlap}"
-        )
+    check_limits(size, overlap)
     chunks: list[Chunk] = []
     for block in blocks:
         for text in pack(sentence_units(block.text, size, counter), size, overlap, counter):
