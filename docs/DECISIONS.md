@@ -228,8 +228,8 @@ the label?" still pass because they name no person.
 
 ## 2026-10-13: the abstain threshold 0.0 is a placeholder
 `ABSTAIN_POLICY` in `query/service.py` uses a default threshold of 0.0, so only an empty retrieval
-abstains. The value is not tuned. It will be set in T102 from the B0 score distribution on the dev split.
+abstains. The value is not tuned. It will be set in T102a from the B0 score distribution on the dev split.
 Fused RRF scores are tiny (the maximum is about 0.033), so a threshold on them needs the measured
-distribution, not a guess. Until T102, the `weak_evidence` abstain path is not exercised live. It is
+distribution, not a guess. Until T102a, the `weak_evidence` abstain path is not exercised live. It is
 covered by unit tests with other thresholds only, so AC-GEN-03 must not be described as protection
 against weak evidence in demos or in the README.

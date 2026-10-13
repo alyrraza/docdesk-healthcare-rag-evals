@@ -147,6 +147,7 @@ no eval run is safe without them (see "Eval budget and pacing" in `docs/modules/
 - [ ] T100 `evals/calibration.py` agreement, kappa, interval (AC-EVL-07)
 - [ ] T101 CI workflow: lint, test, retrieval-only gate (AC-EVL-06)
 - [ ] T102 set tolerances from measured intervals, record in `DECISIONS.md`
+- [ ] T102a set the abstain threshold from the B0 dev score distribution: sweep candidate thresholds on the dev split only, pick by wrong_abstain versus unanswerable pass rate, record the choice and the numbers in DECISIONS.md. The test split is never used for this.
 - [ ] T103 set non-functional targets in `PRD.md` from the baseline
 - [ ] T104 phase review
 
