@@ -20,6 +20,7 @@ params:
 untrusted:
   - evidence
   - previous_output
+  - validation_error
 status: draft
 changelog: test
 ---
@@ -37,14 +38,16 @@ Your last reply was rejected.
 <previous_output>
 {{previous_output}}
 </previous_output>
-Problem: {{validation_error}}
+<validation_error>
+{{validation_error}}
+</validation_error>
 Reply again with one valid JSON object.
 """
 VARS = {"evidence": "[c1] text", "question": "q"}
 
 
 def test_ac_gen_04_the_loader_reads_the_optional_repair_section() -> None:
-    assert "Problem:" in parse_prompt(TEMPLATE).repair
+    assert "validation_error" in parse_prompt(TEMPLATE).repair
     assert parse_prompt(TEMPLATE.split("## repair")[0]).repair == ""
 
 
@@ -56,8 +59,8 @@ def test_ac_gen_04_a_normal_render_does_not_need_the_repair_variables() -> None:
 def test_ac_gen_04_a_repair_render_appends_the_error_after_the_original_request() -> None:
     repair = {"previous_output": "{bad", "validation_error": "citations must not be empty"}
     rendered = render(parse_prompt(TEMPLATE), VARS, repair=repair)
-    assert rendered.user.index("Question: q") < rendered.user.index("Problem:")
-    assert "Problem: citations must not be empty" in rendered.user
+    assert rendered.user.index("Question: q") < rendered.user.index("<validation_error>")
+    assert "<validation_error>\ncitations must not be empty\n</validation_error>" in rendered.user
     assert "<previous_output>\n{bad\n</previous_output>" in rendered.user
 
 
@@ -83,3 +86,8 @@ def test_ac_gen_04_the_shipped_answer_prompt_has_a_repair_section_and_asks_for_j
     assert prompt.repair
     assert "JSON" in prompt.system
     assert "previous_output" in prompt.untrusted
+
+
+def test_ac_ctx_03_the_shipped_answer_prompt_treats_the_validation_error_as_untrusted() -> None:
+    prompt = load_prompt(ROOT / "prompts" / "answer" / "answer.v1.md")
+    assert "validation_error" in prompt.untrusted
