@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
@@ -10,6 +11,9 @@ from alembic import command
 from alembic.config import Config
 from dotenv import dotenv_values
 from sqlalchemy.engine import make_url
+from sqlalchemy.orm import Session
+
+from docdesk.db.session import make_engine, make_session_factory
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -60,3 +64,13 @@ def readonly_test_url(migrated_url: str) -> str:
         pytest.fail("READONLY_DATABASE_URL is missing from the environment and .env")
     test_name = make_url(migrated_url).database
     return make_url(url).set(database=test_name).render_as_string(hide_password=False)
+
+
+@pytest.fixture
+def db_session(migrated_url: str) -> Iterator[Session]:
+    """Give each test its own session and undo everything it wrote."""
+    engine = make_engine(migrated_url)
+    with make_session_factory(engine)() as session:
+        yield session
+        session.rollback()
+    engine.dispose()
