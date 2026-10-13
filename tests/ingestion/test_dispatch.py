@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from docdesk.ingestion.chunkers import fixed, parent_child, recursive
+from docdesk.ingestion.chunkers import fixed, recursive
 from docdesk.ingestion.chunkers.registry import get_chunker
 from docdesk.ingestion.errors import ParseError
 from docdesk.ingestion.parsers.dispatch import parse_document
@@ -23,9 +23,8 @@ def test_ac_ing_03_a_parse_failure_keeps_its_reason() -> None:
 def test_ac_ing_05_chunkers_are_found_by_name() -> None:
     assert get_chunker("fixed") is fixed.chunk
     assert get_chunker("recursive") is recursive.chunk
-    assert get_chunker("parent_child") is parent_child.chunk
 
 
 def test_ac_ing_05_an_unknown_chunker_name_lists_the_valid_ones() -> None:
-    with pytest.raises(ValueError, match="fixed, parent_child, recursive"):
+    with pytest.raises(ValueError, match="fixed, recursive"):
         get_chunker("sliding")

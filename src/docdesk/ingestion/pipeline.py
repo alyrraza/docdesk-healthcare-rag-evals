@@ -58,8 +58,6 @@ def check_config(config: IngestConfig, encoder: TextEncoder) -> None:
             f"chunk size {config.size} is above the model limit of {encoder.max_length} tokens, "
             "the end of each chunk would be cut off when embedding"
         )
-    if config.chunker == "parent_child":
-        raise ValueError("parent_child needs a parent text column that the chunks table lacks")
     get_chunker(config.chunker)
 
 

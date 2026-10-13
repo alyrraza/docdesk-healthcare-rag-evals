@@ -11,7 +11,7 @@ so Celery records it (AC-ING-03).
 - `parsers/pdf.py`, `parsers/text.py`: return a list of `(page, text)` blocks. One file per format.
   A scanned PDF with no text layer fails with a clear reason. OCR is out of scope.
 - `cleaner.py`: normalize whitespace, remove repeated headers and footers, fix hyphenation across lines.
-- `chunkers/fixed.py`, `chunkers/recursive.py`, `chunkers/parent_child.py`: each exposes
+- `chunkers/fixed.py`, `chunkers/recursive.py`: each exposes
   `chunk(blocks, size, overlap) -> list[Chunk]`. A chunker never splits mid-sentence if it can avoid it.
   Each has a `VERSION` string stored on every chunk (AC-ING-05).
 - `hashing.py`: content hash for duplicate upload detection (AC-ING-04).
@@ -23,8 +23,8 @@ so Celery records it (AC-ING-03).
 
 ## Decisions to make with data, not opinion
 - Chunk size and overlap: experiment E1 (128, 200, 256 tokens; MiniLM truncates above 256).
-- Strategy: fixed vs recursive: E2. Parent-child (retrieve small, return the parent) is built but
-  deferred, see `DECISIONS.md`.
+- Strategy: fixed vs recursive: E2. Parent-child (retrieve small, return the parent) is deferred and
+  its code removed, see `DECISIONS.md`.
 - Embedding model: two small open models compared in E6. Record the model name and revision on each chunk.
 
 ## Edge cases to handle

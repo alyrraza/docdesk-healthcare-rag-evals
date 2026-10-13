@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from docdesk.ingestion.chunkers import fixed, parent_child, recursive
+from docdesk.ingestion.chunkers import fixed, recursive
 from docdesk.ingestion.types import Block, Chunk, TokenCounting
 
 Chunker = Callable[[list[Block], int, int, TokenCounting], list[Chunk]]
@@ -12,7 +12,6 @@ Chunker = Callable[[list[Block], int, int, TokenCounting], list[Chunk]]
 CHUNKERS: dict[str, Chunker] = {
     "fixed": fixed.chunk,
     "recursive": recursive.chunk,
-    "parent_child": parent_child.chunk,
 }
 
 
