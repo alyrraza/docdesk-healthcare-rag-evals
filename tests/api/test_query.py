@@ -121,4 +121,4 @@ def test_ac_gen_05_a_what_does_the_label_say_dose_question_is_still_answered(
     assert data["abstained"] is False and data["citations"]
     assert len(fake.requests) == 1
     row = trace_for(migrated_url, response.json()["trace_id"])
-    assert row.guardrails == {"input": "allowed"}
+    assert row.guardrails == {"input": "allowed", "output": "passed"}

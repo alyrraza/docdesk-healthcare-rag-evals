@@ -18,6 +18,17 @@ from docdesk.retrieval.types import RetrievalResult
 log = logging.getLogger(__name__)
 
 
+def output_outcome(answer: AnswerResult) -> str | None:
+    """Say how the output checks ended, or None when there was no model reply to check."""
+    if answer.llm_calls == 0:
+        return None
+    if answer.error_code == "output_invalid" or (answer.error_code and answer.retry_used):
+        return "failed"
+    if answer.error_code:
+        return None  # the provider failed on the first call, so no output was ever checked
+    return "retried" if answer.retry_used else "passed"
+
+
 def question_hash(question: str) -> str:
     """Hash the normalised question, so repeats can be counted without storing the text."""
     return hashlib.sha256(" ".join(question.casefold().split()).encode("utf-8")).hexdigest()
@@ -41,6 +52,7 @@ class TraceBuilder:
             tokens={},
             guardrails={},
             validation={},
+            # Always False: the semantic cache is built in Phase 6, nothing can hit it before.
             cache_hit=False,
             abstained=False,
             retry_used=False,
@@ -73,6 +85,9 @@ class TraceBuilder:
         row.retry_used = answer.retry_used
         row.finish_reason = answer.finish_reason
         row.error_code = answer.error_code or row.error_code
+        outcome = output_outcome(answer)
+        if outcome:
+            self.add_guardrail("output", outcome)
         row.validation = {"flags": answer.flags, "raw_output_kept": answer.raw_output is not None}
         row.stage_ms = {**row.stage_ms, **answer.stage_ms}
 
