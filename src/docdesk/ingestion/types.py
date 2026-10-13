@@ -10,7 +10,7 @@ from typing import Protocol
 class Block:
     """A run of text and the page it came from, so chunks can cite a page later."""
 
-    page: int
+    page: int | None
     text: str
 
 
@@ -27,7 +27,7 @@ class Chunk:
     """One retrievable piece of text with everything AC-ING-05 says must be stored."""
 
     position: int
-    page: int
+    page: int | None
     text: str
     token_count: int
     chunker_version: str

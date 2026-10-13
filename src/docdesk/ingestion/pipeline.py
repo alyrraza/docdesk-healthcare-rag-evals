@@ -84,6 +84,7 @@ def to_rows(
             position=chunk.position,
             text=chunk.text,
             token_count=chunk.token_count,
+            page=chunk.page,
             embedding=vector.tolist(),
             chunker_version=chunk.chunker_version,
             embed_model_version=model_version,

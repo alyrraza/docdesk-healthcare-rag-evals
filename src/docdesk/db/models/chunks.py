@@ -40,6 +40,8 @@ class ChunkRow(Base):
     position: Mapped[int] = mapped_column(Integer, nullable=False)
     text: Mapped[str] = mapped_column(Text, nullable=False)
     token_count: Mapped[int] = mapped_column(Integer, nullable=False)
+    # Source page for PDFs; null for sources that have no pages.
+    page: Mapped[int | None] = mapped_column(Integer, nullable=True)
     embedding: Mapped[list[float]] = mapped_column(Vector(EMBEDDING_DIM), nullable=False)
     # Filled by the database from text, so keyword search can never drift from the stored text.
     tsv: Mapped[str] = mapped_column(

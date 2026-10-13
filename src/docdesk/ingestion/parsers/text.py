@@ -1,4 +1,4 @@
-"""Plain text parser: the whole file is one block on page 1."""
+"""Plain text parser: the whole file is one block with no page."""
 
 from __future__ import annotations
 
@@ -17,4 +17,4 @@ def parse_text(data: bytes) -> list[Block]:
     text = text.replace("\r\n", "\n").replace("\r", "\n")
     if not text.strip():
         raise ParseError("file contains no text")
-    return [Block(page=1, text=text)]
+    return [Block(page=None, text=text)]
