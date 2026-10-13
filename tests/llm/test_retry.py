@@ -61,3 +61,12 @@ def test_ac_gen_04_a_very_long_retry_after_is_capped() -> None:
     client, _, waits = make([RateLimitedError("slow", retry_after=3600.0), "ok"])
     client.complete(REQ)
     assert waits == [30.0]
+
+
+def test_ac_gen_04_a_json_validation_failure_from_the_provider_is_retried() -> None:
+    flaky = ProviderError(
+        "Groq returned HTTP 400 (json_validate_failed)", 400, "json_validate_failed"
+    )
+    client, inner, waits = make([flaky, "ok"])
+    assert client.complete(REQ).text == "ok"
+    assert len(inner.requests) == 2 and len(waits) == 1

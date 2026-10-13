@@ -124,3 +124,12 @@ def test_ac_gen_04_the_provider_error_code_is_kept_in_the_message_but_not_the_bo
         client_for(handler).complete(REQ)
     assert "json_validate_failed" in str(caught.value)
     assert "secret prompt text" not in str(caught.value)
+
+
+def test_ac_gen_04_the_provider_code_is_available_on_the_error_object() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(400, json={"error": {"code": "json_validate_failed"}})
+
+    with pytest.raises(ProviderError) as caught:
+        client_for(handler).complete(REQ)
+    assert caught.value.code == "json_validate_failed" and caught.value.retryable

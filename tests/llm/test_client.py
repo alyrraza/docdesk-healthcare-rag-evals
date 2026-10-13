@@ -52,3 +52,9 @@ def test_ac_obs_03_error_types_say_whether_a_retry_can_help() -> None:
     assert LLMTimeoutError("t").retryable
     assert ProviderError("server", status_code=503).retryable
     assert not ProviderError("bad request", status_code=400).retryable
+
+
+def test_ac_obs_03_a_provider_error_keeps_its_code_and_a_json_failure_is_retryable() -> None:
+    error = ProviderError("bad json", status_code=400, code="json_validate_failed")
+    assert error.code == "json_validate_failed" and error.retryable
+    assert not ProviderError("other", status_code=400, code="invalid_api_key").retryable
