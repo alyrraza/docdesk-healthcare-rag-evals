@@ -91,6 +91,15 @@ a test can switch this off, by setting `Settings.reject_placeholders` on the cla
 an environment variable. Why: a copied `.env.example` once left the JWT signing secret equal to a
 value committed to git.
 
+## 2026-10-13: why the read-only role test was rewritten
+Decision: `tests/db/test_readonly_role.py` was changed twice, each time in its own commit, and no
+check was weakened. First, the create-table test now runs `SET default_transaction_read_only = off`
+before trying to create a table, so it proves the privileges alone stop the write and not just the
+read-only session default. Second, after T032 loaded the Synthea tables, the old assertion that the
+role holds zero table privileges became false by design, so it now asserts the role holds only
+SELECT and only on `synthea_` tables. Why: the old tests passed for the wrong reason or failed for
+a correct reason, and a test that cannot fail on a real privilege leak is not a test.
+
 ## Parked ideas (not in scope, do not build)
 - Multi-turn conversation memory (adds context clash risk; revisit after the baseline)
 - Query rewriting and HyDE (matrix item E7, optional)
