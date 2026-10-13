@@ -85,7 +85,7 @@ def test_ac_prm_01_the_shipped_answer_prompt_loads() -> None:
     assert (prompt.name, prompt.schema, prompt.untrusted) == (
         "answer",
         "AnswerOutput@1",
-        ("evidence",),
+        ("evidence", "previous_output"),
     )
 
 
