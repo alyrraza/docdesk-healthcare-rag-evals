@@ -53,8 +53,8 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 
 ## Phase 2: ingestion
 - [x] T036 `embeddings/tokenizer.py` token counting
-- [ ] T037 `embeddings/encoder.py` ONNX session, batching
-- [ ] T038 encoder test with a tiny fixture and shape checks
+- [x] T037 `embeddings/encoder.py` ONNX session, batching
+- [x] T038 encoder test with a tiny fixture and shape checks
 - [ ] T039 `ingestion/parsers/text.py`
 - [ ] T040 `ingestion/parsers/pdf.py` and the no-text-layer failure
 - [ ] T041 `ingestion/cleaner.py`
