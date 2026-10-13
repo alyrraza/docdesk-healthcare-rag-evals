@@ -5,11 +5,14 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
-from docdesk.api.query_deps import get_llm
+from docdesk.api.query_deps import get_encoder, get_llm, get_token_counter
 from docdesk.core.config import Settings
 from docdesk.core.errors import AppError
 from docdesk.guardrails.policy import REFUSAL_MESSAGE
 from docdesk.llm.errors import LLMTimeoutError
+from fakes.corpus import FixedEncoder
+from fakes.ingestion import WordCounter
+from fakes.llm import FakeLLMClient
 from fakes.query_api import REPLY, ask, trace_for
 
 pytestmark = pytest.mark.integration
@@ -122,3 +125,17 @@ def test_ac_gen_05_a_what_does_the_label_say_dose_question_is_still_answered(
     assert len(fake.requests) == 1
     row = trace_for(migrated_url, response.json()["trace_id"])
     assert row.guardrails == {"input": "allowed", "output": "passed"}
+
+
+def test_ac_prm_02_no_active_prompt_is_a_503_that_tells_the_operator_what_to_run(
+    client: TestClient, me: dict[str, str]
+) -> None:
+    overrides = client.app.dependency_overrides  # type: ignore[attr-defined]
+    overrides[get_llm] = lambda: FakeLLMClient([])
+    overrides[get_encoder] = lambda: FixedEncoder(0)
+    overrides[get_token_counter] = lambda: WordCounter()
+    response = ask(client, me)
+    error = response.json()["error"]
+    assert response.status_code == 503 and error["code"] == "prompt_not_active"
+    assert "scripts/smoke_llm.py" in error["message"]
+    assert error["trace_id"] == response.headers["x-trace-id"]
