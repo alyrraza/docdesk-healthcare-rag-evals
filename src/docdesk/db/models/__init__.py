@@ -4,6 +4,7 @@ from docdesk.db.models.base import Base
 from docdesk.db.models.chunks import ChunkRow
 from docdesk.db.models.documents import DocumentRow
 from docdesk.db.models.evals import EvalResultRow, EvalRunRow
+from docdesk.db.models.fingerprint import CorpusFingerprintRow
 from docdesk.db.models.prompts import ActivePromptRow, PromptVersionRow
 from docdesk.db.models.synthea import (
     SyntheaConditionRow,
@@ -18,6 +19,7 @@ __all__ = [
     "ActivePromptRow",
     "Base",
     "ChunkRow",
+    "CorpusFingerprintRow",
     "DocumentRow",
     "EvalResultRow",
     "EvalRunRow",

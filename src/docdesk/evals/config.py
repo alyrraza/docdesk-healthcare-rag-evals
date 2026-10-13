@@ -11,6 +11,8 @@ from pathlib import Path
 from typing import Any
 
 from docdesk.context.budget import ContextBudget
+from docdesk.db.repositories.fingerprint import CorpusFingerprint
+from docdesk.ingestion.pipeline import IngestConfig
 from docdesk.retrieval.types import RetrievalConfig
 
 
@@ -41,6 +43,25 @@ class EvalConfig:
             top_n=section["top_n"],
             top_k=section["top_k"],
             rrf_k=section["rrf_k"],
+        )
+
+    def ingest_config(self) -> IngestConfig:
+        """Chunking settings the corpus must be built with for this config to be valid."""
+        section = self.values["chunking"]
+        return IngestConfig(
+            chunker=section["strategy"], size=section["size"], overlap=section["overlap"]
+        )
+
+    def corpus_fingerprint(self) -> CorpusFingerprint:
+        """What the database fingerprint must equal; the model string matches chunk rows."""
+        chunking = self.ingest_config()
+        model = self.values["embedding"]
+        name = model["model"].rsplit("/", 1)[-1]
+        return CorpusFingerprint(
+            chunker=chunking.chunker,
+            chunk_size=chunking.size,
+            overlap=chunking.overlap,
+            embedding_model=f"{name}@{model['revision']}",
         )
 
     def context_budget(self) -> ContextBudget:
