@@ -121,7 +121,7 @@ Added 2026-10-13 after the phase 3 token measurements; they come before the gold
 no eval run is safe without them (see "Eval budget and pacing" in `docs/modules/evals.md`).
 - [x] T079a `llm/pacer.py` tokens per minute and requests per minute per model; waits, never fails
 - [x] T079b `evals/cache.py` disk cache for LLM calls under `.cache/`, key = prompt hash, model, params, input (AC-EVL-04, replaces T089)
-- [ ] T079c judge output parser: JSON mode where supported, strips a fenced json block, counts parse failures
+- [x] T079c judge output parser: JSON mode where supported, strips a fenced json block, counts parse failures
 - [ ] T079d `evals/budget.py` daily token guard and resume state, so a run stops cleanly and continues next day
 - [ ] T079e `evals/configs/b0.toml` pinned baseline config with a content hash, frozen after the first B0 result
 - [ ] T080 golden item schema and validator (AC-EVL-01)
