@@ -109,6 +109,13 @@ Added during the build (not in the original task list; all recorded in DECISIONS
 - [ ] T079 phase review
 
 ## Phase 4: golden set, eval harness, baseline
+Added 2026-10-13 after the phase 3 token measurements; they come before the golden set work because
+no eval run is safe without them (see "Eval budget and pacing" in `docs/modules/evals.md`).
+- [ ] T079a `llm/pacer.py` tokens per minute and requests per minute per model; waits, never fails
+- [ ] T079b `evals/cache.py` disk cache for LLM calls under `.cache/`, key = prompt hash, model, params, input (AC-EVL-04, replaces T089)
+- [ ] T079c judge output parser: JSON mode where supported, strips a fenced json block, counts parse failures
+- [ ] T079d `evals/budget.py` daily token guard and resume state, so a run stops cleanly and continues next day
+- [ ] T079e `evals/configs/b0.toml` pinned baseline config with a content hash, frozen after the first B0 result
 - [ ] T080 golden item schema and validator (AC-EVL-01)
 - [ ] T081 golden loader with split handling
 - [ ] T082 golden items batch 1, single fact, 10 items, hand verified
@@ -118,12 +125,12 @@ Added during the build (not in the original task list; all recorded in DECISIONS
 - [ ] T086 golden items batch 5, adversarial, 6 items
 - [ ] T087 `evals/metrics/retrieval.py` recall@k, MRR, hit rate (AC-EVL-02)
 - [ ] T088 `evals/stats.py` bootstrap and paired comparison (AC-EVL-05)
-- [ ] T089 `evals/cache.py` disk cache for LLM calls (AC-EVL-04)
+- [ ] T089 moved to T079b (the disk cache is built first)
 - [ ] T090 `evals/judges/faithfulness.py` labels, code computes score
 - [ ] T091 `evals/judges/correctness.py`
 - [ ] T092 `evals/metrics/citation.py` and `abstention.py`
 - [ ] T093 `evals/labeler.py` failure labels (AC-EVL-03)
-- [ ] T094 `evals/runner.py` with a fake pipeline test
+- [ ] T094 `evals/runner.py` resumable, uses the pacer, cache and budget guard, with a fake pipeline test
 - [ ] T095 `evals/report.py` tables with intervals
 - [ ] T096 `evals/cli.py`
 - [ ] T097 run baseline B0 retrieval-only, commit numbers
