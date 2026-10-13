@@ -125,9 +125,13 @@ Experiment E6 still compares it with a bge-small class model before the final ch
 
 ## 2026-10-13: parent-child chunking is deferred
 Decision: none of the experiments E1 to E10 in `docs/modules/evals.md` needs parent-child chunking:
-E2 compares fixed and recursive chunking only. `chunkers/parent_child.py` stays in the code with its
-tests, but the pipeline refuses `parent_child` and there is no `parent_text` column. Revisit only if
+E2 compares fixed and recursive chunking only. There is no `parent_text` column. Revisit only if
 E2 shows chunk context is the weak point; it would need a migration then.
+
+Update, same day: the parent-child chunker and its tests were removed from the code (nothing used
+them). The idea, if revisited: split into small child chunks for retrieval, store the larger parent
+text next to each child, and give the parent to the model. It needs a `parent_text` column and a
+migration, and the chunker can be rewritten from this description.
 
 ## 2026-10-13: HNSW recall on the real corpus (T052)
 Measured on the 5457 real chunks (298 documents): HNSW with ef_search 40 returned 99.9 percent of the
