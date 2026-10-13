@@ -80,11 +80,11 @@ Added during the build (not in the original task list; all recorded in DECISIONS
 - Upload is the raw request body, not multipart (`python-multipart` is not in TECHSTACK.md)
 
 ## Phase 3: naive RAG end to end
-- [ ] T054 `retrieval/dense.py` (AC-RET-01)
-- [ ] T055 `retrieval/keyword.py` (AC-RET-02)
-- [ ] T056 `retrieval/access.py` filter in SQL (AC-RET-05)
-- [ ] T057 `retrieval/fusion.py` RRF (AC-RET-03)
-- [ ] T058 `retrieval/retriever.py` config driven, with timings
+- [x] T054 `retrieval/dense.py` (AC-RET-01)
+- [x] T055 `retrieval/keyword.py` (AC-RET-02)
+- [x] T056 `retrieval/access.py` filter in SQL (AC-RET-05)
+- [x] T057 `retrieval/fusion.py` RRF (AC-RET-03)
+- [x] T058 `retrieval/retriever.py` config driven, with timings
 - [ ] T059 `llm/client.py` interface and fake for tests
 - [ ] T060 first real provider adapter
 - [ ] T061 `llm/retry.py` backoff and timeouts
