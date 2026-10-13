@@ -130,3 +130,12 @@ def test_ac_ing_05_a_chunk_size_the_model_would_truncate_is_refused_up_front(
 def test_ac_ing_03_an_unknown_document_id_is_an_error(pipeline_session, store) -> None:
     with pytest.raises(LookupError):
         ingest_document(pipeline_session, uuid.uuid4(), store, FakeEncoder(), WordCounter(), CONFIG)
+
+
+def test_ac_ing_05_parent_child_is_refused_until_parent_text_can_be_stored(
+    pipeline_session, store, make_document
+) -> None:
+    document = make_document(TEXT)
+    config = IngestConfig(chunker="parent_child", size=20, overlap=0)
+    with pytest.raises(ValueError, match="parent"):
+        run(pipeline_session, document, store, config=config)
