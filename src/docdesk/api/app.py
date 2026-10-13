@@ -11,6 +11,7 @@ from docdesk.core.config import Settings, get_settings
 from docdesk.core.errors import register_error_handlers
 from docdesk.core.ids import new_trace_id
 from docdesk.core.logging import bind_trace_id
+from docdesk.worker.celery_app import make_celery
 
 
 async def add_trace_id(
@@ -28,6 +29,8 @@ async def add_trace_id(
 def create_app(settings: Settings | None = None) -> FastAPI:
     """Build the app in a function so tests get a fresh instance each time."""
     settings = settings or get_settings()
+    # Binds the ingestion task to the real broker; without it apply_async has none and fails.
+    make_celery(settings.redis_url)
     docs = settings.public_docs_enabled
     app = FastAPI(
         title="DocDesk v2",
