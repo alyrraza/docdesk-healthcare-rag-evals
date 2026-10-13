@@ -46,6 +46,8 @@ class Settings(BaseSettings):
     # Where uploaded files and the downloaded embedding model live (both git-ignored).
     upload_dir: str = "data/uploads"
     model_dir: str = ".cache/models/all-MiniLM-L6-v2"
+    # Largest accepted upload in bytes; the body is read up to this size and no further.
+    max_upload_bytes: int = Field(default=5_000_000, gt=0)
     jwt_secret: str = Field(min_length=32)
     jwt_lifetime_minutes: int = Field(default=30, gt=0)
     # Only scripts/seed_admin.py uses these; checked here so a placeholder never gets seeded.
