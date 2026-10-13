@@ -3,6 +3,17 @@
 Newest first. Each entry: date, decision, why, what it supersedes. Specs older than their
 decisions are marked superseded in the spec file, so nobody builds from stale text.
 
+## 2026-10-14: smoke test leftovers removed from the main database
+The main database held two upload documents from the phase 2 and 3 smoke tests ("FDA sample PDF smoke",
+36 chunks made by the fixed chunker, and "Damaged PDF smoke", failed) and 598 files under `data/uploads`
+that no document owned after two re-ingests. They were removed with `scripts/clean_leftovers.py` so B0
+sees only the seed corpus: 298 documents, 5919 recursive chunks, matching the corpus fingerprint.
+
+## 2026-10-14: PyYAML added for the golden set files
+`docs/modules/evals.md` defines golden items as YAML. PyYAML was installed only as a dependency of
+`huggingface_hub`, so it is now declared in `pyproject.toml` and `TECHSTACK.md`. Files are read with
+`yaml.safe_load` only.
+
 ## 2026-10-14: golden items use evidence quotes, not chunk ids
 Decision: a golden item has `gold_evidence`, a list of `{source, text}` entries, instead of
 `gold_chunk_ids`. `source` is the stable key `seed:<corpus>:<source id>` stored in `documents.source`,
