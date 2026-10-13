@@ -21,6 +21,10 @@ DOSE_CUES = re.compile(
     rf"|\b(should|can|may|could|would|do|does) {SUBJECT} "
     r"(take|use|get|give|have|stop|start|be taking|be given)\b"
     r"|\bsafe for (me|him|her|my \w+|our \w+)\b"
+    # "is it ok for me to take ...", "is it ok if I take ...", "is it okay when my son takes ..."
+    r"|\b(ok|okay|fine|alright|safe) for (me|him|her|us|my \w+|our \w+|the patient) to "
+    r"(take|use|have|get|stop|start)\b"
+    rf"|\b(ok|okay|fine|alright|safe) (if|when) {SUBJECT} (take|takes|use|uses|have|has|get|gets)\b"
 )
 DIAGNOSIS_CUES = re.compile(
     rf"\b(do|does|did|am|is|are|could|might|may) {SUBJECT} (have|having|got|suffer)\b"
