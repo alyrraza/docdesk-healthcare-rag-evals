@@ -46,7 +46,8 @@ def test_ac_ret_05_corpus_files_become_shared_documents_owned_by_the_admin(
     assert {doc.title for doc in created} == {"Title a", "Title b"}
     rows = pipeline_session.execute(select(DocumentRow)).scalars().all()
     assert all(row.is_shared and row.owner_id == admin_id for row in rows)
-    assert all(row.source == "seed:openfda" and row.status == "queued" for row in rows)
+    assert all(row.status == "queued" for row in rows)
+    assert {row.source for row in rows} == {"seed:openfda:a", "seed:openfda:b"}
     assert {doc.id for doc in created} == set(store.files)
 
 
@@ -89,3 +90,13 @@ def test_ac_ing_02_ingest_all_marks_good_files_ready_and_reports_bad_ones(
     }
     assert statuses == {"Title good": DocumentStatus.READY, "Title bad": DocumentStatus.FAILED}
     assert pipeline_session.execute(select(ChunkRow)).scalars().first() is not None
+
+
+def test_t080b_each_seed_document_has_its_own_stable_source_key(
+    pipeline_session, tmp_path, store, admin_id
+) -> None:
+    """Golden items name a document by this key, which must survive a re-ingest."""
+    folder = write_corpus(tmp_path, "medlineplus", {"medlineplus-9": TEXT})
+    register_corpus(pipeline_session, store, [folder], admin_id)
+    source = pipeline_session.execute(select(DocumentRow.source)).scalar_one()
+    assert source == "seed:medlineplus:medlineplus-9"
