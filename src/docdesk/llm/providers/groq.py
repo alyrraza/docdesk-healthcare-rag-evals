@@ -64,9 +64,12 @@ class GroqClient:
             return
         if response.status_code == 429:
             raise RateLimitedError("Groq rate limit reached", _retry_after(response))
+        code = _error_code(response)
+        suffix = f" ({code})" if code else ""
         raise ProviderError(
-            f"Groq returned HTTP {response.status_code}{_error_code(response)}",
+            f"Groq returned HTTP {response.status_code}{suffix}",
             status_code=response.status_code,
+            code=code,
         )
 
     def _result(self, model: str, data: dict[str, Any], latency_ms: float) -> LLMResult:
@@ -96,10 +99,10 @@ def _retry_after(response: httpx.Response) -> float | None:
         return None
 
 
-def _error_code(response: httpx.Response) -> str:
-    """Name the provider's error code, never its message, which can echo the prompt."""
+def _error_code(response: httpx.Response) -> str | None:
+    """Read the provider's error code, never its message, which can echo the prompt."""
     try:
         code = response.json()["error"]["code"]
     except (ValueError, KeyError, TypeError):
-        return ""
-    return f" ({code})" if isinstance(code, str) else ""
+        return None
+    return code if isinstance(code, str) else None

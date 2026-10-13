@@ -26,13 +26,17 @@ class LLMTimeoutError(LLMError):
 
 
 class ProviderError(LLMError):
-    """Any other failure; a 5xx may pass on its own, a 4xx never will."""
+    """Any other failure; a 5xx or a JSON mode failure may pass on its own, a 4xx usually never."""
 
-    def __init__(self, message: str, status_code: int | None = None) -> None:
+    def __init__(
+        self, message: str, status_code: int | None = None, code: str | None = None
+    ) -> None:
         super().__init__(message)
         self.status_code = status_code
+        self.code = code
 
     @property
     def retryable(self) -> bool:  # type: ignore[override]
-        """Retry only server side errors."""
-        return self.status_code is not None and self.status_code >= 500
+        """Retry server errors and the provider's occasional rejection of its own JSON output."""
+        server_side = self.status_code is not None and self.status_code >= 500
+        return server_side or self.code == "json_validate_failed"
