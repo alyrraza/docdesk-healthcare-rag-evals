@@ -7,7 +7,7 @@
 # default. B0 as written in docs/modules/evals.md is "recursive". Before T097 the corpus must be
 # re-ingested with "recursive", or this file must say "fixed". Decide it before the first result.
 id = "b0"
-content_hash = "fed9a01995b7949088a60ec32c5a095b5209a967683bf462fe9476eae9e4b26d"
+content_hash = "ec66619a5a99a1adb5968b76526e76d0e12e967ebd4e1874b6c13a1a5b7c19a6"
 
 [chunking]
 strategy = "recursive"
@@ -42,6 +42,8 @@ reserve = 700
 [prompt]
 name = "answer"
 version = "1.0.0"
+# sha256 of prompts/answer/answer.v1.md from the prompt loader; an edit must become a new version.
+content_hash = "a0be1da5f9af465c4532837735edc804dda9199f1c66f104ca31c7f394cec14e"
 
 [models]
 generator = "openai/gpt-oss-120b"

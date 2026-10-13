@@ -76,7 +76,9 @@ def test_t079e_b0_models_match_the_settings_defaults() -> None:
 def test_t079e_b0_records_the_chunking_prompt_and_abstain_pins() -> None:
     values = load_eval_config(B0_PATH).values
     assert values["chunking"] == {"strategy": "recursive", "size": 200, "overlap": 40}
-    assert values["prompt"] == {"name": "answer", "version": "1.0.0"}
+    prompt = values["prompt"]
+    assert (prompt["name"], prompt["version"]) == ("answer", "1.0.0")
+    assert set(prompt) == {"name", "version", "content_hash"}
     assert values["packer"]["max_per_document"] == 2
     assert values["abstain"]["threshold"] == 0.0
 

@@ -13,6 +13,7 @@ from typing import Any
 from docdesk.context.budget import ContextBudget
 from docdesk.db.repositories.fingerprint import CorpusFingerprint
 from docdesk.ingestion.pipeline import IngestConfig
+from docdesk.prompts.loader import PromptFile
 from docdesk.retrieval.types import RetrievalConfig
 
 
@@ -25,6 +26,10 @@ def content_hash(values: dict[str, Any]) -> str:
     body = {key: value for key, value in values.items() if key != "content_hash"}
     canonical = json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+class PromptPinMismatch(ValueError):
+    """The prompt in use is not the one the config pinned; a prompt edit must be a new version."""
 
 
 @dataclass(frozen=True)
@@ -63,6 +68,20 @@ class EvalConfig:
             overlap=chunking.overlap,
             embedding_model=f"{name}@{model['revision']}",
         )
+
+    def check_prompt(self, prompt: PromptFile) -> None:
+        """Refuse a prompt other than the pinned one, so an edit cannot move a baseline."""
+        pinned = self.values["prompt"]
+        label = f"{prompt.name}@{prompt.version}"
+        if (prompt.name, prompt.version) != (pinned["name"], pinned["version"]):
+            raise PromptPinMismatch(
+                f"{self.id} pins {pinned['name']}@{pinned['version']}, the active prompt is {label}"
+            )
+        if prompt.content_hash != pinned["content_hash"]:
+            raise PromptPinMismatch(
+                f"{label} no longer matches the hash pinned in {self.id}. "
+                "Do not edit a pinned prompt: make a new version and a new config id."
+            )
 
     def context_budget(self) -> ContextBudget:
         """Build the token budget; ContextBudget itself checks that the slots add up."""
