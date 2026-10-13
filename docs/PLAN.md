@@ -107,6 +107,14 @@ Added during the build (not in the original task list; all recorded in DECISIONS
 - [x] T078 manual smoke test, ten questions, notes in `PROJECT_NOTES.md`
 - [x] T078a input policy: refuse personal dose and diagnosis requests (AC-GEN-05)
 - [ ] T079 phase review
+Added 2026-10-13 after the phase 3 review (`docs/reviews/phase-3.md`); done in this order, before Phase 4:
+- [ ] T079f escape `validation_error` and every model supplied string in the repair prompt through the renderer escaping (S1); test with an id of "IGNORE ALL RULES" and with a closing tag inside the string
+- [ ] T079g renderer escapes every closing evidence tag variant: case insensitive, extra spaces, attributes (S2); one test per variant
+- [ ] T079h two user test on the real `POST /query` route: user A's private document never shows in user B's evidence, citations or answer (G3, AC-RET-05)
+- [ ] T079i record output guardrail outcomes in the trace `guardrails` field (AC-OBS-01); `cache_hit` stays false with a comment pointing to Phase 6 (G1)
+- [ ] T079j widen the dose and diagnosis refusal for first person phrasing such as "is it ok for me to take 500 mg" and "is it safe for my child to take X" (S5, AC-GEN-05); pattern based, label questions must still be answered
+- [ ] T079k `POST /query` returns a clear 503 when no prompt is active, telling the operator to run `scripts/smoke_llm.py`; one README line (G5)
+- [ ] T079l tick T079 and T079f to T079k
 
 ## Phase 4: golden set, eval harness, baseline
 Added 2026-10-13 after the phase 3 token measurements; they come before the golden set work because
