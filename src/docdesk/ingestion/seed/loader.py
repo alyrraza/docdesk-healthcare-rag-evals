@@ -55,12 +55,13 @@ def register_corpus(
             raise FileNotFoundError(
                 f"corpus folder {directory} not found, run scripts/fetch_{directory.name}.py first"
             )
-        for entry in load_manifest(directory).values():
+        for source_id, entry in load_manifest(directory).items():
             data = (directory / entry["file"]).read_bytes()
             digest = content_hash(data)
             if repo.find_by_hash(admin_id, digest) is not None:
                 continue
-            source = f"seed:{directory.name}"
+            # One key per document, so golden items can name it and it survives a re-ingest.
+            source = f"seed:{directory.name}:{source_id}"
             document = repo.add(admin_id, entry["title"], source, digest, is_shared=True)
             store.save(document.id, data)
             session.commit()
