@@ -79,3 +79,19 @@ def test_t079e_b0_records_the_chunking_prompt_and_abstain_pins() -> None:
     assert values["prompt"] == {"name": "answer", "version": "1.0.0"}
     assert values["packer"]["max_per_document"] == 2
     assert values["abstain"]["threshold"] == 0.0
+
+
+def test_t080a_b0_gives_the_ingest_settings_the_corpus_must_be_built_with() -> None:
+    ingest = load_eval_config(B0_PATH).ingest_config()
+    assert (ingest.chunker, ingest.size, ingest.overlap) == ("recursive", 200, 40)
+
+
+def test_t080a_b0_fingerprint_uses_the_same_model_string_the_chunks_store() -> None:
+    fingerprint = load_eval_config(B0_PATH).corpus_fingerprint()
+    revision = "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+    assert fingerprint.embedding_model == f"all-MiniLM-L6-v2@{revision}"
+    assert (fingerprint.chunker, fingerprint.chunk_size, fingerprint.overlap) == (
+        "recursive",
+        200,
+        40,
+    )
