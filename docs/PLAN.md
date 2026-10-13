@@ -104,7 +104,7 @@ Added during the build (not in the original task list; all recorded in DECISIONS
 - [x] T075 `observability/trace.py` builder and writer (AC-OBS-01)
 - [x] T076 `POST /query` end to end
 - [x] T077 prompt unit tests for `answer.v1` (AC-PRM-04)
-- [ ] T078 manual smoke test, ten questions, notes in `PROJECT_NOTES.md`
+- [x] T078 manual smoke test, ten questions, notes in `PROJECT_NOTES.md`
 - [ ] T079 phase review
 
 ## Phase 4: golden set, eval harness, baseline
