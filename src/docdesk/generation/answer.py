@@ -135,7 +135,7 @@ def fallback(result: AnswerResult, last: Attempt) -> AnswerResult:
     result.citations = []
     if last.llm_error is not None:
         result.error_code = error_code_for(last.llm_error)
-        log.warning("model call failed: %s", type(last.llm_error).__name__)
+        log.warning("model call failed: %s: %s", type(last.llm_error).__name__, last.llm_error)
     else:
         result.error_code = "output_invalid"
         result.raw_output = last.llm.text if last.llm else None
