@@ -71,3 +71,39 @@ def test_ac_gen_05_a_question_about_what_a_document_says_is_not_refused(question
 
 def test_ac_gen_05_case_and_extra_spaces_do_not_hide_a_personal_request() -> None:
     assert check_policy("WHAT   DOSE   SHOULD   I   TAKE?").refused
+
+
+FIRST_PERSON_DOSE_REQUESTS = [
+    "is it ok for me to take 500 mg",
+    "Is it okay for me to take 500 mg of ibuprofen every day?",
+    "Is it safe for my child to take ibuprofen?",
+    "is it safe for my daughter to take 200 mg of naproxen",
+    "Is it fine for him to take two tablets at night?",
+    "Would it be alright for my wife to use this twice a day?",
+    "is it ok if i take 500 mg of paracetamol with coffee",
+    "Is it okay when my son takes aspirin for a fever?",
+]
+
+FIRST_PERSON_LABEL_QUESTIONS = [
+    "Is it ok to take famotidine with food according to the label?",
+    "Is it safe for children to take ibuprofen according to the label?",
+    "What does the label say about whether it is ok for adults to take 500 mg?",
+    "Does the document say it is safe for pregnant women to take naproxen?",
+    "Which patients is it not safe to give metoclopramide to, according to the label?",
+]
+
+
+@pytest.mark.parametrize("question", FIRST_PERSON_DOSE_REQUESTS)
+def test_ac_gen_05_first_person_is_it_ok_for_me_to_take_phrasing_is_refused_as_a_dose(
+    question: str,
+) -> None:
+    decision = check_policy(question)
+    assert decision.refused
+    assert decision.reason == "personal_dose"
+
+
+@pytest.mark.parametrize("question", FIRST_PERSON_LABEL_QUESTIONS)
+def test_ac_gen_05_general_is_it_ok_to_take_label_questions_are_still_answered(
+    question: str,
+) -> None:
+    assert not check_policy(question).refused
