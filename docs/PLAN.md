@@ -127,7 +127,7 @@ no eval run is safe without them (see "Eval budget and pacing" in `docs/modules/
 - [x] T080a make the corpus match B0: `scripts/reingest_corpus.py` clears the seed documents and chunks, re-runs the normal ingest with the config from `b0.toml`, and stores a corpus fingerprint (chunker, chunk size, overlap, embedding model) that can be read from the database
 - [x] T080 golden item schema and validator (AC-EVL-01), with `gold_evidence` quotes and their resolver instead of chunk ids
 - [x] T081 golden loader with split handling
-- [ ] T082 golden items batch 1, single fact, 10 items, hand verified, evidence quotes
+- [x] T082 golden items batch 1, single fact, 10 items, hand verified, evidence quotes (10 drafts written and validated, `verified: false` until the owner marks them OK in `docs/golden_review/batch1_single_fact.md` and runs `scripts/golden_review.py --apply`)
 - [ ] T083 golden items batch 2, single fact, 21 items, evidence quotes
 - [ ] T084 golden items batch 3, multi chunk, 19 items, evidence quotes
 - [ ] T085 golden items batch 4, unanswerable, 19 items, empty evidence plus a reason

@@ -1,0 +1,135 @@
+- id: gi-001
+  type: single_fact
+  split: dev
+  question: How does rubella show up in someone who gets symptoms?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - A rash that starts on the face and spreads to the body
+  - Mild fever
+  - Aching joints, especially in young women
+  - Swollen glands
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-387
+    text: 'symptoms may include: - A rash that starts on the face and spreads to the body - Mild fever - Aching joints, especially in young women - Swollen glands'
+  verified: false
+- id: gi-002
+  type: single_fact
+  split: test
+  question: How far ahead can a ramipril capsule mixture be prepared, and how should it be kept?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - It can be prepared ahead and kept up to 24 hours at room temperature
+  - Or up to 48 hours under refrigeration
+  gold_evidence:
+  - source: seed:openfda:01da05d8-e72e-4208-bf92-a5cd929f15ab
+    text: The described mixtures can be pre-prepared and stored for up to 24 hours at room temperature or up to 48 hours under refrigeration.
+  verified: false
+- id: gi-003
+  type: single_fact
+  split: dev
+  question: What strengths does metoprolol tartrate come in, and is it a tablet or a liquid?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - It is a tablet taken by mouth
+  - The strengths are 25 mg, 50 mg and 100 mg
+  gold_evidence:
+  - source: seed:openfda:00940cc5-d2eb-4841-9138-de97d7b1c674
+    text: Metoprolol tartrate tablets, USP are available as 25 mg, 50 mg and 100 mg tablets for oral administration
+  verified: false
+- id: gi-004
+  type: single_fact
+  split: test
+  question: What exactly is an eating disorder?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - A serious mental health disorder
+  - Severe problems with thoughts about food and eating behaviors
+  - A person may eat much less or much more than they need
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-237
+    text: Eating disorders are serious mental health disorders. They involve severe problems with your thoughts about food and your eating behaviors. You may eat much less or much more than you need.
+  verified: false
+- id: gi-005
+  type: single_fact
+  split: dev
+  question: Which kinds of food naturally provide folic acid?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Leafy green vegetables
+  - Fruits
+  - Dried beans, peas and nuts
+  - Enriched breads, cereals and other grain products
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-1611
+    text: 'Foods with folic acid in them include: - Leafy green vegetables - Fruits - Dried beans, peas, and nuts - Enriched breads, cereals and other grain products'
+  verified: false
+- id: gi-006
+  type: single_fact
+  split: dev
+  question: What can happen when opioid painkillers are combined with benzodiazepine sedatives?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - It may cause profound sedation, respiratory depression, coma and death
+  gold_evidence:
+  - source: seed:openfda:066e25b2-8a1b-4b08-b585-ce36753bf104
+    text: Concomitant use of benzodiazepines and opioids may result in profound sedation, respiratory depression, coma, and death.
+  verified: false
+- id: gi-007
+  type: single_fact
+  split: test
+  question: Which types of medicine can cause bone loss?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Corticosteroids
+  - Proton pump inhibitors, which treat GERD
+  - Medicines to treat epilepsy
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-5935
+    text: 'Taking certain medicines, such as: - Corticosteroids - Proton pump inhibitors (which treat GERD) - Medicines to treat epilepsy'
+  verified: false
+- id: gi-008
+  type: single_fact
+  split: dev
+  question: What conditions is gabapentin prescribed to treat?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Postherpetic neuralgia in adults
+  - Added treatment for partial onset seizures in adults and children 3 years and older with epilepsy
+  gold_evidence:
+  - source: seed:openfda:01b810b7-f4c8-4412-bbc5-b9220d8770d8
+    text: Management of postherpetic neuralgia in adults Adjunctive therapy in the treatment of partial onset seizures, with and without secondary generalization, in adults and pediatric patients 3 years and older with epilepsy
+  verified: false
+- id: gi-009
+  type: single_fact
+  split: dev
+  question: How often are routine prenatal checkups scheduled over the course of a pregnancy?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Once a month for weeks 4 through 28
+  - Twice a month for weeks 28 through 36
+  - Weekly from week 36 until the baby is born
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-6
+    text: 'Usually, visits during your pregnancy occur: - Once a month for weeks 4 through 28 - Twice a month for weeks 28 through 36 - Weekly for week 36 until your baby is born'
+  verified: false
+- id: gi-010
+  type: single_fact
+  split: test
+  question: Are the side effects of enalapril usually severe, or do they tend to pass?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - For the most part the side effects were mild and transient
+  gold_evidence:
+  - source: seed:openfda:074fe718-88d8-365c-e063-6394a90a299d
+    text: For the most part, adverse experiences were mild and transient in nature.
+  verified: false
