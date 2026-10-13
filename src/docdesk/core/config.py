@@ -6,7 +6,7 @@ from functools import lru_cache
 from typing import ClassVar, Literal
 from urllib.parse import unquote, urlsplit
 
-from pydantic import Field, model_validator
+from pydantic import Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Words that mean "someone copied the example file and forgot to put in a real secret".
@@ -48,6 +48,15 @@ class Settings(BaseSettings):
     model_dir: str = ".cache/models/all-MiniLM-L6-v2"
     # Largest accepted upload in bytes; the body is read up to this size and no further.
     max_upload_bytes: int = Field(default=5_000_000, gt=0)
+    # Free-tier LLM keys; optional so the app and every test run without them.
+    groq_api_key: SecretStr | None = None
+    openrouter_api_key: SecretStr | None = None
+    # Model ids are fixed here and logged with every result. Generator and judge must differ.
+    generator_model: str = "openai/gpt-oss-120b"
+    judge_model: str = "qwen/qwen3.8-27b"
+    # Only for the 40 item judge calibration cross check, free models only.
+    crosscheck_judge_model: str = "google/gemma-4-31b-it:free"
+    crosscheck_fallback_model: str = "nvidia/nemotron-3-super-120b-a12b:free"
     jwt_secret: str = Field(min_length=32)
     jwt_lifetime_minutes: int = Field(default=30, gt=0)
     # Only scripts/seed_admin.py uses these; checked here so a placeholder never gets seeded.
@@ -58,6 +67,18 @@ class Settings(BaseSettings):
     def public_docs_enabled(self) -> bool:
         """Serve /docs, /redoc and /openapi.json everywhere except production."""
         return self.environment != "production"
+
+    @model_validator(mode="after")
+    def check_model_choices(self) -> Settings:
+        """Stop startup if the judge could grade its own family or a paid model slips in."""
+        if self.generator_model == self.judge_model:
+            raise ValueError("GENERATOR_MODEL and JUDGE_MODEL must be different models")
+        for name in (self.crosscheck_judge_model, self.crosscheck_fallback_model):
+            if not name.endswith(":free") or name.startswith("openrouter/"):
+                raise ValueError(
+                    f"cross check model '{name}' must be a named model ending in :free"
+                )
+        return self
 
     @model_validator(mode="after")
     def refuse_placeholder_secrets(self) -> Settings:
