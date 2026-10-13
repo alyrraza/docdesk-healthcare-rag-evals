@@ -27,7 +27,10 @@ def escape_delimiters(value: str, untrusted: tuple[str, ...]) -> str:
     if not untrusted:
         return value
     tags = "|".join(re.escape(name) for name in untrusted)
-    return re.sub(rf"<(/?)\s*({tags})\s*>", r"&lt;\1\2&gt;", value, flags=re.I)
+    # A whole tag, however it is spelled, becomes plain text; a half written tag loses its "<".
+    whole = rf"<(\s*/?\s*(?:{tags})(?![\w-])[^<>]*)>"
+    value = re.sub(whole, r"&lt;\1&gt;", value, flags=re.I)
+    return re.sub(rf"<(?=\s*/?\s*(?:{tags})(?![\w-]))", "&lt;", value, flags=re.I)
 
 
 def check_template(prompt: PromptFile) -> None:
