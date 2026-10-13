@@ -100,6 +100,12 @@ role holds zero table privileges became false by design, so it now asserts the r
 SELECT and only on `synthea_` tables. Why: the old tests passed for the wrong reason or failed for
 a correct reason, and a test that cannot fail on a real privilege leak is not a test.
 
+## 2026-10-13: first embedding model is all-MiniLM-L6-v2
+Decision: the encoder starts with `sentence-transformers/all-MiniLM-L6-v2` (fp32 ONNX, 90 MB, 384
+dimensions, mean pooling, max 256 tokens), revision `1110a243fdf4706b3f48f1d95db1a4f5529b4d41`.
+It is stored under `.cache/models/` and never committed. Why: it fits `vector(384)` and runs on CPU.
+Experiment E6 still compares it with a bge-small class model before the final choice.
+
 ## Parked ideas (not in scope, do not build)
 - Multi-turn conversation memory (adds context clash risk; revisit after the baseline)
 - Query rewriting and HyDE (matrix item E7, optional)
