@@ -84,7 +84,7 @@ def test_ac_ctx_03_the_request_carries_the_question_and_the_evidence_inside_deli
     request = client.requests[0]
     assert "<evidence>\n[c1] Label 1\nAspirin can cause stomach bleeding." in request.user
     assert "What are the risks of aspirin?" in request.user
-    assert "[c1]" not in request.system
+    assert "stomach bleeding" not in request.system
     assert (request.model, request.temperature, request.max_output_tokens) == (
         "fake-model",
         0,
