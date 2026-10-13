@@ -59,7 +59,7 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 - [ ] T040 `ingestion/parsers/pdf.py` and the no-text-layer failure
 - [x] T041 `ingestion/cleaner.py`
 - [x] T042 `chunkers/fixed.py` with invariants tests
-- [ ] T043 `chunkers/recursive.py`
+- [x] T043 `chunkers/recursive.py`
 - [ ] T044 `chunkers/parent_child.py`
 - [ ] T045 `ingestion/hashing.py` duplicate detection (AC-ING-04)
 - [ ] T046 `ingestion/pipeline.py` transactional ingest (AC-ING-02, AC-ING-03, AC-ING-05)
