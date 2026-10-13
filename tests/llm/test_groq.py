@@ -113,3 +113,14 @@ def test_ac_gen_04_an_answer_with_no_choices_is_a_provider_error() -> None:
 def test_ac_gen_01_a_missing_key_is_refused_when_the_client_is_built() -> None:
     with pytest.raises(ValueError, match="GROQ_API_KEY"):
         GroqClient(api_key="", http=httpx.Client())
+
+
+def test_ac_gen_04_the_provider_error_code_is_kept_in_the_message_but_not_the_body() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        body = {"error": {"code": "json_validate_failed", "message": "secret prompt text"}}
+        return httpx.Response(400, json=body)
+
+    with pytest.raises(ProviderError) as caught:
+        client_for(handler).complete(REQ)
+    assert "json_validate_failed" in str(caught.value)
+    assert "secret prompt text" not in str(caught.value)
