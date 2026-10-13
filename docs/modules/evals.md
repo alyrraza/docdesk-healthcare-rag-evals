@@ -87,6 +87,13 @@ Baseline B0: recursive chunking at 200 tokens with overlap, dense top-5, no rera
 the cheap generator. One factor at a time: E1 chunk size, E2 strategy, E3 retrieval mode, E4 reranker,
 E5 top-k and budget, E6 embedding model, E7 query rewriting (optional), E8 prompt version, E9 generator
 model, E10 semantic cache (check for wrong cache hits).
+Known baseline weakness for E5 to test (found 2026-10-13 in a phase 3 smoke question, not in the
+held-out test set): the packer keeps at most 2 chunks per document. For a question about one drug label,
+the best chunk (the label's "Adverse reactions" overview, dense rank 1) can be dropped by that cap because
+two other chunks of the same label ranked higher, while chunks of other drugs from the keyword leg take
+the free slots. The model then abstained although the answer was in the corpus (`context_overflow`, with
+`context_distraction` and `wrong_abstain` as consequences). E5 should vary the per-document cap together
+with top-k, and the thresholds must be tuned on the dev split only. Nothing was changed for B0.
 Each experiment commits its config change, then its results file. The report generator builds the
 results table and the quality, cost and latency plot.
 
