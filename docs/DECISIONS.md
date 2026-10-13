@@ -3,6 +3,22 @@
 Newest first. Each entry: date, decision, why, what it supersedes. Specs older than their
 decisions are marked superseded in the spec file, so nobody builds from stale text.
 
+## 2026-10-14: T087 and T088 are done before T082 to T086
+Decision: the retrieval metrics (T087) and the bootstrap statistics (T088) are built before the golden
+item batches. Task ids and acceptance criteria do not change.
+Why: neither task depends on golden items, and the golden batches need the owner's hand checking, so
+the code work does not wait for it.
+
+## 2026-10-14: the per-document cap stays at 2 in B0
+Decision: `packer.max_per_document` stays at 2 in `evals/configs/b0.toml`. Experiment E5 varies it
+together with top-k.
+Why: B0 must describe the system as built. The weakness it causes (found in the phase 3 smoke
+question) is measured by E5, not hidden by changing the baseline.
+
+## 2026-10-14: T078a was built before its plan line existed
+T078a (refuse personal dose and diagnosis requests, AC-GEN-05) was implemented before its line was
+added to `PLAN.md`. The owner accepted the history as it is. No commit is rewritten.
+
 ## 2026-10-13: modular monolith, not separate microservices
 Decision: one FastAPI app, one Celery worker, one eval CLI, with strict module boundaries
 (`MODULES.md`). Each module has one folder, one public interface, and files under 200 lines.
