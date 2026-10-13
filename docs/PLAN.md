@@ -52,7 +52,7 @@ AC ids refer to `PRD.md`. Module detail is in `docs/modules/`.
 - [x] T035 phase review in a fresh session against the PRD
 
 ## Phase 2: ingestion
-- [ ] T036 `embeddings/tokenizer.py` token counting
+- [x] T036 `embeddings/tokenizer.py` token counting
 - [ ] T037 `embeddings/encoder.py` ONNX session, batching
 - [ ] T038 encoder test with a tiny fixture and shape checks
 - [ ] T039 `ingestion/parsers/text.py`
