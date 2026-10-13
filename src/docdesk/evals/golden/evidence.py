@@ -74,9 +74,7 @@ def is_gold(chunk: Span, quote: Span) -> bool:
     return overlap >= MIN_OVERLAP_SHARE * (quote[1] - quote[0]) and overlap > 0
 
 
-def gold_chunk_ids(
-    document_text: str, quote: str, chunks: Sequence[tuple[str, str]]
-) -> set[str]:
+def gold_chunk_ids(document_text: str, quote: str, chunks: Sequence[tuple[str, str]]) -> set[str]:
     """Ids of the chunks (id, text in document order) that count as gold for one quote."""
     occurrences = quote_spans(document_text, quote)
     placed = locate_chunks(document_text, [text for _, text in chunks], [i for i, _ in chunks])
