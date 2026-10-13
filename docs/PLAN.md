@@ -124,6 +124,7 @@ no eval run is safe without them (see "Eval budget and pacing" in `docs/modules/
 - [x] T079c judge output parser: JSON mode where supported, strips a fenced json block, counts parse failures
 - [x] T079d `evals/budget.py` daily token guard and resume state, so a run stops cleanly and continues next day
 - [x] T079e `evals/configs/b0.toml` pinned baseline config with a content hash, frozen after the first B0 result
+- [ ] T080a make the corpus match B0: `scripts/reingest_corpus.py` clears the seed documents and chunks, re-runs the normal ingest with the config from `b0.toml`, and stores a corpus fingerprint (chunker, chunk size, overlap, embedding model) that can be read from the database
 - [ ] T080 golden item schema and validator (AC-EVL-01)
 - [ ] T081 golden loader with split handling
 - [ ] T082 golden items batch 1, single fact, 10 items, hand verified
@@ -138,7 +139,7 @@ no eval run is safe without them (see "Eval budget and pacing" in `docs/modules/
 - [ ] T091 `evals/judges/correctness.py`
 - [ ] T092 `evals/metrics/citation.py` and `abstention.py`
 - [ ] T093 `evals/labeler.py` failure labels (AC-EVL-03)
-- [ ] T094 `evals/runner.py` resumable, uses the pacer, cache and budget guard, with a fake pipeline test
+- [ ] T094 `evals/runner.py` resumable, uses the pacer, cache and budget guard, with a fake pipeline test. The runner reads the corpus fingerprint (T080a) and refuses to start when it differs from the config it was given.
 - [ ] T095 `evals/report.py` tables with intervals
 - [ ] T096 `evals/cli.py`
 - [ ] T097 run baseline B0 retrieval-only, commit numbers
