@@ -122,3 +122,49 @@ def test_ac_obs_01_guardrail_outcomes_are_recorded_on_the_row() -> None:
     builder.add_guardrail("input", "refused")
     builder.add_guardrail("reason", "personal_dose")
     assert builder.build().guardrails == {"input": "refused", "reason": "personal_dose"}
+
+
+def traced(result: AnswerResult) -> dict[str, str]:
+    builder = TraceBuilder(TRACE_ID, uuid.UUID(int=5), "q")
+    builder.add_answer(result, bundle_id="b")
+    return builder.build().guardrails
+
+
+def test_ac_obs_01_a_first_try_pass_is_recorded_as_output_passed() -> None:
+    assert traced(answer()) == {"output": "passed"}
+
+
+def test_ac_obs_01_a_pass_after_the_retry_is_recorded_as_output_retried() -> None:
+    result = answer()
+    result.retry_used, result.llm_calls = True, 2
+    assert traced(result) == {"output": "retried"}
+
+
+def test_ac_obs_01_two_invalid_replies_are_recorded_as_output_failed() -> None:
+    result = AnswerResult("x", abstain_output("system_error"))
+    result.retry_used, result.llm_calls, result.error_code = True, 2, "output_invalid"
+    assert traced(result) == {"output": "failed"}
+
+
+def test_ac_obs_01_a_provider_failure_on_the_retry_still_counts_as_output_failed() -> None:
+    result = AnswerResult("x", abstain_output("system_error"))
+    result.retry_used, result.llm_calls, result.error_code = True, 2, "llm_timeout"
+    assert traced(result) == {"output": "failed"}
+
+
+def test_ac_obs_01_no_output_outcome_when_the_checks_never_ran() -> None:
+    no_model = AnswerResult("x", abstain_output("no_evidence"))
+    provider_down = AnswerResult("x", abstain_output("system_error"))
+    provider_down.llm_calls, provider_down.error_code = 1, "llm_timeout"
+    assert traced(no_model) == {} and traced(provider_down) == {}
+
+
+def test_ac_obs_01_the_output_outcome_sits_next_to_the_input_decision() -> None:
+    builder = TraceBuilder(TRACE_ID, uuid.UUID(int=5), "q")
+    builder.add_guardrail("input", "allowed")
+    builder.add_answer(answer(), bundle_id="b")
+    assert builder.build().guardrails == {"input": "allowed", "output": "passed"}
+
+
+def test_ac_obs_01_cache_hit_is_false_until_the_cache_exists() -> None:
+    assert TraceBuilder(TRACE_ID, None, "q").build().cache_hit is False

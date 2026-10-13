@@ -44,6 +44,7 @@ def test_ac_obs_01_every_request_leaves_one_trace_row_with_the_bundle_and_config
     assert row.prompt_bundle_id and len(row.prompt_bundle_id) == 16
     assert len(row.used_ids) == 1 and row.tokens["model"] == "fake-model"
     assert str(row.user_id) == me["user_id"] and row.question_text is None
+    assert row.guardrails == {"input": "allowed", "output": "passed"}
 
 
 def test_ac_gen_03_a_user_with_no_matching_documents_gets_an_abstain_and_no_model_call(
