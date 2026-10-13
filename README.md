@@ -25,6 +25,8 @@ git config core.hooksPath .githooks
 `.cache/` and `.env` are git-ignored. Activate the venv before committing, or the hooks
 cannot find ruff.
 
+On a fresh database, run `python scripts/smoke_llm.py` once so a prompt is synced and active, or `POST /query` returns 503 `prompt_not_active`.
+
 ## Checks
 
 ```powershell
