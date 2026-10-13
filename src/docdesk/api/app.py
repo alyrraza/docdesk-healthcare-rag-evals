@@ -29,8 +29,9 @@ async def add_trace_id(
 def create_app(settings: Settings | None = None) -> FastAPI:
     """Build the app in a function so tests get a fresh instance each time."""
     settings = settings or get_settings()
-    # Binds the ingestion task to the real broker; without it apply_async has none and fails.
-    make_celery(settings.redis_url)
+    # Binds the ingestion task to the real broker. set_default makes it visible to the threads
+    # that run the routes; the plain current app is per thread.
+    make_celery(settings.redis_url).set_default()
     docs = settings.public_docs_enabled
     app = FastAPI(
         title="DocDesk v2",
