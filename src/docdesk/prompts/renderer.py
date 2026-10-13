@@ -33,29 +33,45 @@ def escape_delimiters(value: str, untrusted: tuple[str, ...]) -> str:
 def check_template(prompt: PromptFile) -> None:
     """Refuse templates that would put data in the instructions or leave it without delimiters."""
     system_names = set(VARIABLE.findall(prompt.system))
+    user_side = f"{prompt.user}\n{prompt.repair}"
     for name in prompt.untrusted:
         if name in system_names:
             raise RenderError(f"untrusted variable '{name}' is used in the system section")
         wrapped = rf"<{name}>\s*\{{\{{{name}\}}\}}\s*</{name}>"
-        if not re.search(wrapped, prompt.user):
+        if "{{" + name + "}}" in user_side and not re.search(wrapped, user_side):
             raise RenderError(f"untrusted variable '{name}' is not inside <{name}> delimiters")
 
 
-def render(prompt: PromptFile, variables: dict[str, str]) -> RenderedPrompt:
-    """Fill the template in one pass, so a value that looks like {{x}} is never expanded."""
-    check_template(prompt)
-    wanted = set(VARIABLE.findall(prompt.system)) | set(VARIABLE.findall(prompt.user))
-    missing, extra = wanted - variables.keys(), variables.keys() - wanted
-    if missing:
-        raise RenderError(f"missing variables: {', '.join(sorted(missing))}")
-    if extra:
-        raise RenderError(f"unknown variables: {', '.join(sorted(extra))}")
+def compare(wanted: set[str], given: set[str], where: str) -> None:
+    """Fail on a missing or unknown variable, so a typo can never become an empty string."""
+    if wanted - given:
+        raise RenderError(f"missing {where}variables: {', '.join(sorted(wanted - given))}")
+    if given - wanted:
+        raise RenderError(f"unknown {where}variables: {', '.join(sorted(given - wanted))}")
+
+
+def fill_template(template: str, values: dict[str, str], untrusted: tuple[str, ...]) -> str:
+    """Substitute in one pass and escape untrusted values, so inserted text is never re-expanded."""
 
     def fill(match: re.Match[str]) -> str:
         name = match.group(1)
-        value = variables[name]
-        return escape_delimiters(value, prompt.untrusted) if name in prompt.untrusted else value
+        return escape_delimiters(values[name], untrusted) if name in untrusted else values[name]
 
+    return VARIABLE.sub(fill, template)
+
+
+def render(
+    prompt: PromptFile, variables: dict[str, str], repair: dict[str, str] | None = None
+) -> RenderedPrompt:
+    """Build the two messages; with repair values, add the retry text after the user message."""
+    check_template(prompt)
+    compare(set(VARIABLE.findall(prompt.system + prompt.user)), set(variables), "")
+    user = fill_template(prompt.user, variables, prompt.untrusted)
+    if repair is not None:
+        if not prompt.repair:
+            raise RenderError(f"prompt {prompt.name} has no repair section")
+        compare(set(VARIABLE.findall(prompt.repair)), set(repair), "repair ")
+        user = f"{user}\n\n{fill_template(prompt.repair, repair, prompt.untrusted)}"
     return RenderedPrompt(
-        system=VARIABLE.sub(fill, prompt.system), user=VARIABLE.sub(fill, prompt.user)
+        system=fill_template(prompt.system, variables, prompt.untrusted), user=user
     )

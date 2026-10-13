@@ -32,6 +32,8 @@ class PromptFile:
     content_hash: str
     # The normalized file text, stored in the database so a version can be rebuilt from it.
     text: str
+    # Optional text appended to the user message when asking the model to fix a rejected reply.
+    repair: str = ""
 
 
 def scalar(raw: str) -> Any:
@@ -76,7 +78,7 @@ def parse_prompt(raw: str) -> PromptFile:
             raise PromptError(f"front matter is missing '{key}'")
     if meta["status"] not in STATUSES:
         raise PromptError(f"status must be one of {', '.join(STATUSES)}, got '{meta['status']}'")
-    sections = dict(re.findall(r"^## (system|user)\n(.*?)(?=^## |\Z)", body, re.S | re.M))
+    sections = dict(re.findall(r"^## (system|user|repair)\n(.*?)(?=^## |\Z)", body, re.S | re.M))
     for section in ("system", "user"):
         if not sections.get(section, "").strip():
             raise PromptError(f"the file needs a non empty '## {section}' section")
@@ -92,6 +94,7 @@ def parse_prompt(raw: str) -> PromptFile:
         user=sections["user"].strip(),
         content_hash=hashlib.sha256(text.encode("utf-8")).hexdigest(),
         text=text,
+        repair=sections.get("repair", "").strip(),
     )
 
 
