@@ -114,7 +114,7 @@ def test_ac_gen_04_invalid_json_is_retried_once_with_the_exact_error_in_the_prom
     assert result.retry_used and result.llm_calls == 2
     assert not result.abstained
     retry = client.requests[1]
-    assert "Problem found: schema:" in retry.user
+    assert "<validation_error>\nschema:" in retry.user
     assert "not json at all" in retry.user
     assert retry.system == client.requests[0].system
 

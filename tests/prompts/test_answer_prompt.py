@@ -54,7 +54,7 @@ def reply(citations: list[str], abstained: bool = False, answer: str = "Bleeding
 def test_ac_prm_04_the_prompt_declares_its_schema_and_deterministic_sampling() -> None:
     assert PROMPT.schema == "AnswerOutput@1"
     assert PROMPT.params["temperature"] == 0
-    assert set(PROMPT.untrusted) == {"evidence", "previous_output"}
+    assert set(PROMPT.untrusted) == {"evidence", "previous_output", "validation_error"}
 
 
 def test_ac_prm_04_the_rules_name_every_enum_value_and_the_field_order() -> None:
