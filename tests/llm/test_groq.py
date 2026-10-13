@@ -57,7 +57,9 @@ def test_ac_gen_01_json_mode_off_sends_no_response_format() -> None:
         seen.update(json.loads(request.content))
         return httpx.Response(200, json=reply("plain"))
 
-    client_for(handler).complete(LLMRequest(system="s", user="u", model="m", json_mode=False))
+    client_for(handler).complete(
+        LLMRequest(system="s", user="u", model="openai/gpt-oss-120b", json_mode=False)
+    )
     assert "response_format" not in seen
 
 
