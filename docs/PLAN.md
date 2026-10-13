@@ -85,14 +85,14 @@ Added during the build (not in the original task list; all recorded in DECISIONS
 - [x] T056 `retrieval/access.py` filter in SQL (AC-RET-05)
 - [x] T057 `retrieval/fusion.py` RRF (AC-RET-03)
 - [x] T058 `retrieval/retriever.py` config driven, with timings
-- [ ] T059 `llm/client.py` interface and fake for tests
-- [ ] T060 first real provider adapter
-- [ ] T061 `llm/retry.py` backoff and timeouts
-- [ ] T062 `llm/cost.py` price table (AC-OBS-03)
-- [ ] T063 `prompts/loader.py` front matter and content hash
-- [ ] T064 `prompts/renderer.py` delimiters and escaping (AC-CTX-03)
-- [ ] T065 `prompts/registry.py` sync and active pointer (AC-PRM-01)
-- [ ] T066 `prompts/bundle.py` bundle id (AC-PRM-03)
+- [x] T059 `llm/client.py` interface and fake for tests
+- [x] T060 first real provider adapter
+- [x] T061 `llm/retry.py` backoff and timeouts
+- [x] T062 `llm/cost.py` price table (AC-OBS-03)
+- [x] T063 `prompts/loader.py` front matter and content hash
+- [x] T064 `prompts/renderer.py` delimiters and escaping (AC-CTX-03)
+- [x] T065 `prompts/registry.py` sync and active pointer (AC-PRM-01)
+- [x] T066 `prompts/bundle.py` bundle id (AC-PRM-03)
 - [ ] T067 `context/budget.py` and `context/packer.py` (AC-CTX-01, AC-CTX-02)
 - [ ] T068 `generation/schema.py` from `OUTPUTS.md`
 - [ ] T069 `guardrails/output.py` three layers (AC-GEN-01)
