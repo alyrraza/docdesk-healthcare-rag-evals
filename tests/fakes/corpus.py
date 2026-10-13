@@ -5,6 +5,7 @@ from __future__ import annotations
 import uuid
 from dataclasses import dataclass
 
+import numpy as np
 from sqlalchemy.orm import Session
 
 from docdesk.db.models.chunks import EMBEDDING_DIM, ChunkRow
@@ -54,3 +55,17 @@ class Corpus:
         self.session.add(row)
         self.session.flush()
         return row
+
+
+class FixedEncoder:
+    """Embeds every question as the same one-hot vector, so a test controls what is nearest."""
+
+    model_name = "fixed"
+    revision = "1"
+    max_length = 256
+
+    def __init__(self, hot: int = 0) -> None:
+        self.hot = hot
+
+    def encode(self, texts: list[str]) -> np.ndarray:
+        return np.array([one_hot(self.hot) for _ in texts], dtype=np.float32)

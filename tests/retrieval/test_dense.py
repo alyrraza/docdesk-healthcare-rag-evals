@@ -25,9 +25,7 @@ def test_ac_ret_01_the_closest_chunk_comes_first_with_score_one(
     assert hits[0].source == "dense"
 
 
-def test_ac_ret_01_top_n_limits_the_number_of_results(
-    db_session: Session, corpus: Corpus
-) -> None:
+def test_ac_ret_01_top_n_limits_the_number_of_results(db_session: Session, corpus: Corpus) -> None:
     user = corpus.user()
     doc = corpus.document(user)
     for i in range(4):
