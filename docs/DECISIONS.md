@@ -133,6 +133,16 @@ them). The idea, if revisited: split into small child chunks for retrieval, stor
 text next to each child, and give the parent to the model. It needs a `parent_text` column and a
 migration, and the chunker can be rewritten from this description.
 
+## 2026-10-13: why the dispatch test was replaced (commit 87f0864)
+In `tests/ingestion/test_dispatch.py`, the test `test_ac_ing_03_a_pdf_is_recognised_by_its_header_not_its_file_name`
+was deleted in the same commit that added the PDF parser tests. It was written when the PDF parser
+was a stub, and it asserted that PDF bytes raise a `ParseError` mentioning "PDF". Once T040 made
+the parser real, that behaviour was meant to disappear, so the test would have failed for a good
+reason. Its intent, that a PDF is chosen by its bytes and not by its name, is now covered by
+`test_ac_ing_03_dispatch_sends_pdf_bytes_to_the_pdf_parser` in `tests/ingestion/parsers/test_pdf.py`,
+together with tests for no text layer, password protection, corrupt files and zero pages.
+Nothing was weakened: the old test checked a stub, the new tests check the real parser.
+
 ## 2026-10-13: HNSW recall on the real corpus (T052)
 Measured on the 5457 real chunks (298 documents): HNSW with ef_search 40 returned 99.9 percent of the
 exact scan's top 10 neighbours (100 random chunks as queries, themselves excluded). The index choice
