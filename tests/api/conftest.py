@@ -20,6 +20,12 @@ API_SETTINGS = Settings(
 )
 
 
+@pytest.fixture(autouse=True)
+def app_settings(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Let create_app() with no argument build from test settings, not a real .env."""
+    monkeypatch.setattr("docdesk.api.app.get_settings", lambda: API_SETTINGS)
+
+
 @pytest.fixture
 def api_settings() -> Settings:
     """The settings the test client uses, so tests can verify tokens it issued."""

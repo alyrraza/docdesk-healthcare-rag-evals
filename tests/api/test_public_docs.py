@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import pytest
-from fastapi import FastAPI
+from fastapi import APIRouter, Depends, FastAPI
 from fastapi.testclient import TestClient
 
 from docdesk.api.app import create_app
 from docdesk.api.public import DOCS_ROUTES, all_operations, find_unprotected_routes, public_routes
+from docdesk.auth.deps import require_user
 from docdesk.core.config import Settings
 
 
@@ -79,3 +80,20 @@ def test_ac_auth_05_a_route_inside_a_mounted_app_is_checked() -> None:
     app.mount("/sub", sub_app)
 
     assert ("GET", "/sub/inner") in find_unprotected_routes(app, settings)
+
+
+def test_ac_auth_05_a_nested_router_with_a_login_dependency_is_not_flagged() -> None:
+    settings = make_settings("local")
+    app = create_app(settings)
+    router = APIRouter()
+
+    @router.get("/item")
+    def item() -> dict[str, str]:
+        return {}
+
+    app.include_router(router, prefix="/guarded", dependencies=[Depends(require_user)])
+    app.include_router(router, prefix="/open")
+
+    unprotected = find_unprotected_routes(app, settings)
+    assert ("GET", "/guarded/item") not in unprotected
+    assert ("GET", "/open/item") in unprotected

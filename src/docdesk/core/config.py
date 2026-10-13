@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from functools import lru_cache
-from typing import ClassVar
+from typing import ClassVar, Literal
 from urllib.parse import unquote, urlsplit
 
 from pydantic import Field, model_validator
@@ -37,6 +37,8 @@ class Settings(BaseSettings):
     # variable or .env line can switch the check off in a real deployment.
     reject_placeholders: ClassVar[bool] = True
 
+    # "production" turns off the public API docs; local and test keep them on.
+    environment: Literal["local", "test", "production"] = "local"
     database_url: str
     redis_url: str
     # Login for the SQL branch's read-only role; optional until that branch exists.
@@ -46,6 +48,11 @@ class Settings(BaseSettings):
     # Only scripts/seed_admin.py uses these; checked here so a placeholder never gets seeded.
     admin_email: str | None = None
     admin_password: str | None = None
+
+    @property
+    def public_docs_enabled(self) -> bool:
+        """Serve /docs, /redoc and /openapi.json everywhere except production."""
+        return self.environment != "production"
 
     @model_validator(mode="after")
     def refuse_placeholder_secrets(self) -> Settings:
