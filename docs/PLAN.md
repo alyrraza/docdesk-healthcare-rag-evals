@@ -119,7 +119,7 @@ Added 2026-10-13 after the phase 3 review (`docs/reviews/phase-3.md`); done in t
 ## Phase 4: golden set, eval harness, baseline
 Added 2026-10-13 after the phase 3 token measurements; they come before the golden set work because
 no eval run is safe without them (see "Eval budget and pacing" in `docs/modules/evals.md`).
-- [ ] T079a `llm/pacer.py` tokens per minute and requests per minute per model; waits, never fails
+- [x] T079a `llm/pacer.py` tokens per minute and requests per minute per model; waits, never fails
 - [ ] T079b `evals/cache.py` disk cache for LLM calls under `.cache/`, key = prompt hash, model, params, input (AC-EVL-04, replaces T089)
 - [ ] T079c judge output parser: JSON mode where supported, strips a fenced json block, counts parse failures
 - [ ] T079d `evals/budget.py` daily token guard and resume state, so a run stops cleanly and continues next day
