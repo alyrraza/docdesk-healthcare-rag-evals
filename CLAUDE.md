@@ -36,6 +36,8 @@ interview, so clarity beats cleverness.
 - Recipes for common tasks: `docs/SKILLS.md`
 - Machine and environment gotchas: `docs/REMEMBER.md`
 - Decisions already made: `docs/DECISIONS.md`
+- `docs/REMEMBER.md`, `SKILLS.md`, `WORKFLOW.md`, `COMMITS.md`, `REFERENCES.md` and the root `INSTALL.md`
+  are local notes, not stored in the repo (they are in `.gitignore`).
 
 ## Hard rules (the short list, full list in `docs/RULES.md`)
 - Every source file stays under 200 lines (tests 300). One responsibility per file.
