@@ -12,28 +12,28 @@
   gold_evidence:
   - source: seed:medlineplus:medlineplus-387
     text: 'symptoms may include: - A rash that starts on the face and spreads to the body - Mild fever - Aching joints, especially in young women - Swollen glands'
-  verified: false
-- id: gi-002
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
+- id: gi-012
   type: single_fact
   split: test
-  question: How far ahead can a ramipril capsule mixture be prepared, and how should it be kept?
+  question: What body mass index counts as obesity in an adult?
   answerable: true
   gold_route: documents
   gold_facts:
-  - It can be prepared ahead and kept up to 24 hours at room temperature
-  - Or up to 48 hours under refrigeration
+  - An adult with a BMI of 30 or more is considered to have obesity
   gold_evidence:
-  - source: seed:openfda:01da05d8-e72e-4208-bf92-a5cd929f15ab
-    text: The described mixtures can be pre-prepared and stored for up to 24 hours at room temperature or up to 48 hours under refrigeration.
+  - source: seed:medlineplus:medlineplus-61
+    text: An adult who has a BMI of 30 or more is considered to have obesity. Severe obesity is having a BMI of 40 or higher.
   verified: false
 - id: gi-003
   type: single_fact
   split: dev
-  question: What strengths does metoprolol tartrate come in, and is it a tablet or a liquid?
+  question: What strengths do metoprolol tartrate tablets come in?
   answerable: true
   gold_route: documents
   gold_facts:
-  - It is a tablet taken by mouth
   - The strengths are 25 mg, 50 mg and 100 mg
   gold_evidence:
   - source: seed:openfda:00940cc5-d2eb-4841-9138-de97d7b1c674
@@ -52,11 +52,13 @@
   gold_evidence:
   - source: seed:medlineplus:medlineplus-237
     text: Eating disorders are serious mental health disorders. They involve severe problems with your thoughts about food and your eating behaviors. You may eat much less or much more than you need.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-005
   type: single_fact
   split: dev
-  question: Which kinds of food naturally provide folic acid?
+  question: Which foods contain folic acid?
   answerable: true
   gold_route: documents
   gold_facts:
@@ -71,7 +73,7 @@
 - id: gi-006
   type: single_fact
   split: dev
-  question: What can happen when opioid painkillers are combined with benzodiazepine sedatives?
+  question: According to the temazepam drug label, what can happen when benzodiazepines and opioids are used together?
   answerable: true
   gold_route: documents
   gold_facts:
@@ -80,19 +82,18 @@
   - source: seed:openfda:066e25b2-8a1b-4b08-b585-ce36753bf104
     text: Concomitant use of benzodiazepines and opioids may result in profound sedation, respiratory depression, coma, and death.
   verified: false
-- id: gi-007
+- id: gi-013
   type: single_fact
   split: test
-  question: Which types of medicine can cause bone loss?
+  question: What is oxybutynin chloride extended-release used to treat?
   answerable: true
   gold_route: documents
   gold_facts:
-  - Corticosteroids
-  - Proton pump inhibitors, which treat GERD
-  - Medicines to treat epilepsy
+  - Overactive bladder
+  - With symptoms of urge urinary incontinence, urgency, and frequency
   gold_evidence:
-  - source: seed:medlineplus:medlineplus-5935
-    text: 'Taking certain medicines, such as: - Corticosteroids - Proton pump inhibitors (which treat GERD) - Medicines to treat epilepsy'
+  - source: seed:openfda:02ff3be7-fc5c-4b91-8c67-ecdf6e19c42a
+    text: Oxybutynin chloride extended-release tablets are a muscarinic antagonist indicated for the treatment of overactive bladder with symptoms of urge urinary incontinence, urgency, and frequency.
   verified: false
 - id: gi-008
   type: single_fact
@@ -106,7 +107,9 @@
   gold_evidence:
   - source: seed:openfda:01b810b7-f4c8-4412-bbc5-b9220d8770d8
     text: Management of postherpetic neuralgia in adults Adjunctive therapy in the treatment of partial onset seizures, with and without secondary generalization, in adults and pediatric patients 3 years and older with epilepsy
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-009
   type: single_fact
   split: dev
@@ -120,16 +123,19 @@
   gold_evidence:
   - source: seed:medlineplus:medlineplus-6
     text: 'Usually, visits during your pregnancy occur: - Once a month for weeks 4 through 28 - Twice a month for weeks 28 through 36 - Weekly for week 36 until your baby is born'
-  verified: false
-- id: gi-010
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
+- id: gi-011
   type: single_fact
   split: test
-  question: Are the side effects of enalapril usually severe, or do they tend to pass?
+  question: In what tablet strengths is digoxin supplied?
   answerable: true
   gold_route: documents
   gold_facts:
-  - For the most part the side effects were mild and transient
+  - 125 mcg (0.125 mg) tablets
+  - 250 mcg (0.25 mg) tablets
   gold_evidence:
-  - source: seed:openfda:074fe718-88d8-365c-e063-6394a90a299d
-    text: For the most part, adverse experiences were mild and transient in nature.
+  - source: seed:openfda:03612934-62f4-4002-85af-6c66cd172acb
+    text: Digoxin is supplied as 125 mcg (0.125 mg) or 250 mcg (0.25 mg) tablets for oral administration.
   verified: false

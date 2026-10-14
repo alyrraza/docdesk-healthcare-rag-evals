@@ -33,3 +33,25 @@ def test_ac_evl_01_batch_one_splits_follow_the_plan_and_are_6_dev_4_test() -> No
     items = batch1()
     assert [item.split for item in items] == [split_for("single_fact", n) for n in range(10)]
     assert sorted(item.split for item in items) == ["dev"] * 6 + ["test"] * 4
+
+
+OWNER_OK = {"gi-001", "gi-004", "gi-008", "gi-009"}
+
+
+def test_ac_evl_01_only_the_owner_approved_items_are_verified() -> None:
+    assert {item.id for item in batch1() if item.verified} == OWNER_OK
+
+
+def test_ac_evl_01_batch_one_dropped_the_unusable_items_and_keeps_ten() -> None:
+    ids = [item.id for item in batch1()]
+    assert len(ids) == 10
+    assert not {"gi-002", "gi-007", "gi-010"} & set(ids)
+    assert {"gi-011", "gi-012", "gi-013"} <= set(ids)
+
+
+def test_ac_evl_01_batch_one_questions_follow_the_review_lessons() -> None:
+    questions = {item.id: item.question.lower() for item in batch1()}
+    assert "naturally" not in questions["gi-005"]
+    assert "tablet or a liquid" not in questions["gi-003"]
+    assert "temazepam" in questions["gi-006"]
+    assert "benzodiazepines and opioids" in questions["gi-006"]
