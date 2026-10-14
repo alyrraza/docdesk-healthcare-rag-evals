@@ -76,7 +76,7 @@
 - id: gi-040
   type: multi_chunk
   split: test
-  question: How serious a cause of death is heart disease in the United States, and what do treatment plans for heart disease depend on?
+  question: Is heart disease a leading cause of death in the United States, and what do treatment plans for heart disease depend on?
   answerable: true
   gold_route: documents
   gold_facts:
@@ -106,7 +106,7 @@
 - id: gi-042
   type: multi_chunk
   split: dev
-  question: How many yes answers to the screening questions suggest an alcohol use disorder, and what should someone who thinks they might have one do?
+  question: How many yes answers to the alcohol use disorder self check questions suggest a person may have an AUD, and what should they do if they think they might?
   answerable: true
   gold_route: documents
   gold_facts:
@@ -118,25 +118,25 @@
   - source: seed:medlineplus:medlineplus-120
     text: What should I do if I think that I might have an alcohol use disorder (AUD)? If you think you might have an AUD, see your health care provider for an evaluation.
   verified: false
-- id: gi-043
+- id: gi-054
   type: multi_chunk
   split: test
-  question: When should you call 911 in an emergency, and what should a basic first aid kit include?
+  question: What parts of the body do Raynaud attacks usually affect, and how can most people with Raynaud phenomenon keep their symptoms under control?
   answerable: true
   gold_route: documents
   gold_facts:
-  - Right away for life-threatening emergencies, such as when someone collapses, can't breathe, or is unresponsive
-  - Adhesive bandages, sterile gauze pads, adhesive tape, antiseptic wipes, disposable gloves, scissors and a first-aid guide
+  - Attacks usually affect the fingers and toes
+  - Most people with Raynaud phenomenon can keep their symptoms under control by avoiding getting cold
   gold_evidence:
-  - source: seed:medlineplus:medlineplus-240
-    text: Call 911 right away for life-threatening emergencies, such as when someone collapses, can't breathe, or is unresponsive.
-  - source: seed:medlineplus:medlineplus-240
-    text: 'A basic first aid kit should include: - Adhesive bandages - Sterile gauze pads - Adhesive tape - Antiseptic wipes - Disposable gloves - Scissors - A first-aid guide, so you know how to use each item'
+  - source: seed:medlineplus:medlineplus-381
+    text: What are the symptoms of Raynaud phenomenon? Raynaud attacks most often happen when you get cold, for example when you grab something cold from the freezer or go into an air-conditioned building on a warm day. Attacks usually affect your fingers and toes.
+  - source: seed:medlineplus:medlineplus-381
+    text: Most people with Raynaud phenomenon can keep their symptoms under control by avoiding getting cold.
   verified: false
 - id: gi-044
   type: multi_chunk
   split: dev
-  question: Are tetanus and botulism caused by the same type of bacteria?
+  question: Which bacteria cause tetanus and botulism?
   answerable: true
   gold_route: documents
   gold_facts:
@@ -166,7 +166,7 @@
 - id: gi-046
   type: multi_chunk
   split: dev
-  question: What are apixaban and irbesartan each indicated for?
+  question: In which patients is apixaban indicated to reduce the risk of stroke and systemic embolism, and what is irbesartan's indication related to blood pressure?
   answerable: true
   gold_route: documents
   gold_facts:
@@ -181,7 +181,7 @@
 - id: gi-047
   type: multi_chunk
   split: dev
-  question: What do the boxed warnings of lithium carbonate and warfarin sodium each warn about?
+  question: What serious risks do the lithium carbonate and warfarin sodium labels warn about?
   answerable: true
   gold_route: documents
   gold_facts:
@@ -211,18 +211,18 @@
 - id: gi-049
   type: multi_chunk
   split: dev
-  question: What is benazepril hydrochloride indicated for, in which patients is it contraindicated, and what tablet strengths are supplied?
+  question: What is benazepril hydrochloride indicated for, what harm can it cause in pregnancy, and what tablet strengths are supplied?
   answerable: true
   gold_route: documents
   gold_facts:
   - Treatment of hypertension, to lower blood pressure
-  - Contraindicated in patients who are hypersensitive to benazepril or any other ACE inhibitor
+  - Benazepril hydrochloride tablets can cause fetal harm when administered to a pregnant woman
   - Supplied as film-coated tablets of 5 mg, 10 mg, 20 mg and 40 mg
   gold_evidence:
   - source: seed:openfda:01a3c9f6-41aa-47a7-8c56-5462c6b54416
     text: Benazepril hydrochloride tablets are indicated for the treatment of hypertension, to lower blood pressure.
   - source: seed:openfda:01a3c9f6-41aa-47a7-8c56-5462c6b54416
-    text: 'Benazepril hydrochloride tablets are contraindicated in patients: • who are hypersensitive to benazepril or to any other ACE inhibitor'
+    text: Benazepril hydrochloride tablets can cause fetal harm when administered to a pregnant woman.
   - source: seed:openfda:01a3c9f6-41aa-47a7-8c56-5462c6b54416
     text: Benazepril hydrochloride is supplied as film-coated tablets containing 5 mg, 10 mg, 20 mg, and 40 mg of benazepril hydrochloride for oral administration.
   verified: false
@@ -244,7 +244,7 @@
 - id: gi-051
   type: multi_chunk
   split: dev
-  question: What is extended-release methylphenidate indicated for, and what risk does its boxed warning describe?
+  question: What is extended-release methylphenidate indicated for, and what risk does the label warn about?
   answerable: true
   gold_route: documents
   gold_facts:
@@ -259,7 +259,7 @@
 - id: gi-052
   type: multi_chunk
   split: test
-  question: What does the boxed warning of phenytoin sodium injection say about the infusion rate, and which seizure emergency is the injection indicated for?
+  question: What does the phenytoin sodium injection label say about the maximum rate of intravenous administration, and which seizure emergency is the injection indicated for?
   answerable: true
   gold_route: documents
   gold_facts:
@@ -274,7 +274,7 @@
 - id: gi-053
   type: multi_chunk
   split: dev
-  question: Which infections does the doxycycline label list first as treatable, and in which persons is doxycycline contraindicated?
+  question: Which rickettsial infections can doxycycline treat, and who must not take it?
   answerable: true
   gold_route: documents
   gold_facts:
