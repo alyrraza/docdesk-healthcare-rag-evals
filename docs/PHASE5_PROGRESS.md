@@ -79,7 +79,9 @@ lower faithfulness. Reason for the amendment: hybrid gained 1 item with an inter
 (19 of 30). FINAL_FULL is cap 4 plus every other technique that passed the original rule (hybrid, top_k 8 if it passes).
 Freeze FINAL_FULL only if it beats FINAL_SIMPLE by at least 2 items on strict pass and does not lower faithfulness,
 otherwise freeze FINAL_SIMPLE. Both are reported in final_vs_b0.md.
-- [ ] waits for e5_topk8 (resume the same command after 2026-10-15 10:39 UTC). Candidates by the rule so far: E5 cap 4 and E3 hybrid.
+- [x] 2026-10-15 final_simple.toml built and run on dev (run 07e3ffbb, label final_simple): 19 of 30 strict pass, all 91 calls cache hits, 0 tokens billed. Same as cap 4.
+- [ ] RESUME: (1) e5_topk8 rerun and report after 2026-10-15 10:39 UTC; (2) technique comparison e5_topk8_vs_b0; (3) final_full.toml = cap 4 + hybrid (+ top_k 8 if it passes the original rule), run label final_full; (4) apply the amended rule, write final_vs_b0.md, copy winner to final.toml, DECISIONS entry FINAL frozen; (5) test split once each; (6) python scripts/phase5_summary.py; (7) push, CI.
+- [ ] (old note) waits for e5_topk8 (resume the same command after 2026-10-15 10:39 UTC). Candidates by the rule so far: E5 cap 4 and E3 hybrid.
   Build `evals/configs/final.toml` from the techniques that pass, run it on dev once, write `evals/results/final_vs_b0.md`, then freeze.
 
 ## Step 5: test split (once)
