@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session
 from docdesk.db.models.evals import EvalRunRow
 from docdesk.evals import run_store
 from docdesk.evals.metrics.abstention import AbstentionCounts, count_cells
+from docdesk.evals.report_usage import ModelUsage
 from docdesk.evals.stats import (
     DEFAULT_RESAMPLES,
     DEFAULT_SEED,
@@ -41,6 +42,8 @@ class ResultRecord:
     item_id: str
     metrics: dict[str, Any]
     failure_label: str | None
+    # The stored judge labels and chunk ids, read by the worst items section.
+    trace: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -88,6 +91,7 @@ class Report:
     llm_calls: int = 0
     not_run: list[tuple[str, str]] = field(default_factory=list)
     total_ok: int = 0
+    model_usage: list[ModelUsage] = field(default_factory=list)
 
 
 def value_of(record: ResultRecord, metric: str) -> float | None:
@@ -127,7 +131,7 @@ def judge_failure_counts(records: list[ResultRecord]) -> dict[str, dict[str, int
     return result
 
 
-def build_report(run: RunData) -> Report:
+def build_report(run: RunData, model_usage: list[ModelUsage] | None = None) -> Report:
     """Aggregate the run. Not run items are listed apart and never counted as failures."""
     ran = [r for r in run.records if r.metrics.get("status") == "ok"]
     names = [n for n in CATEGORY_ORDER if any(r.metrics["type"] == n for r in ran)]
@@ -147,6 +151,7 @@ def build_report(run: RunData) -> Report:
         not_run=[(r.item_id, r.metrics["reason"]) for r in run.records
                  if r.metrics.get("status") == "not_run"],
         total_ok=len(ran),
+        model_usage=model_usage or [],
     )
 
 
@@ -155,7 +160,7 @@ def load_run_data(session: Session, run_id: uuid.UUID) -> RunData:
     run = session.get(EvalRunRow, run_id)
     if run is None:
         raise LookupError(f"no eval run with id {run_id}")
-    records = [ResultRecord(r.item_id, r.metrics, r.failure_label)
+    records = [ResultRecord(r.item_id, r.metrics, r.failure_label, r.trace)
                for r in run_store.results_of(session, run_id)]
     mode = next((r.metrics["mode"] for r in records if "mode" in r.metrics), "full")
     return RunData(str(run.id), run.config_id, run.split, mode, records)

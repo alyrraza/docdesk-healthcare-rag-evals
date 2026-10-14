@@ -10,6 +10,14 @@ from docdesk.evals.report_data import (
     MetricCell,
     Report,
 )
+from docdesk.evals.report_sections_md import (
+    headline_lines,
+    outcome_lines,
+    stage_lines,
+    usage_lines,
+    worst_lines,
+)
+from docdesk.evals.report_table import table
 
 COLUMNS = (
     ("pass_rate", "pass rate"), ("recall", "recall@k"), ("hit", "hit"), ("mrr", "MRR"),
@@ -26,12 +34,6 @@ def format_cell(cell: MetricCell, category_n: int) -> str:
     i = cell.interval
     text = f"{i.estimate:.2f} [{i.low:.2f}, {i.high:.2f}]"
     return text if cell.n == category_n else f"{text} (n={cell.n})"
-
-
-def table(headers: list[str], rows: list[list[str]]) -> list[str]:
-    """A markdown table as lines."""
-    lines = ["| " + " | ".join(headers) + " |", "|" + "---|" * len(headers)]
-    return lines + ["| " + " | ".join(row) + " |" for row in rows]
 
 
 def category_row(c: Category) -> list[str]:
@@ -59,6 +61,7 @@ def report_markdown(report: Report) -> str:
         f"seed {SEED}. "
         "Items that share a source document are resampled together. "
         "A cell shows n when some items had no value for it.", "",
+        *headline_lines(report),
         "## Results per category", "",
         *table(["category", "items"] + [label for _, label in COLUMNS],
                [category_row(c) for c in [*report.categories, report.overall]]), "",
@@ -78,7 +81,9 @@ def report_markdown(report: Report) -> str:
         "## Tokens and cost", "",
         f"Tokens in {report.tokens_in}, tokens out {report.tokens_out}, "
         f"cost {report.cost_usd} USD, model calls {report.llm_calls}, "
-        f"cache hits {report.cache_hits}.", "",
+        f"cache hits {report.cache_hits}. Cache hits count the judge calls only, because the "
+        "generator cache hits are not recorded yet.", "",
+        *usage_lines(report), *stage_lines(report), *outcome_lines(report), *worst_lines(report),
         "## Not run", "",
     ]
     if report.not_run:

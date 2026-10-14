@@ -20,6 +20,7 @@ from pathlib import Path
 from sqlalchemy.orm import Session
 
 from docdesk.evals.budget import BudgetStop
+from docdesk.evals.cache import DEFAULT_CACHE_DIR
 from docdesk.evals.cli_check import answer_prompt_for, check_all
 from docdesk.evals.config import EvalConfig, PromptPinMismatch, load_eval_config
 from docdesk.evals.golden.corpus import GoldenCorpus
@@ -30,6 +31,7 @@ from docdesk.evals.preflight import FingerprintMismatch
 from docdesk.evals.report import compare_markdown, report_markdown
 from docdesk.evals.report_compare import compare_runs
 from docdesk.evals.report_data import build_report, load_run_data
+from docdesk.evals.report_usage import usage_from_cache
 from docdesk.evals.run_store import latest_run_id
 from docdesk.evals.runner import RunOptions, run_eval
 from docdesk.prompts.loader import PromptFile
@@ -49,6 +51,8 @@ class Runtime:
     prompts_dir: Path = Path("prompts")
     git_sha: str = "unknown"
     commit: bool = True
+    # Where the cache entries are read back for the tokens per model table of the report.
+    cache_dir: Path = DEFAULT_CACHE_DIR
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -126,7 +130,8 @@ def cmd_report(rt: Runtime, args: argparse.Namespace) -> int:
     """Print the report of one run."""
     with rt.open_session() as session:
         run_id = uuid.UUID(args.run_id) if args.run_id else latest_run_id(session)
-        write_or_print(report_markdown(build_report(load_run_data(session, run_id))), args.out)
+        report = build_report(load_run_data(session, run_id), usage_from_cache(rt.cache_dir))
+        write_or_print(report_markdown(report), args.out)
     return 0
 
 

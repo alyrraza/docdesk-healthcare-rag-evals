@@ -138,3 +138,19 @@ def test_ac_evl_06_cli_07_a_budget_stop_exits_cleanly_with_the_resume_message(
     calls.pipeline.run = stop
     assert cli(runtime, "run") == 2
     assert "progress is saved" in capsys.readouterr().out
+
+
+def test_ac_evl_04_cli_report_reads_tokens_per_model_from_the_runtime_cache_folder(
+    setup, capsys, tmp_path
+) -> None:
+    _, runtime, _ = setup
+    cache = tmp_path / "cache"
+    cache.mkdir()
+    entry = {"text": "x", "tokens_in": 10, "tokens_out": 2, "latency_ms": 1.0,
+             "finish_reason": "stop", "model": "cache-model", "cost_usd": "0.5"}
+    (cache / "one.json").write_text(json.dumps(entry), encoding="utf-8")
+    runtime.cache_dir = cache
+    assert cli(runtime, "run") == 0
+    capsys.readouterr()
+    assert cli(runtime, "report") == 0
+    assert "| cache-model | 1 | 10 | 2 | 0.500000 |" in capsys.readouterr().out
