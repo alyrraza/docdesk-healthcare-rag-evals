@@ -94,3 +94,30 @@ def test_ac_evl_06_live_04_retrieval_only_never_calls_a_client_that_raises_when_
     out = pipeline.run("What about famotidine?", retrieval_only=True)
     assert out.retrieved_ids[0] == str(chunks[0].id)
     assert client.requests == [] and out.llm_calls == 0
+
+
+def test_ac_evl_08_live_05_config_temperature_and_max_tokens_reach_the_model_call(
+    db_session: Session, corpus: Corpus
+) -> None:
+    from dataclasses import replace
+
+    models = {**CONFIG.values["models"], "temperature": 0.7, "max_output_tokens": 321}
+    config = replace(CONFIG, values={**CONFIG.values, "models": models})
+    client = FakeLLMClient([ANSWER])
+    user = corpus.user()
+    doc = corpus.document(user, shared=True)
+    corpus.chunk(doc, "Chunk text about famotidine.", hot=0, position=0)
+    pipeline = LivePipeline(
+        session=db_session, encoder=FixedEncoder(0), counter=WordCounter(), llm=client,
+        prompt=PROMPT, config=config, user_id=user,
+    )
+    pipeline.run("What about famotidine?", retrieval_only=False)
+    assert (client.requests[0].temperature, client.requests[0].max_output_tokens) == (0.7, 321)
+
+
+def test_ac_obs_03_live_06_the_pipeline_reports_retrieval_and_generation_time(
+    db_session: Session, corpus: Corpus
+) -> None:
+    pipeline, _ = build(db_session, corpus, FakeLLMClient([ANSWER]))
+    out = pipeline.run("What about famotidine?", retrieval_only=False)
+    assert out.timings_ms["retrieval"] > 0 and out.timings_ms["generation"] >= 0
