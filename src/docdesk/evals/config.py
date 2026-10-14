@@ -25,7 +25,8 @@ KNOWN_KEYS: dict[str, frozenset[str]] = {
     "content_hash": frozenset(),
     "chunking": frozenset({"strategy", "size", "overlap"}),
     "embedding": frozenset({"model", "revision"}),
-    "retrieval": frozenset({"mode", "top_n", "top_k", "rrf_k"}),
+    # drop_title_only (E4) and decompose (E7) are read by LivePipeline.candidates.
+    "retrieval": frozenset({"mode", "top_n", "top_k", "rrf_k", "drop_title_only", "decompose"}),
     "rerank": frozenset({"enabled"}),
     "packer": frozenset({"max_per_document"}),
     "budget": frozenset(

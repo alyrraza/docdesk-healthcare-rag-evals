@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import time
 import uuid
 from dataclasses import replace
 
@@ -19,8 +20,11 @@ from docdesk.guardrails.policy import REFUSAL_MESSAGE
 from docdesk.ingestion.types import TokenCounting
 from docdesk.llm.client import LLMClient
 from docdesk.prompts.loader import PromptFile
+from docdesk.retrieval.decompose import sub_queries
+from docdesk.retrieval.filters import drop_title_only
+from docdesk.retrieval.fusion import reciprocal_rank_fusion
 from docdesk.retrieval.retriever import QueryEncoder, retrieve
-from docdesk.retrieval.types import RetrievalResult
+from docdesk.retrieval.types import RetrievalConfig, RetrievalResult
 
 
 def outcome_of(result: AnswerResult) -> Outcome:
@@ -59,17 +63,38 @@ class LivePipeline:
         # Retrieve all top_n candidates so the labeler can tell a ranking miss from a retrieval
         # miss, then cut to top_k. For a dense config this gives the same top_k as asking for k.
         every = replace(settings, top_k=settings.top_n)
-        wide = retrieve(self._session, self._encoder, question, self._user, every)
+        started = time.perf_counter()
+        wide = self.candidates(question, every)
+        retrieval_ms = (time.perf_counter() - started) * 1000.0
         top = RetrievalResult(wide.chunks[: settings.top_k], settings.config_id, wide.timings_ms)
         output = PipelineOutput(
             outcome=None,
             candidate_ids=[str(c.chunk_id) for c in wide.chunks],
             retrieved_ids=[str(c.chunk_id) for c in top.chunks],
-            timings_ms={"retrieval": wide.timings_ms.get("total", 0.0)},
+            timings_ms={"retrieval": retrieval_ms},
         )
         if retrieval_only:
             return output
         return self.generate(question, top, output)
+
+    def candidates(self, question: str, every: RetrievalConfig) -> RetrievalResult:
+        """The top_n candidates, plus the optional steps a config switches on (E7, then E4).
+
+        A config without the two flags gets exactly what `retrieve` returns, which keeps B0 intact.
+        """
+        flags = self._config.values["retrieval"]
+        wide = retrieve(self._session, self._encoder, question, self._user, every)
+        chunks = wide.chunks
+        subs = sub_queries(question) if flags.get("decompose") else []
+        if subs:
+            lists = [chunks] + [
+                retrieve(self._session, self._encoder, sub, self._user, every).chunks
+                for sub in subs
+            ]
+            chunks = reciprocal_rank_fusion(lists, every.rrf_k)[: every.top_n]
+        if flags.get("drop_title_only"):
+            chunks = drop_title_only(chunks)
+        return RetrievalResult(chunks, wide.config_id, wide.timings_ms)
 
     def generate(
         self, question: str, top: RetrievalResult, output: PipelineOutput

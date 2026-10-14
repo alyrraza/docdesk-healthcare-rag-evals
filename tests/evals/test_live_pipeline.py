@@ -121,3 +121,59 @@ def test_ac_obs_03_live_06_the_pipeline_reports_retrieval_and_generation_time(
     pipeline, _ = build(db_session, corpus, FakeLLMClient([ANSWER]))
     out = pipeline.run("What about famotidine?", retrieval_only=False)
     assert out.timings_ms["retrieval"] > 0 and out.timings_ms["generation"] >= 0
+
+
+def with_retrieval(**flags):
+    from dataclasses import replace
+
+    retrieval = {**CONFIG.values["retrieval"], **flags}
+    return replace(CONFIG, values={**CONFIG.values, "retrieval": retrieval})
+
+
+class CountingEncoder(FixedEncoder):
+    """Remembers every text it embedded, so a test can see how many searches were made."""
+
+    def __init__(self) -> None:
+        super().__init__(0)
+        self.texts: list[str] = []
+
+    def encode(self, texts: list[str]):
+        self.texts += texts
+        return super().encode(texts)
+
+
+def pipeline_with(db_session: Session, corpus: Corpus, config, encoder=None):
+    user = corpus.user()
+    doc = corpus.document(user, title="Famotidine drug label", shared=True)
+    title = corpus.chunk(doc, "Famotidine drug label", hot=0, position=0)
+    body = corpus.chunk(doc, "Take famotidine with food.", hot=1, position=1)
+    pipe = LivePipeline(
+        session=db_session, encoder=encoder or FixedEncoder(0), counter=WordCounter(), llm=None,
+        prompt=PROMPT, config=config, user_id=user,
+    )
+    return pipe, title, body
+
+
+def test_ac_evl_08_live_07_drop_title_only_removes_the_title_chunk_from_the_candidates(
+    db_session: Session, corpus: Corpus
+) -> None:
+    plain, title, body = pipeline_with(db_session, corpus, CONFIG)
+    assert plain.run("famotidine?", retrieval_only=True).retrieved_ids[0] == str(title.id)
+    dropping, title, body = pipeline_with(db_session, corpus, with_retrieval(drop_title_only=True))
+    out = dropping.run("famotidine?", retrieval_only=True)
+    assert str(title.id) not in out.candidate_ids and str(body.id) in out.retrieved_ids
+
+
+def test_ac_evl_08_live_08_decompose_searches_once_per_drug_and_only_when_switched_on(
+    db_session: Session, corpus: Corpus
+) -> None:
+    question = "What risks do the lithium and warfarin labels warn about?"
+    encoder = CountingEncoder()
+    plain, _, _ = pipeline_with(db_session, corpus, CONFIG, encoder)
+    plain.run(question, retrieval_only=True)
+    assert encoder.texts == [question]
+    encoder = CountingEncoder()
+    split, _, _ = pipeline_with(db_session, corpus, with_retrieval(decompose=True), encoder)
+    split.run(question, retrieval_only=True)
+    assert len(encoder.texts) == 3
+    assert encoder.texts[1].startswith("lithium") and encoder.texts[2].startswith("warfarin")
