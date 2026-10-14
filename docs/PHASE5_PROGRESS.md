@@ -73,7 +73,9 @@ Results table (primary metric: strict pass on 30 answerable dev items, baseline 
 - [x] P5-8 abstain gate done (0.55 tie, 0.60 loses 2 items, neither kept)
 
 ## Step 4: FINAL config
-AMENDED 2026-10-15 (before any FINAL run). Original rule: include a technique if it gains at least 1 item and does not
+SECOND AMENDMENT 2026-10-15 (before any FINAL_FULL run and any test run): FINAL_FULL and top_k 8 NOT COMPLETED, the daily generator token budget was spent (168122 of 170000). FINAL = FINAL_SIMPLE (cap 4 alone), the only technique whose paired interval excludes zero on dev. The first amendment below is superseded for the final choice. See docs/DECISIONS.md.
+
+First amendment (superseded): AMENDED 2026-10-15 (before any FINAL run). Original rule: include a technique if it gains at least 1 item and does not
 lower faithfulness. Reason for the amendment: hybrid gained 1 item with an interval that holds zero and MRR fell from
 0.81 to 0.67, so the one item rule would turn noise into a kept technique. New rule: FINAL_SIMPLE is E5 cap 4 alone
 (19 of 30). FINAL_FULL is cap 4 plus every other technique that passed the original rule (hybrid, top_k 8 if it passes).

@@ -775,3 +775,14 @@ strict pass on answerable dev items. Every config tried is in `evals/results/pha
   FINAL_FULL is cap 4 plus every other technique that passed the original one item rule (hybrid, and top_k 8 if it
   passes). Freeze FINAL_FULL only if it beats FINAL_SIMPLE by at least 2 items on strict pass AND does not lower
   faithfulness. Otherwise freeze FINAL_SIMPLE. Both are reported in `evals/results/final_vs_b0.md`.
+
+## 2026-10-15: second amendment to the FINAL rule, written before any FINAL_FULL run and before any test run
+- **What happened.** FINAL_FULL and top_k 8 are NOT COMPLETED. The daily generator token budget was spent (ledger
+  168122 of 170000 tokens for openai/gpt-oss-120b). No FINAL_FULL run exists. top_k 8 (run 22fb6b60) is unfinished.
+- **Rule change.** FINAL = FINAL_SIMPLE (E5 cap 4 alone). It is the only technique whose paired interval excludes zero on dev
+  (+4 items, [+0.033, +0.267] on the rate). Hybrid had no clear difference. This moves toward the simpler config.
+- **Superseded, kept visible.** The first amendment (2026-10-15 above) said to freeze FINAL_FULL only if it beat
+  FINAL_SIMPLE by at least 2 items. That comparison cannot be made without a FINAL_FULL run, so that branch is superseded by
+  this entry. The original one item rule (2026-10-14) is superseded for the FINAL choice by the first amendment.
+- **Consequence.** `evals/configs/final.toml` is a copy of `final_simple.toml` (only the id and a comment differ, a test
+  proves it). `final_vs_b0.md` reports FINAL_SIMPLE against B0 and lists FINAL_FULL and top_k 8 as not completed.
