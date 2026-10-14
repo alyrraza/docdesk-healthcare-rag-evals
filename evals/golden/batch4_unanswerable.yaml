@@ -1,0 +1,255 @@
+- id: gi-055
+  type: unanswerable
+  split: dev
+  question: What is the elimination half-life of doxazosin?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: The doxazosin label in the corpus covers indications, dosage, contraindications, warnings and adverse reactions, but never gives a half-life or any elimination time.
+  absent_terms:
+  - half-life
+  - half life
+  - elimination
+  absence_scope: seed:openfda:08521333-ff21-45ad-b99e-1f43d945d24d
+  verified: false
+- id: gi-056
+  type: unanswerable
+  split: test
+  question: What are the common side effects of semaglutide?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: The corpus has no document about semaglutide, so no passage describes its side effects.
+  absent_terms:
+  - semaglutide
+  - ozempic
+  - wegovy
+  - rybelsus
+  absence_scope: corpus
+  verified: false
+- id: gi-057
+  type: unanswerable
+  split: dev
+  question: Which brand of home blood pressure monitor is the most accurate?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: The corpus is health reference text and does not compare or recommend consumer devices or brands.
+  absent_terms:
+  - omron
+  - withings
+  - blood pressure monitor
+  - most accurate
+  absence_scope: corpus
+  verified: false
+- id: gi-058
+  type: unanswerable
+  split: test
+  question: What dose of diltiazem hydrochloride extended-release capsules is recommended for children?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: The diltiazem label in the corpus gives adult dosing only and never mentions children, infants or pediatric use.
+  absent_terms:
+  - pediatric
+  - paediatric
+  - children
+  - child
+  - infant
+  absence_scope: seed:openfda:0089fc7a-a7aa-4873-b699-39a1b21616ca
+  verified: false
+- id: gi-059
+  type: unanswerable
+  split: dev
+  question: Which serious infections is adalimumab known to make more likely?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: The corpus has no document about adalimumab or any of its brand names.
+  absent_terms:
+  - adalimumab
+  - humira
+  absence_scope: corpus
+  verified: false
+- id: gi-060
+  type: unanswerable
+  split: test
+  question: What are the usual visiting hours for an intensive care unit?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: Visiting hours are set by each hospital, and no corpus document gives visiting hours for any unit.
+  absent_terms:
+  - visiting hours
+  - visitation
+  - visitors
+  absence_scope: corpus
+  verified: false
+- id: gi-061
+  type: unanswerable
+  split: dev
+  question: What is the incubation period of mumps?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: The mumps topic lists the first symptoms and says they last 7 to 10 days, but it never says how long after exposure they begin.
+  absent_terms:
+  - incubation
+  - after exposure
+  - days after
+  absence_scope: seed:medlineplus:medlineplus-334
+  verified: false
+- id: gi-062
+  type: unanswerable
+  split: dev
+  question: What are the typical symptoms of celiac disease?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: The corpus has no document about celiac disease.
+  absent_terms:
+  - celiac
+  - coeliac
+  absence_scope: corpus
+  verified: false
+- id: gi-063
+  type: unanswerable
+  split: test
+  question: What causes Huntington's disease?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: The corpus has no document about Huntington's disease.
+  absent_terms:
+  - huntington
+  absence_scope: corpus
+  verified: false
+- id: gi-064
+  type: unanswerable
+  split: dev
+  question: Can a hospital be sued for malpractice if a patient falls out of bed?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: This is a legal question about liability, and the corpus holds health reference text with no legal content.
+  absent_terms:
+  - malpractice
+  - lawsuit
+  - sued
+  - negligence
+  - statute of limitations
+  absence_scope: corpus
+  verified: false
+- id: gi-065
+  type: unanswerable
+  split: test
+  question: Which medicines are given in hospital to treat tetanus?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: The tetanus topic says treatment happens in a hospital but names no medicine or therapy.
+  absent_terms:
+  - antibiotic
+  - antitoxin
+  - immune globulin
+  - metronidazole
+  - penicillin
+  - muscle relaxant
+  - sedative
+  absence_scope: seed:medlineplus:medlineplus-435
+  verified: false
+- id: gi-066
+  type: unanswerable
+  split: dev
+  question: What is the recommended treatment for a donepezil overdose?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: The donepezil label in the corpus has no overdosage section and never mentions overdose or its treatment.
+  absent_terms:
+  - overdose
+  - overdosage
+  - atropine
+  absence_scope: seed:openfda:03e26183-3e07-45e8-a414-a8bad32483e2
+  verified: false
+- id: gi-067
+  type: unanswerable
+  split: dev
+  question: How is plantar fasciitis usually treated?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: The corpus has no document about plantar fasciitis.
+  absent_terms:
+  - plantar
+  - fasciitis
+  absence_scope: corpus
+  verified: false
+- id: gi-068
+  type: unanswerable
+  split: test
+  question: Does furosemide pass into breast milk?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: The furosemide label in the corpus never mentions breast milk, nursing or lactation.
+  absent_terms:
+  - breast milk
+  - breastfeeding
+  - lactation
+  - nursing
+  - milk
+  absence_scope: seed:openfda:01a5f094-b473-4e46-9e61-69d5ec6dd766
+  verified: false
+- id: gi-069
+  type: unanswerable
+  split: dev
+  question: How can a patient appeal an insurer's denial of a physical therapy claim?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: Appealing a claim denial is an insurance procedure, and no corpus document covers it.
+  absent_terms:
+  - appeal
+  - prior authorization
+  - claim denial
+  - denied claim
+  absence_scope: corpus
+  verified: false
+- id: gi-070
+  type: unanswerable
+  split: test
+  question: Which parasitic infections is ivermectin used to treat?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: The corpus has no document about ivermectin or its brand name.
+  absent_terms:
+  - ivermectin
+  - stromectol
+  absence_scope: corpus
+  verified: false
+- id: gi-071
+  type: unanswerable
+  split: dev
+  question: At what degree of spinal curvature is a brace recommended for scoliosis?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: The scoliosis topic says some people need a brace but gives no curve size or angle for when.
+  absent_terms:
+  - degree
+  - cobb
+  absence_scope: seed:medlineplus:medlineplus-395
+  verified: false
+- id: gi-072
+  type: unanswerable
+  split: test
+  question: Is any clinical trial currently recruiting adults with pancreatic cancer in Texas?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: Live trial listings change daily, and the corpus holds no trial registry data.
+  absent_terms:
+  - recruiting
+  - enrolling
+  - clinicaltrials.gov
+  absence_scope: corpus
+  verified: false
+- id: gi-073
+  type: unanswerable
+  split: dev
+  question: Which medicines are used to treat Raynaud phenomenon?
+  answerable: false
+  gold_route: documents
+  no_evidence_reason: The Raynaud topic says medicines can help but names none, and it only lists medicines that can make symptoms worse.
+  absent_terms:
+  - calcium channel
+  - nifedipine
+  - amlodipine
+  - vasodilator
+  - nitroglycerin
+  absence_scope: seed:medlineplus:medlineplus-381
+  verified: false
