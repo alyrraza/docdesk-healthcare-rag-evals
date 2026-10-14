@@ -82,18 +82,19 @@ lower faithfulness. Reason for the amendment: hybrid gained 1 item with an inter
 Freeze FINAL_FULL only if it beats FINAL_SIMPLE by at least 2 items on strict pass and does not lower faithfulness,
 otherwise freeze FINAL_SIMPLE. Both are reported in final_vs_b0.md.
 - [x] 2026-10-15 final_simple.toml built and run on dev (run 07e3ffbb, label final_simple): 19 of 30 strict pass, all 91 calls cache hits, 0 tokens billed. Same as cap 4.
-- [ ] RESUME: (1) e5_topk8 rerun and report after 2026-10-15 10:39 UTC; (2) technique comparison e5_topk8_vs_b0; (3) final_full.toml = cap 4 + hybrid (+ top_k 8 if it passes the original rule), run label final_full; (4) apply the amended rule, write final_vs_b0.md, copy winner to final.toml, DECISIONS entry FINAL frozen; (5) test split once each; (6) python scripts/phase5_summary.py; (7) push, CI.
+- [x] 2026-10-15 FINAL frozen as final.toml (copy of final_simple, git 5dfffb2), final_vs_b0.md rebuilt by code. Key pool built (src/docdesk/evals/key_pool.py), smoke run 5e9ec4d1 passed (generator on slot 2, judge on slot 1).
+- [ ] (superseded by the second amendment) RESUME: (1) e5_topk8 rerun and report after 2026-10-15 10:39 UTC; (2) technique comparison e5_topk8_vs_b0; (3) final_full.toml = cap 4 + hybrid (+ top_k 8 if it passes the original rule), run label final_full; (4) apply the amended rule, write final_vs_b0.md, copy winner to final.toml, DECISIONS entry FINAL frozen; (5) test split once each; (6) python scripts/phase5_summary.py; (7) push, CI.
 - [ ] (old note) waits for e5_topk8 (resume the same command after 2026-10-15 10:39 UTC). Candidates by the rule so far: E5 cap 4 and E3 hybrid.
   Build `evals/configs/final.toml` from the techniques that pass, run it on dev once, write `evals/results/final_vs_b0.md`, then freeze.
 
 ## Step 5: test split (once)
-- [ ] pending
+- [x] 2026-10-15 test-b0 (run 40488aff) and test-final (run 6e8a809d) each run exactly once, 29 of 30 items ran, 1 injected item not run. Strict pass on 20 answerable items: B0 13, FINAL 15 (+0.100, interval [-0.100, +0.300], no clear difference). Result file: evals/results/test_split_b0_vs_final.md. No rerun, no tuning.
 
 ## Step 6: phase5_summary.md
-- [~] generator written (`scripts/phase5_summary.py`, test passes), table built with FINAL and top_k 8 marked not finished; rebuild after they finish
+- [x] rebuilt 2026-10-15 with both amendments, not completed runs and the test split. (old note) generator written (`scripts/phase5_summary.py`, test passes), table built with FINAL and top_k 8 marked not finished; rebuild after they finish
 
 ## Step 7: end of session
-- [ ] pending
+- [x] scripts/readme_results.py does not exist yet, README step skipped. Secret scan, push and CI: see the log below.
 
 ## Stopped items
 - e5_topk8 full dev run (run 22fb6b60): stopped by the daily token guard, resumable. Command: `python -m docdesk.evals.cli --config evals/configs/e5_topk8.toml run --label e5_topk8` after 2026-10-15 10:39 UTC.
@@ -105,3 +106,4 @@ otherwise freeze FINAL_SIMPLE. Both are reported in final_vs_b0.md.
 - 2026-10-14: the hosted database stopped resolving (DNS error). Pending DB steps: B0 rescore, report regeneration, B0 regression script, retrieval only latency, migrations are already applied to the dev database (0017).
 - Process note: rescore.py and its tests were written together, not test first.
 - 2026-10-15: Step 3 done except top_k 8. Next session: (1) resume e5_topk8, then `report`, `technique e5_topk8 <B0 run> <run>` (note recall at 8); (2) build final.toml, run FINAL on dev, compare, freeze with a DECISIONS entry that has the date and the git hash; (3) only if all preconditions hold, B0 and FINAL on test once each with `--split test --allow-test`; (4) `python scripts/phase5_summary.py`; (5) secret scan and push.
+- 2026-10-15 evening: second amendment, key pool, smoke, test split and summary done. Tokens today by slot: gpt-oss-120b slot 1 169174, slot 2 57536; qwen3.8-27b slot 1 136598, slot 2 0.

@@ -821,3 +821,10 @@ strict pass on answerable dev items. Every config tried is in `evals/results/pha
   that carry the key slot into the usage record. It cannot change a judge request, cache key or score. Judged reasonable, so
   the test split goes ahead. Estimated need per arm: about 35000 generator and 17000 judge tokens; the pool has room.
 - Each test arm is run exactly once. A crash is resumed as the same run, never restarted or tuned.
+
+## 2026-10-15: test split result
+- Run once each, no tuning: B0 run 40488aff, FINAL run 6e8a809d. Strict pass on 20 answerable test items: B0 13, FINAL 15
+  (gained gi-038, gi-040, gi-054, lost gi-045), +0.100 with paired interval [-0.100, +0.300]: no clear difference.
+  multi_chunk 0.12 to 0.38 (n 8), single_fact 1.00 to 1.00 (n 12). The direction matches dev, the evidence is weak at n 20.
+- The technique report prints a "Result: kept" line from the dev rule; on the test split it must not be read as a verdict.
+- The injected adversarial item is not run.
