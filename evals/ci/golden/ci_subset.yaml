@@ -1,0 +1,223 @@
+- id: gi-001
+  type: single_fact
+  split: dev
+  question: How does rubella show up in someone who gets symptoms?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - A rash that starts on the face and spreads to the body
+  - Mild fever
+  - Aching joints, especially in young women
+  - Swollen glands
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-387
+    text: 'symptoms may include: - A rash that starts on the face and spreads to the body - Mild fever - Aching joints, especially in young women - Swollen glands'
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
+- id: gi-005
+  type: single_fact
+  split: dev
+  question: Which foods contain folic acid?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Leafy green vegetables
+  - Fruits
+  - Dried beans, peas and nuts
+  - Enriched breads, cereals and other grain products
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-1611
+    text: 'Foods with folic acid in them include: - Leafy green vegetables - Fruits - Dried beans, peas, and nuts - Enriched breads, cereals and other grain products'
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
+- id: gi-009
+  type: single_fact
+  split: dev
+  question: How often are routine prenatal checkups scheduled over the course of a pregnancy?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Once a month for weeks 4 through 28
+  - Twice a month for weeks 28 through 36
+  - Weekly from week 36 until the baby is born
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-6
+    text: 'Usually, visits during your pregnancy occur: - Once a month for weeks 4 through 28 - Twice a month for weeks 28 through 36 - Weekly for week 36 until your baby is born'
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
+- id: gi-017
+  type: single_fact
+  split: dev
+  question: What causes Cushing's syndrome?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Long-term exposure to too much cortisol
+  - Cortisol is a hormone that the adrenal gland makes
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-4318
+    text: Cushing's syndrome is a hormonal disorder. The cause is long-term exposure to too much cortisol, a hormone that your adrenal gland makes.
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
+- id: gi-019
+  type: single_fact
+  split: dev
+  question: What are antioxidants?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Man-made or natural substances
+  - They may prevent or delay some types of cell damage
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-1590
+    text: Antioxidants are man-made or natural substances that may prevent or delay some types of cell damage.
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
+- id: gi-021
+  type: single_fact
+  split: dev
+  question: What is another name for amblyopia?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Lazy eye
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-6189
+    text: Amblyopia, or "lazy eye," is the most common cause of visual impairment in children.
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
+- id: gi-027
+  type: single_fact
+  split: dev
+  question: What does a person usually feel when they are about to faint?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Dizzy
+  - Lightheaded
+  - Nauseous
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-1481
+    text: Fainting is a temporary loss of consciousness. If you're about to faint, you'll feel dizzy, lightheaded, or nauseous.
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
+- id: gi-029
+  type: single_fact
+  split: dev
+  question: What causes tension headaches?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Tight muscles in the shoulders, neck, scalp and jaw
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-273
+    text: The most common type of headache is a tension headache. Tension headaches are due to tight muscles in your shoulders, neck, scalp and jaw.
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
+- id: gi-034
+  type: single_fact
+  split: dev
+  question: Which vaccine can prevent mumps?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - The measles-mumps-rubella (MMR) vaccine
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-334
+    text: There is no treatment for mumps, but the measles-mumps-rubella (MMR) vaccine can prevent it.
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
+- id: gi-035
+  type: multi_chunk
+  split: dev
+  question: What most often causes infectious mononucleosis, and how is it diagnosed?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - It is most often caused by the Epstein-Barr virus (EBV), though many viruses can cause it
+  - A healthcare provider may diagnose it based on the symptoms and a physical exam
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-298
+    text: What causes infectious mononucleosis (mono)? Mono can be caused by many different viruses. But it is most often caused by the Epstein-Barr virus (EBV).
+  - source: seed:medlineplus:medlineplus-298
+    text: How is infectious mononucleosis (mono) diagnosed? Your healthcare provider may diagnose mono based on your symptoms and a physical exam.
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
+- id: gi-037
+  type: multi_chunk
+  split: dev
+  question: What causes hemorrhoids, and how can they most often be treated at home?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Too much pressure on the veins around the anus
+  - Eating high-fiber foods, taking a stool softener or fiber supplement, and drinking enough fluids
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-1226
+    text: Hemorrhoids happen when there is too much pressure on the veins around the anus.
+  - source: seed:medlineplus:medlineplus-1226
+    text: 'You can most often treat your hemorrhoids at home by: - Eating foods that are high in fiber. - Taking a stool softener or a fiber supplement. - Drinking enough fluids every day.'
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
+- id: gi-041
+  type: multi_chunk
+  split: dev
+  question: Which type of tremor is the most common, and in which age group is tremor most common?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Essential tremor is the most common type
+  - Tremor is most common in middle-aged and older adults
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-1315
+    text: Essential tremor, sometimes called benign essential tremor or familial tremor. This is the most common type.
+  - source: seed:medlineplus:medlineplus-1315
+    text: Anyone can get tremor, but it is most common in middle-aged and older adults.
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
+- id: gi-042
+  type: multi_chunk
+  split: dev
+  question: How many yes answers to the alcohol use disorder self check questions suggest a person may have an AUD, and what should they do if they think they might?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Yes to two or more of the questions suggests an AUD
+  - See a health care provider for an evaluation
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-120
+    text: 'How do I know if I have an alcohol use disorder (AUD)? You may have an AUD if you can answer yes to two or more of these questions: In the past year, have you:'
+  - source: seed:medlineplus:medlineplus-120
+    text: What should I do if I think that I might have an alcohol use disorder (AUD)? If you think you might have an AUD, see your health care provider for an evaluation.
+  verified: true
+  verified_by: ali
+  verified_on: &id001 2026-10-14
+- id: gi-044
+  type: multi_chunk
+  split: dev
+  question: Which bacteria cause tetanus and botulism?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Tetanus is caused by Clostridium bacteria
+  - Botulism is caused by a toxin made by Clostridium botulinum
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-435
+    text: Tetanus is a serious illness caused by Clostridium bacteria.
+  - source: seed:medlineplus:medlineplus-1557
+    text: Botulism is a rare but serious illness. The cause is a toxin (poison) made by a bacterium called Clostridium botulinum.
+  verified: true
+  verified_by: ali
+  verified_on: *id001
