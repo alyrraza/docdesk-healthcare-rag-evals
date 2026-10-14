@@ -53,7 +53,17 @@ Disclosure: the cap 4 result (19 of 30 strict pass) was seen before this pre-reg
 for judge calibration. It is reported as measured, not as a blind result.
 
 ## Step 3: techniques
-- [ ] pending
+Results table (primary metric: strict pass on 30 answerable dev items, baseline 15):
+| technique | config | strict pass | change | paired interval | verdict (rule) |
+|---|---|---|---|---|---|
+| E5 cap 4 | calib_cap4 (reused run 80c1977c) | 19 of 30 | +4 | [+0.033, +0.267] on the rate | kept by the rule (+4 items, faithfulness not lowered). Not blind, see disclosure. |
+
+- [x] P5-3 E5 cap 4 done (no new tokens)
+- [ ] P5-4 hybrid
+- [ ] P5-5 depth and top_k
+- [ ] P5-6 title drop
+- [ ] P5-7 decomposition
+- [ ] P5-8 abstain gate
 
 ## Step 4: FINAL config
 - [ ] pending
