@@ -1,0 +1,51 @@
+# Technique config e7_decompose, derived from b0.toml with these changes: retrieval.decompose=true.
+# b0.toml is never edited. content_hash covers every value below.
+id = "e7_decompose"
+content_hash = "125340f2254e62d0bfebf3e50b4f48a41e83e7d1ed43bac626a41aaa2a102785"
+
+[chunking]
+strategy = "recursive"
+size = 200
+overlap = 40
+
+[embedding]
+model = "sentence-transformers/all-MiniLM-L6-v2"
+revision = "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+
+[retrieval]
+decompose = true
+mode = "dense"
+top_n = 20
+top_k = 5
+rrf_k = 60
+
+[rerank]
+enabled = false
+
+[packer]
+max_per_document = 2
+
+[budget]
+total = 6000
+system = 500
+schema = 300
+evidence = 4200
+history = 0
+question = 300
+reserve = 700
+
+[prompt]
+name = "answer"
+version = "1.0.0"
+# sha256 of prompts/answer/answer.v1.md from the prompt loader; an edit must become a new version.
+content_hash = "a0be1da5f9af465c4532837735edc804dda9199f1c66f104ca31c7f394cec14e"
+
+[models]
+generator = "openai/gpt-oss-120b"
+judge = "qwen/qwen3.8-27b"
+temperature = 0
+max_output_tokens = 600
+
+# Placeholder on purpose: T102a sets the threshold from the B0 dev score distribution.
+[abstain]
+threshold = 0.0

@@ -1,0 +1,50 @@
+# Technique config t111a_abstain060, derived from b0.toml with these changes: abstain.threshold=0.60.
+# b0.toml is never edited. content_hash covers every value below.
+id = "t111a_abstain060"
+content_hash = "1e8c4cd523c6a352a65414606dc333cd1fdd4aaa957e4051a178cee72ec00cef"
+
+[chunking]
+strategy = "recursive"
+size = 200
+overlap = 40
+
+[embedding]
+model = "sentence-transformers/all-MiniLM-L6-v2"
+revision = "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+
+[retrieval]
+mode = "dense"
+top_n = 20
+top_k = 5
+rrf_k = 60
+
+[rerank]
+enabled = false
+
+[packer]
+max_per_document = 2
+
+[budget]
+total = 6000
+system = 500
+schema = 300
+evidence = 4200
+history = 0
+question = 300
+reserve = 700
+
+[prompt]
+name = "answer"
+version = "1.0.0"
+# sha256 of prompts/answer/answer.v1.md from the prompt loader; an edit must become a new version.
+content_hash = "a0be1da5f9af465c4532837735edc804dda9199f1c66f104ca31c7f394cec14e"
+
+[models]
+generator = "openai/gpt-oss-120b"
+judge = "qwen/qwen3.8-27b"
+temperature = 0
+max_output_tokens = 600
+
+# Placeholder on purpose: T102a sets the threshold from the B0 dev score distribution.
+[abstain]
+threshold = 0.60
