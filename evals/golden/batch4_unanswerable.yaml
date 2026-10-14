@@ -10,7 +10,9 @@
   - half life
   - elimination
   absence_scope: seed:openfda:08521333-ff21-45ad-b99e-1f43d945d24d
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: &id001 2026-10-14
 - id: gi-056
   type: unanswerable
   split: test
@@ -24,7 +26,9 @@
   - wegovy
   - rybelsus
   absence_scope: corpus
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-057
   type: unanswerable
   split: dev
@@ -38,7 +42,9 @@
   - blood pressure monitor
   - most accurate
   absence_scope: corpus
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-058
   type: unanswerable
   split: test
@@ -53,7 +59,9 @@
   - child
   - infant
   absence_scope: seed:openfda:0089fc7a-a7aa-4873-b699-39a1b21616ca
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-059
   type: unanswerable
   split: dev
@@ -65,7 +73,9 @@
   - adalimumab
   - humira
   absence_scope: corpus
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-060
   type: unanswerable
   split: test
@@ -78,7 +88,9 @@
   - visitation
   - visitors
   absence_scope: corpus
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-061
   type: unanswerable
   split: dev
@@ -91,7 +103,9 @@
   - after exposure
   - days after
   absence_scope: seed:medlineplus:medlineplus-334
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-062
   type: unanswerable
   split: dev
@@ -103,7 +117,9 @@
   - celiac
   - coeliac
   absence_scope: corpus
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-063
   type: unanswerable
   split: test
@@ -114,7 +130,9 @@
   absent_terms:
   - huntington
   absence_scope: corpus
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-064
   type: unanswerable
   split: dev
@@ -129,7 +147,9 @@
   - negligence
   - statute of limitations
   absence_scope: corpus
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-065
   type: unanswerable
   split: test
@@ -146,7 +166,9 @@
   - muscle relaxant
   - sedative
   absence_scope: seed:medlineplus:medlineplus-435
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-066
   type: unanswerable
   split: dev
@@ -159,7 +181,9 @@
   - overdosage
   - atropine
   absence_scope: seed:openfda:03e26183-3e07-45e8-a414-a8bad32483e2
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-067
   type: unanswerable
   split: dev
@@ -171,7 +195,9 @@
   - plantar
   - fasciitis
   absence_scope: corpus
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-068
   type: unanswerable
   split: test
@@ -186,7 +212,9 @@
   - nursing
   - milk
   absence_scope: seed:openfda:01a5f094-b473-4e46-9e61-69d5ec6dd766
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-069
   type: unanswerable
   split: dev
@@ -200,7 +228,9 @@
   - claim denial
   - denied claim
   absence_scope: corpus
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-070
   type: unanswerable
   split: test
@@ -212,7 +242,9 @@
   - ivermectin
   - stromectol
   absence_scope: corpus
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-071
   type: unanswerable
   split: dev
@@ -224,7 +256,9 @@
   - degree
   - cobb
   absence_scope: seed:medlineplus:medlineplus-395
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-072
   type: unanswerable
   split: test
@@ -237,7 +271,9 @@
   - enrolling
   - clinicaltrials.gov
   absence_scope: corpus
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-073
   type: unanswerable
   split: dev
@@ -252,4 +288,6 @@
   - vasodilator
   - nitroglycerin
   absence_scope: seed:medlineplus:medlineplus-381
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001

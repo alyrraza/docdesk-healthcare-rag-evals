@@ -97,7 +97,9 @@
     text: Heart disease is the leading cause of death in the United States, but there are ways to prevent and manage many types of heart disease.
   - source: seed:medlineplus:medlineplus-277
     text: Treatment plans for heart disease depend on the type of heart disease you have, how serious your symptoms are, and what other health conditions you have.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: &id001 2026-10-14
 - id: gi-041
   type: multi_chunk
   split: dev
@@ -129,7 +131,9 @@
     text: 'How do I know if I have an alcohol use disorder (AUD)? You may have an AUD if you can answer yes to two or more of these questions: In the past year, have you:'
   - source: seed:medlineplus:medlineplus-120
     text: What should I do if I think that I might have an alcohol use disorder (AUD)? If you think you might have an AUD, see your health care provider for an evaluation.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-054
   type: multi_chunk
   split: test
@@ -144,7 +148,9 @@
     text: What are the symptoms of Raynaud phenomenon? Raynaud attacks most often happen when you get cold, for example when you grab something cold from the freezer or go into an air-conditioned building on a warm day. Attacks usually affect your fingers and toes.
   - source: seed:medlineplus:medlineplus-381
     text: Most people with Raynaud phenomenon can keep their symptoms under control by avoiding getting cold.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-044
   type: multi_chunk
   split: dev
@@ -159,7 +165,9 @@
     text: Tetanus is a serious illness caused by Clostridium bacteria.
   - source: seed:medlineplus:medlineplus-1557
     text: Botulism is a rare but serious illness. The cause is a toxin (poison) made by a bacterium called Clostridium botulinum.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-045
   type: multi_chunk
   split: test
@@ -191,7 +199,9 @@
     text: 'Apixaban is a factor Xa inhibitor indicated: to reduce the risk of stroke and systemic embolism in patients with nonvalvular atrial fibrillation.'
   - source: seed:openfda:029a90b6-0722-49be-8400-3ec29526aafd
     text: 'Irbesartan tablets are an angiotensin II receptor blocker (ARB) indicated for: Treatment of hypertension, to lower blood pressure.'
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-047
   type: multi_chunk
   split: dev
@@ -206,7 +216,9 @@
     text: Lithium toxicity is closely related to serum lithium concentrations, and can occur at doses close to therapeutic concentrations.
   - source: seed:openfda:0cbce382-9c88-4f58-ae0f-532a841e8f95
     text: Warfarin sodium can cause major or fatal bleeding
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-048
   type: multi_chunk
   split: test
@@ -241,7 +253,9 @@
     text: Benazepril hydrochloride tablets can cause fetal harm when administered to a pregnant woman.
   - source: seed:openfda:01a3c9f6-41aa-47a7-8c56-5462c6b54416
     text: Benazepril hydrochloride is supplied as film-coated tablets containing 5 mg, 10 mg, 20 mg, and 40 mg of benazepril hydrochloride for oral administration.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-050
   type: multi_chunk
   split: test
@@ -273,7 +287,9 @@
     text: Methylphenidate hydrochloride extended-release capsules are indicated for the treatment of Attention Deficit Hyperactivity Disorder (ADHD) in pediatric patients 6 to 15 years of age.
   - source: seed:openfda:10aa0dc0-bd0e-4927-a19a-8722d78ad67d
     text: Methylphenidate hydrochloride extended-release has a high potential for abuse and misuse, which can lead to the development of a substance use disorder, including addiction.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-052
   type: multi_chunk
   split: test
@@ -288,7 +304,9 @@
     text: The rate of intravenous Phenytoin Sodium Injection administration should not exceed 50 mg per minute in adults and 1 to 3 mg/kg/min (or 50 mg per minute, whichever is slower) in pediatric patients because of the risk of severe hypotension and cardiac arrhythmias.
   - source: seed:openfda:035a8d4e-2063-4240-83cb-d7eebcabe301
     text: Parenteral Phenytoin Sodium Injection is indicated for the treatment of generalized tonic-clonic status epilepticus, and prevention and treatment of seizures occurring during neurosurgery.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
 - id: gi-053
   type: multi_chunk
   split: dev
@@ -303,4 +321,6 @@
     text: 'Doxycycline is indicated for the treatment of the following infections: Rocky Mountain spotted fever, typhus fever and the typhus group, Q fever, rickettsialpox, and tick fevers caused by Rickettsiae.'
   - source: seed:openfda:00b2aa98-dea2-90c3-e063-6294a90a35d6
     text: This drug is contraindicated in persons who have shown hypersensitivity to any of the tetracyclines.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: *id001
