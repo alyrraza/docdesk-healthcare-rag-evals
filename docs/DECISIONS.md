@@ -451,3 +451,22 @@ Choices made while building the eval runner that the task text did not fix.
 - **Report numbers.** Pass rate is the share of items with no failure label. Intervals are 95 percent
   bootstrap, 2000 resamples, seed 0, resampling items that share a source document together.
 
+## 2026-10-14: v2 judge prompt versions and the prompt loader test
+- The judge prompts are `judge_faithfulness.v2` and `judge_correctness.v2`, version 2.0.0, because the label
+  scheme changed (three labels per claim, covered, missing or contradicted per key point). A changed scheme is a
+  new major version, not an edit of a draft. The v1 files stay as they were.
+- `test_ac_prm_01_every_shipped_prompt_loads_and_file_names_match_front_matter` used to assert that every
+  version starts with "1." and never compared file names. It now requires that the name and the major version in
+  the file name (`.v1`, `.v2`) equal the front matter, which is stricter. A second test shows that `demo.v2.md`
+  with version 1.0.0 front matter is rejected. The helper lives in the test file, not in the loader.
+- Checked 2026-10-14 with the free Groq models list call (no completion): both `openai/gpt-oss-120b` (generator)
+  and `qwen/qwen3.8-27b` (judge) are served by Groq, so the judge can use the Groq client for now.
+
+## 2026-10-14: parked items from T090 to T096
+- Generator cache hits are not counted in the report, because `AnswerResult` has no cache hit flag. Judge cache
+  hits are counted. Fix when the answer flow is next touched.
+- `prompts/judge_faithfulness/judge_faithfulness.v1.md` and `prompts/judge_correctness/judge_correctness.v1.md` are
+  unused drafts. They can be deleted later.
+- The judge tests use AC-EVL-07 because the PRD has no judge criterion. Propose to the owner a PRD criterion for
+  judge labels and for counting parse failures. The PRD is not edited here.
+
