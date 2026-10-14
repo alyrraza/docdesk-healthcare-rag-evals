@@ -73,6 +73,12 @@ Results table (primary metric: strict pass on 30 answerable dev items, baseline 
 - [x] P5-8 abstain gate done (0.55 tie, 0.60 loses 2 items, neither kept)
 
 ## Step 4: FINAL config
+AMENDED 2026-10-15 (before any FINAL run). Original rule: include a technique if it gains at least 1 item and does not
+lower faithfulness. Reason for the amendment: hybrid gained 1 item with an interval that holds zero and MRR fell from
+0.81 to 0.67, so the one item rule would turn noise into a kept technique. New rule: FINAL_SIMPLE is E5 cap 4 alone
+(19 of 30). FINAL_FULL is cap 4 plus every other technique that passed the original rule (hybrid, top_k 8 if it passes).
+Freeze FINAL_FULL only if it beats FINAL_SIMPLE by at least 2 items on strict pass and does not lower faithfulness,
+otherwise freeze FINAL_SIMPLE. Both are reported in final_vs_b0.md.
 - [ ] waits for e5_topk8 (resume the same command after 2026-10-15 10:39 UTC). Candidates by the rule so far: E5 cap 4 and E3 hybrid.
   Build `evals/configs/final.toml` from the techniques that pass, run it on dev once, write `evals/results/final_vs_b0.md`, then freeze.
 

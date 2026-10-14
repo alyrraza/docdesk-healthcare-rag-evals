@@ -764,3 +764,14 @@ strict pass on answerable dev items. Every config tried is in `evals/results/pha
   under five items. The hybrid p95 of about 47 seconds is mostly pacer waiting on the free tier, so it is not a serving latency.
 - **Cost of the work so far** (tokens billed per run, from per run accounting): hybrid 88705, title drop 8435,
   decomposition 3186, abstain gates 0, top_n 50 0, cap 4 59375 (earlier session).
+
+## 2026-10-15: amendment to the FINAL rule, written before any FINAL run
+- **Reason.** Hybrid gained 1 item with a paired interval that holds zero, and MRR fell from 0.81 to 0.67. The original
+  one item rule would turn that noise into a kept technique.
+- **Original rule (superseded for the FINAL choice, kept for the record).** A technique is included only if it improves
+  strict pass by at least 1 item versus B0 on dev and does not lower faithfulness. It still decides which techniques are
+  candidates for FINAL_FULL.
+- **New rule.** There are two candidates. FINAL_SIMPLE is E5 cap 4 alone (dev result exists: 19 of 30 strict pass).
+  FINAL_FULL is cap 4 plus every other technique that passed the original one item rule (hybrid, and top_k 8 if it
+  passes). Freeze FINAL_FULL only if it beats FINAL_SIMPLE by at least 2 items on strict pass AND does not lower
+  faithfulness. Otherwise freeze FINAL_SIMPLE. Both are reported in `evals/results/final_vs_b0.md`.
