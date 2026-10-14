@@ -1,0 +1,273 @@
+labeled_by: ali
+labeled_on: '2026-10-14'
+labels:
+- n: 1
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-030
+  answer_hash: c0db659a6905a4b7b8d6a7f97e575227f3a8ef04cfa285405b8df1b3b81a97d9
+  key_points:
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 2
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-032
+  answer_hash: 8038e536d1168a34ebec31323872684bc95e9ff523b27a73151fdabf0c3ad98a
+  key_points:
+  - covered
+  - missing
+  unsupported_claims: []
+  contradicted: false
+- n: 3
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-016
+  answer_hash: e4b7a862dc448ecd9759cbaf0f7a7c80a5cdf18ad1465c1baf167e03aac98f20
+  key_points:
+  - covered
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 4
+  run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  item_id: gi-006
+  answer_hash: 5df673ff375aa850ee24e0cbef494c15b4f61fef5850f7e3b685c7ffbe52eca9
+  key_points:
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 5
+  run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  item_id: gi-035
+  answer_hash: 47e1d5506ce28253ec611e3657e49c8769ef93bc9fbef07a01ac7b5d1bbe4eb1
+  key_points:
+  - covered
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 6
+  run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  item_id: gi-016
+  answer_hash: 9e50aecdc0e7f637a806ae116e7ed7b522f569d82d39ca3c11cf9ddd15527a82
+  key_points:
+  - covered
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 7
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-022
+  answer_hash: 26646bfa33662832a6c883d3c1f36d23d676c5a170939fc79c91f9fc077a5f6a
+  key_points:
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 8
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-017
+  answer_hash: d61e8a0db6afa5acd31c4262c8205043237e478c09b99c70f904d769937cb174
+  key_points:
+  - covered
+  - missing
+  unsupported_claims:
+  - the synthetic hormone medicines are glucocorticoids
+  contradicted: false
+- n: 9
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-027
+  answer_hash: 11a43638e3602acb16060cff62fe1aeb65886b942fac3ac5a3677c86514f50d2
+  key_points:
+  - covered
+  - covered
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 10
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-046
+  answer_hash: 933568a78ef1deef38e7600c361f70975ed2a2c6ff8a73cca265d97f4c6afd26
+  key_points:
+  - covered
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 11
+  run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  item_id: gi-039
+  answer_hash: 1adef2d9412b7c71bce2fdce5119f060ba1f91b5113458dfe244f31c683f3f52
+  key_points:
+  - covered
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 12
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-001
+  answer_hash: 85d8e3ad2281149389ee7eca4381fe0c55cae506effbeaaec080c1fa4a65365e
+  key_points:
+  - covered
+  - covered
+  - covered
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 13
+  run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  item_id: gi-009
+  answer_hash: 023d61bd0646f571543dab7c16f38ecd28ac5bdbda66c9b64e4495f80c1ee1a1
+  key_points:
+  - covered
+  - covered
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 14
+  run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  item_id: gi-042
+  answer_hash: dd24270b3bc658397000d698bd4bffb9c1c7a33a8bfea4a0e92b698e572c462f
+  key_points:
+  - covered
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 15
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-009
+  answer_hash: f8625c3e49f4e839c6b2276a152bf37b6aca9740855b45e02e522b7a4c154a8e
+  key_points:
+  - covered
+  - covered
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 16
+  run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  item_id: gi-047
+  answer_hash: 76567e407405b190572c7fccdd1f5737c4182ccee53cb56ba59f443cf4909c60
+  key_points:
+  - missing
+  - missing
+  unsupported_claims: []
+  contradicted: false
+- n: 17
+  run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  item_id: gi-041
+  answer_hash: 00a5bed07419a88fbf59c09a34114e34a39a013e8fcb8fc3873e2403281dd238
+  key_points:
+  - covered
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 18
+  run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  item_id: gi-022
+  answer_hash: 228464e07b861e43c752e6c75a467874b52f5a03b68c5ab0c1a7313a1bb76709
+  key_points:
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 19
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-005
+  answer_hash: 7b802ff5e31879f0adb0060bed196d7ba6cb96672cb9fd835f750bfa01862071
+  key_points:
+  - covered
+  - covered
+  - covered
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 20
+  run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  item_id: gi-008
+  answer_hash: 9893b84f1cde9ee74d0987481aa198927b93ad25f222a84c8289baff3732f4fb
+  key_points:
+  - missing
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 21
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-029
+  answer_hash: 83a578209b347cd8d2733ffcd218bb6c73c514c7f463c886e34fe80c796fb67d
+  key_points:
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 22
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-047
+  answer_hash: 46c58a9a606e1cdaf5b3fabe434f508b446a67b094a443b47e9cc4fa3bb7d02b
+  key_points:
+  - missing
+  - missing
+  unsupported_claims: []
+  contradicted: false
+- n: 23
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-019
+  answer_hash: 164893c0c084943ddfea7c5239e020978d88199736681e56dbefa0355f1d73d7
+  key_points:
+  - covered
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 24
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-026
+  answer_hash: 84d49337e6b052065cb1d350cf9755afb182ab31257433294081dd274b51e1a1
+  key_points:
+  - covered
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 25
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-039
+  answer_hash: 36d1e7f33d492807cac899fd517e1eb6cc39e4c843a201507c6f95039fa4673a
+  key_points:
+  - missing
+  - missing
+  unsupported_claims: []
+  contradicted: false
+- n: 26
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-021
+  answer_hash: ef3fc3576cc9a9a4a0bb6a84d130c362dead2f00e2282631f48fac7eb88b1478
+  key_points:
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 27
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-044
+  answer_hash: bb04e4d4d72b35dc7db831b5361443aedb47ea2bfc1c61754d26e54580a14518
+  key_points:
+  - covered
+  - covered
+  unsupported_claims:
+  - the tetanus-causing species is Clostridium tetani
+  contradicted: false
+- n: 28
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-006
+  answer_hash: eec6388724d04649b6d4d7e0592564f173debc707de4154f50fc89c5a7d41e0d
+  key_points:
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 29
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-034
+  answer_hash: 5628ed4555683fd451967c884be40fcab82290ac5106fd1d5ccf857f5f0147bf
+  key_points:
+  - covered
+  unsupported_claims: []
+  contradicted: false
+- n: 30
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-003
+  answer_hash: 93fdb2e36a63091203f90612e7dceebda853b9028bc4039097a55b649926e982
+  key_points:
+  - covered
+  unsupported_claims: []
+  contradicted: false

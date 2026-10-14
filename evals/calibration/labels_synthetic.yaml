@@ -1,0 +1,110 @@
+labeled_by: ali
+labeled_on: '2026-10-14'
+labels:
+- synthetic_id: syn-01
+  n: 1
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-003
+  answer_hash: 0a3ffc655b2001c7b24646314959b23038c2e50e3bf9f3eae3868c1e8e3a2918
+  key_points:
+  - covered
+  unsupported_claims:
+  - the maintenance dose ranged from 12 mcg to 2,003 mcg per day
+  contradicted: false
+- synthetic_id: syn-02
+  n: 2
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-027
+  answer_hash: a35ec18d359b5dea92c7b48b2c1f7cfbb0102ee6bec76719a0d4f63fee5ae5aa
+  key_points:
+  - covered
+  - covered
+  - covered
+  unsupported_claims:
+  - the usual initial dosage is 100 mg daily, given in two divided doses
+  contradicted: false
+- synthetic_id: syn-03
+  n: 3
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-001
+  answer_hash: 4b8162b36fd1af85111da7bdcb9624184cf74556e9137d410bd58384722cf8a7
+  key_points:
+  - covered
+  - covered
+  - covered
+  - covered
+  unsupported_claims:
+  - the total daily dose should not exceed 36 mg
+  contradicted: false
+- synthetic_id: syn-04
+  n: 4
+  run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  item_id: gi-039
+  answer_hash: 65ff1d109ce4e22c84ced3572ffd77cd20e4de5aa761975715b08b83af2c2543
+  key_points:
+  - covered
+  - missing
+  unsupported_claims: []
+  contradicted: false
+- synthetic_id: syn-05
+  n: 5
+  run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  item_id: gi-042
+  answer_hash: 60ead932d26748e00075a3406de0364c1f6a29b215073531ff9b8716af08b56c
+  key_points:
+  - covered
+  - missing
+  unsupported_claims: []
+  contradicted: false
+- synthetic_id: syn-06
+  n: 6
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-021
+  answer_hash: b0737f171fc8a0b7ff9711fd8cfb7f79d244fec41e50717f7e29518b760342ad
+  key_points:
+  - covered
+  unsupported_claims:
+  - the mean minimum lithium concentration increased 15%, and the renal clearance
+    decreased by approximately 20%
+  contradicted: false
+- synthetic_id: syn-07
+  n: 7
+  run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  item_id: gi-047
+  answer_hash: 2902741191d41b95bc6b981f234a6fa6007321a1080ccfe2c5a5501dac943ea1
+  key_points:
+  - missing
+  - missing
+  unsupported_claims: []
+  contradicted: false
+- synthetic_id: syn-08
+  n: 8
+  run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  item_id: gi-035
+  answer_hash: c602e364879b56056aaaff9a6ab6ac9acbb80b1c7085521434e58dd8b31995ca
+  key_points:
+  - covered
+  - missing
+  unsupported_claims: []
+  contradicted: false
+- synthetic_id: syn-09
+  n: 9
+  run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  item_id: gi-041
+  answer_hash: b9243d40744e812bdbfe0107e784fdbf10f42c03e3e7f34a3e1b0b837ea110fe
+  key_points:
+  - covered
+  - covered
+  unsupported_claims:
+  - dosage can be increased by 25 to 50 mg/day each subsequent week as tolerated
+  contradicted: false
+- synthetic_id: syn-10
+  n: 10
+  run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  item_id: gi-046
+  answer_hash: 131486d7ace004df215022c5a86f78d4aa795274f0be7ec8d2a9484bd98e62e3
+  key_points:
+  - covered
+  - missing
+  unsupported_claims: []
+  contradicted: false
