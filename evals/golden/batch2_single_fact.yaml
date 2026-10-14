@@ -9,7 +9,9 @@
   gold_evidence:
   - source: seed:openfda:013a485a-4227-46ae-b19f-c550302fcb96
     text: Propranolol Hydrochloride Tablets, USP are available as tablets for oral administration containing either 10 mg, 20 mg, 40 mg, 60 mg, or 80 mg of propranolol hydrochloride, USP.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-015
   type: single_fact
   split: test
@@ -22,7 +24,9 @@
   gold_evidence:
   - source: seed:medlineplus:medlineplus-5987
     text: Chronic kidney disease (CKD) means that your kidneys are damaged and can't filter blood as they should.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-016
   type: single_fact
   split: dev
@@ -35,7 +39,9 @@
   gold_evidence:
   - source: seed:openfda:00615fad-ad3b-46e8-a89d-48290d937ae2
     text: Potassium chloride is contraindicated in patients on triamterene and amiloride.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-017
   type: single_fact
   split: dev
@@ -48,7 +54,9 @@
   gold_evidence:
   - source: seed:medlineplus:medlineplus-4318
     text: Cushing's syndrome is a hormonal disorder. The cause is long-term exposure to too much cortisol, a hormone that your adrenal gland makes.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-018
   type: single_fact
   split: test
@@ -61,7 +69,9 @@
   gold_evidence:
   - source: seed:openfda:041f127e-5166-4484-bc1a-0a373d1187ae
     text: Nitroglycerin sublingual tablets are indicated for the acute relief of an attack or acute prophylaxis of angina pectoris due to coronary artery disease.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-019
   type: single_fact
   split: dev
@@ -74,7 +84,9 @@
   gold_evidence:
   - source: seed:medlineplus:medlineplus-1590
     text: Antioxidants are man-made or natural substances that may prevent or delay some types of cell damage.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-020
   type: single_fact
   split: test
@@ -86,7 +98,9 @@
   gold_evidence:
   - source: seed:openfda:03e26183-3e07-45e8-a414-a8bad32483e2
     text: Donepezil hydrochloride tablet is an acetylcholinesterase inhibitor indicated for the treatment of dementia of the Alzheimer's type.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-021
   type: single_fact
   split: dev
@@ -98,7 +112,9 @@
   gold_evidence:
   - source: seed:medlineplus:medlineplus-6189
     text: Amblyopia, or "lazy eye," is the most common cause of visual impairment in children.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-022
   type: single_fact
   split: dev
@@ -110,7 +126,9 @@
   gold_evidence:
   - source: seed:openfda:05907a49-537f-4bf2-8a5f-5e905f19fece
     text: Promethazine Hydrochloride Tablets, USP are contraindicated for use in pediatric patients less than two years of age.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-023
   type: single_fact
   split: test
@@ -134,7 +152,9 @@
   gold_evidence:
   - source: seed:openfda:01db4606-d49c-4b10-a78a-1cf41880a9fb
     text: Oxycodone hydrochloride tablets contains oxycodone, a Schedule II controlled substance.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-025
   type: single_fact
   split: test
@@ -147,7 +167,9 @@
   gold_evidence:
   - source: seed:medlineplus:medlineplus-442
     text: If you have Tourette syndrome, you make unusual movements or sounds, called tics. You have little or no control over them. Common tics are throat-clearing and blinking.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-026
   type: single_fact
   split: dev
@@ -160,7 +182,9 @@
   gold_evidence:
   - source: seed:openfda:01a5f094-b473-4e46-9e61-69d5ec6dd766
     text: Furosemide tablets are contraindicated in patients with anuria and in patients with a history of hypersensitivity to furosemide.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-027
   type: single_fact
   split: dev
@@ -174,7 +198,9 @@
   gold_evidence:
   - source: seed:medlineplus:medlineplus-1481
     text: Fainting is a temporary loss of consciousness. If you're about to faint, you'll feel dizzy, lightheaded, or nauseous.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-028
   type: single_fact
   split: test
@@ -189,7 +215,9 @@
   gold_evidence:
   - source: seed:openfda:0038bc38-c205-4d8d-ab78-1abbcd76829e
     text: 'Uses temporarily relieves these symptoms due to hay fever or other upper respiratory allergies: • runny nose • itchy, watery eyes • sneezing • itching of the nose or throat'
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-029
   type: single_fact
   split: dev
@@ -201,7 +229,9 @@
   gold_evidence:
   - source: seed:medlineplus:medlineplus-273
     text: The most common type of headache is a tension headache. Tension headaches are due to tight muscles in your shoulders, neck, scalp and jaw.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-030
   type: single_fact
   split: dev
@@ -226,7 +256,9 @@
   gold_evidence:
   - source: seed:medlineplus:medlineplus-6053
     text: Canker sores are small, round sores in your mouth. They can be on the inside of your cheek, under your tongue, or in the back of your throat. They usually have a red edge and a gray center.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-032
   type: single_fact
   split: dev
@@ -239,7 +271,9 @@
   gold_evidence:
   - source: seed:openfda:0034a97a-fb05-418a-a234-de278907cd2a
     text: Treatment with metoclopramide can cause tardive dyskinesia, a serious movement disorder that is often irreversible.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-033
   type: single_fact
   split: test
@@ -251,7 +285,9 @@
   gold_evidence:
   - source: seed:medlineplus:medlineplus-321
     text: Often the first sign of melanoma is a change in the size, shape, color, or feel of a mole.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-034
   type: single_fact
   split: dev
@@ -263,4 +299,6 @@
   gold_evidence:
   - source: seed:medlineplus:medlineplus-334
     text: There is no treatment for mumps, but the measles-mumps-rubella (MMR) vaccine can prevent it.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14

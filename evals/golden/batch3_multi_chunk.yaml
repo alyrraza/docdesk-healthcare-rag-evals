@@ -12,7 +12,9 @@
     text: What causes infectious mononucleosis (mono)? Mono can be caused by many different viruses. But it is most often caused by the Epstein-Barr virus (EBV).
   - source: seed:medlineplus:medlineplus-298
     text: How is infectious mononucleosis (mono) diagnosed? Your healthcare provider may diagnose mono based on your symptoms and a physical exam.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-036
   type: multi_chunk
   split: test
@@ -27,7 +29,9 @@
     text: Over time, sarcoidosis can cause permanent scarring of organs.
   - source: seed:medlineplus:medlineplus-389
     text: There is no cure for sarcoidosis. The goal of treatment for sarcoidosis is remission, which means you still have the condition, but it does not cause you problems.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-037
   type: multi_chunk
   split: dev
@@ -42,7 +46,9 @@
     text: Hemorrhoids happen when there is too much pressure on the veins around the anus.
   - source: seed:medlineplus:medlineplus-1226
     text: 'You can most often treat your hemorrhoids at home by: - Eating foods that are high in fiber. - Taking a stool softener or a fiber supplement. - Drinking enough fluids every day.'
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-038
   type: multi_chunk
   split: test
@@ -57,7 +63,9 @@
     text: Mitral valve prolapse (MVP) happens when the flaps of the mitral valve become floppy and don't close tightly.
   - source: seed:medlineplus:medlineplus-1605
     text: What are the symptoms of mitral valve prolapse (MVP)? Most people who have MVP don't have any symptoms.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-039
   type: multi_chunk
   split: dev
@@ -72,7 +80,9 @@
     text: What causes sudden cardiac arrest (SCA)? Your heart has an electrical system that controls the rate and rhythm of your heartbeat. An SCA can happen when the heart's electrical system is not working right and causes irregular heartbeats.
   - source: seed:medlineplus:medlineplus-4266
     text: What are the treatments for sudden cardiac arrest (SCA)? SCA is an emergency. A person having SCA needs to be treated with a defibrillator right away. A defibrillator is a device that sends an electric shock to the heart.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-040
   type: multi_chunk
   split: test
@@ -102,7 +112,9 @@
     text: Essential tremor, sometimes called benign essential tremor or familial tremor. This is the most common type.
   - source: seed:medlineplus:medlineplus-1315
     text: Anyone can get tremor, but it is most common in middle-aged and older adults.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-042
   type: multi_chunk
   split: dev
@@ -162,7 +174,9 @@
     text: 'Glipizide is contraindicated in patients with: 1. Known hypersensitivity to the drug. 2. Type 1 diabetes mellitus, diabetic ketoacidosis, with or without coma.'
   - source: seed:openfda:05341afe-5b7a-462a-a196-689cb09f83fc
     text: 'Glyburide tablets are contraindicated in patients with: Known hypersensitivity or allergy to the drug. Diabetic ketoacidosis, with or without coma.'
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-046
   type: multi_chunk
   split: dev
@@ -207,7 +221,9 @@
     text: Lamotrigine can cause serious rashes requiring hospitalization and discontinuation of treatment.
   - source: seed:openfda:047bc284-060a-4db9-bf37-75d10f95a0a6
     text: SERIOUS AND SOMETIMES FATAL DERMATOLOGIC REACTIONS, INCLUDING TOXIC EPIDERMAL NECROLYSIS (TEN) AND STEVENS-JOHNSON SYNDROME (SJS), HAVE BEEN REPORTED DURING TREATMENT WITH CARBAMAZEPINE.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-049
   type: multi_chunk
   split: dev
@@ -240,7 +256,9 @@
     text: 'Atorvastatin calcium tablets are indicated: To reduce the risk of: Myocardial infarction (MI), stroke, revascularization procedures, and angina in adults with multiple risk factors for coronary heart disease (CHD)'
   - source: seed:openfda:00afce9b-48c9-487a-a738-e359c005c707
     text: CONTRAINDICATIONS Acute liver failure or decompensated cirrhosis [see Warnings and Precautions (5.3) ] Hypersensitivity to atorvastatin or any excipients in atorvastatin calcium.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-051
   type: multi_chunk
   split: dev

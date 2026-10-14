@@ -35,10 +35,10 @@ def test_ac_evl_01_batch_one_splits_follow_the_plan_and_are_6_dev_4_test() -> No
     assert sorted(item.split for item in items) == ["dev"] * 6 + ["test"] * 4
 
 
-OWNER_OK = {"gi-001", "gi-004", "gi-008", "gi-009"}
+OWNER_OK = {f"gi-{n:03d}" for n in (1, 3, 4, 5, 6, 8, 9, 11, 12, 13)}  # all ten, after round 2
 
 
-def test_ac_evl_01_only_the_owner_approved_items_are_verified() -> None:
+def test_ac_evl_01_every_batch_one_item_is_owner_verified() -> None:
     assert {item.id for item in batch1() if item.verified} == OWNER_OK
 
 

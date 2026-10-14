@@ -26,7 +26,9 @@
   gold_evidence:
   - source: seed:medlineplus:medlineplus-61
     text: An adult who has a BMI of 30 or more is considered to have obesity. Severe obesity is having a BMI of 40 or higher.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-003
   type: single_fact
   split: dev
@@ -38,7 +40,9 @@
   gold_evidence:
   - source: seed:openfda:00940cc5-d2eb-4841-9138-de97d7b1c674
     text: Metoprolol tartrate tablets, USP are available as 25 mg, 50 mg and 100 mg tablets for oral administration
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-004
   type: single_fact
   split: test
@@ -69,7 +73,9 @@
   gold_evidence:
   - source: seed:medlineplus:medlineplus-1611
     text: 'Foods with folic acid in them include: - Leafy green vegetables - Fruits - Dried beans, peas, and nuts - Enriched breads, cereals and other grain products'
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-006
   type: single_fact
   split: dev
@@ -81,7 +87,9 @@
   gold_evidence:
   - source: seed:openfda:066e25b2-8a1b-4b08-b585-ce36753bf104
     text: Concomitant use of benzodiazepines and opioids may result in profound sedation, respiratory depression, coma, and death.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-013
   type: single_fact
   split: test
@@ -94,7 +102,9 @@
   gold_evidence:
   - source: seed:openfda:02ff3be7-fc5c-4b91-8c67-ecdf6e19c42a
     text: Oxybutynin chloride extended-release tablets are a muscarinic antagonist indicated for the treatment of overactive bladder with symptoms of urge urinary incontinence, urgency, and frequency.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
 - id: gi-008
   type: single_fact
   split: dev
@@ -138,4 +148,6 @@
   gold_evidence:
   - source: seed:openfda:03612934-62f4-4002-85af-6c66cd172acb
     text: Digoxin is supplied as 125 mcg (0.125 mg) or 250 mcg (0.25 mg) tablets for oral administration.
-  verified: false
+  verified: true
+  verified_by: ali
+  verified_on: 2026-10-14
