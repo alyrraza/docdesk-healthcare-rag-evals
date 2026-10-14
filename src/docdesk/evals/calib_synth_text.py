@@ -28,6 +28,7 @@ HEADING_WORD = re.compile(r"\b[A-Z]{4,}\b")
 # Table symbols and dotted abbreviations such as b.i.d. mean the text came from a table.
 TABLE_TEXT = re.compile(r"[<>=±]|\b[a-z]\.[a-z]\.")
 MIN_LENGTH, MAX_LENGTH = 30, 200
+MAX_CAPITALISED = 2
 
 
 def split_sentences(text: str) -> list[str]:
@@ -43,6 +44,12 @@ def keep_first_sentence(answer: str) -> str:
     return split_sentences(answer)[0]
 
 
+def reads_cleanly(sentence: str) -> bool:
+    """Why: a cut off bracket or a run of capitalised words shows the text came from a heading."""
+    capitalised = [word for word in sentence.split()[1:] if word[0].isupper()]
+    return sentence.count("(") == sentence.count(")") and len(capitalised) <= MAX_CAPITALISED
+
+
 def insertion_sentences(chunk_text: str, drug: str) -> list[str]:
     """Why: only a short, self-contained sentence with a concrete claim reads as an answer part."""
     found = []
@@ -53,7 +60,9 @@ def insertion_sentences(chunk_text: str, drug: str) -> list[str]:
             continue
         if not sentence.endswith((".", "!", "?")) or TABLE_TEXT.search(sentence):
             continue
-        if CROSS_REFERENCE.search(sentence) or HEADING_WORD.search(sentence):
+        if not reads_cleanly(sentence) or HEADING_WORD.search(sentence):
+            continue
+        if CROSS_REFERENCE.search(sentence):
             continue
         if drug.lower() in sentence.lower():
             continue

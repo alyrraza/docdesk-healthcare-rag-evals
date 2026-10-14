@@ -68,3 +68,13 @@ def test_ac_evl_07_calib_46_fragments_and_table_text_are_not_candidates() -> Non
     for text in (glued, no_stop, symbol):
         assert insertion_sentences(text, drug="metformin") == []
     assert insertion_sentences(fine, drug="metformin") == [fine]
+
+
+def test_ac_evl_07_calib_47_broken_brackets_and_title_case_runs_are_not_candidates() -> None:
+    broken = "The dose in adults is greater than or equal to 50 mL/minute (2.1."
+    title_case = "The 5 mg tablets also contain FD&C Yellow No. 6 Aluminum Lake."
+    headings = "The dose in Adult and Pediatric Patients with Renal Impairment is 5 mg."
+    names = "The usual dose in Parkinson disease is 5 mg twice daily."  # one proper name is fine
+    for text in (broken, title_case, headings):
+        assert insertion_sentences(text, drug="metformin") == []
+    assert insertion_sentences(names, drug="metformin") == [names]
