@@ -811,3 +811,13 @@ strict pass on answerable dev items. Every config tried is in `evals/results/pha
   stays one per model, which is stricter than the per key per minute limit, so it is safe and simple.
 - **Reporting.** Each stored call usage carries its slot. The run usage report adds a table of billed tokens per model per slot
   when any call went through the pool.
+
+## 2026-10-15: test split preconditions checked
+- FINAL frozen at commit 5dfffb2 (config) and 7633a0c (entry). Smoke run 5e9ec4d1 passed: a parsed answer with 2 citations,
+  generator served by slot 2, judge by slot 1, shown in the per slot usage table. The smoke used a scratch cache folder
+  (`DOCDESK_LLM_CACHE_DIR`) because every dev item was already cached under final_simple.
+- Reading of "no judge or prompt file changed after the freeze": no judge prompt, prompt file, judge pin or config changed
+  (`git diff 7633a0c HEAD -- prompts evals/configs` is empty). One judge source file did change, `judges/call.py`, by two lines
+  that carry the key slot into the usage record. It cannot change a judge request, cache key or score. Judged reasonable, so
+  the test split goes ahead. Estimated need per arm: about 35000 generator and 17000 judge tokens; the pool has room.
+- Each test arm is run exactly once. A crash is resumed as the same run, never restarted or tuned.
