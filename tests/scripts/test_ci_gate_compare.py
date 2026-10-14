@@ -7,7 +7,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from ci_gate_compare import GATED, TOLERANCE, check_gate, gate_numbers  # noqa: E402
+from ci_gate_compare import (  # noqa: E402
+    GATED,
+    TOLERANCE,
+    baseline_record,
+    check_gate,
+    config_mismatch,
+    gate_numbers,
+)
 
 BASELINE = {"recall@5": 0.9, "mrr": 0.8}
 
@@ -59,3 +66,19 @@ def test_ac_evl_06_gate_fails_when_the_baseline_lacks_a_gated_metric() -> None:
 
 def test_ac_evl_06_gated_metrics_are_recall_at_5_and_mrr() -> None:
     assert GATED == ("recall@5", "mrr")
+
+
+def test_ac_evl_06_baseline_record_keeps_numbers_config_and_item_count() -> None:
+    record = baseline_record(summary(0.9, 0.8), "b0", "abc123")
+    assert record["numbers"] == BASELINE
+    assert record["config_id"] == "b0"
+    assert record["config_hash"] == "abc123"
+    assert record["items"] == 14
+    assert record["tolerance"] == TOLERANCE
+
+
+def test_ac_evl_06_baseline_for_another_config_is_refused() -> None:
+    record = baseline_record(summary(0.9, 0.8), "b0", "abc123")
+    assert config_mismatch(record, "b0", "abc123") is None
+    assert "b1" in (config_mismatch(record, "b1", "abc123") or "")
+    assert "hash" in (config_mismatch(record, "b0", "zzz") or "")

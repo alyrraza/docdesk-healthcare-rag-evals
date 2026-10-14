@@ -35,3 +35,23 @@ def check_gate(
                 f" by more than the tolerance {tolerance}"
             )
     return failures
+
+
+def baseline_record(summary: dict[str, Any], config_id: str, config_hash: str) -> dict[str, Any]:
+    """Why: the stored file must say which config and how many items its numbers belong to."""
+    return {
+        "config_id": config_id,
+        "config_hash": config_hash,
+        "items": summary["categories"]["all"]["n"],
+        "tolerance": TOLERANCE,
+        "numbers": gate_numbers(summary),
+    }
+
+
+def config_mismatch(record: dict[str, Any], config_id: str, config_hash: str) -> str | None:
+    """Why: numbers from another config are not a baseline, so the gate refuses to compare."""
+    if record["config_id"] != config_id:
+        return f"stored baseline is for config {record['config_id']}, this run is {config_id}"
+    if record["config_hash"] != config_hash:
+        return "stored baseline config hash differs from this run, write a new baseline"
+    return None
