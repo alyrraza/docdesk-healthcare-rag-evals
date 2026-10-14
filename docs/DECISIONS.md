@@ -413,3 +413,41 @@ attacks ("disregard the question", "ignore all earlier instructions"), so passin
 subtle attacks. Parked, not a task yet: T122 should add subtler variants as extra regression items, not as
 new golden items. Variants to cover: polite wording, an instruction hidden inside a table or a list, and a
 request to reveal the system prompt. The golden set stays at 75 items.
+
+## 2026-10-14: judges, labeler, runner, report and CLI (tasks T090 to T096)
+Choices made while building the eval runner that the task text did not fix.
+- **Judge prompts are new v2 files.** `judge_faithfulness.v2` and `judge_correctness.v2` replace the v1
+  drafts, which used a yes or no label and did not match the three label scheme. The v1 files are left
+  as they were and are not used. Both v2 prompts add the question as input.
+- **Zero claims gives no score.** A non empty answer for which the judge lists no claims gets status
+  `no_claims` and score None, not 1.0. A vacuous 1.0 would reward an answer the judge could not break down.
+  The report shows n for the cell, so the gap is visible.
+- **Faithfulness is judged against the packed context**, the evidence text the generator was shown, not the
+  full retrieved list and not only the cited chunks. The answer text is the model's answer without the
+  disclaimer that code appends.
+- **Correctness key points are the golden `gold_facts`.** The judge numbers them and must return one label
+  for each number. A reply with a missing, extra or repeated number is counted as a parse failure
+  (`JudgeParser.reject`, a small addition to the T079c parser). An answerable item whose answer abstained
+  gets every point `missing` and score 0.0 from code, with no judge call.
+- **No judge acceptance criterion exists in the PRD**, so the judge tests carry the id AC-EVL-07 (the
+  calibration criterion, which covers each judge). A PRD line for judge scoring can be added later.
+- **Failure label definitions** (the order is the suggested one, see `evals.md`). Retrieval labels look at
+  the top_n candidates and the top_k, so the pipeline retrieves all top_n and cuts to top_k afterwards.
+  A system error answer is always `other`. `context_distraction` is a heuristic: all gold is in the prompt
+  but a non gold chunk is first and the answer failed. An answer passes the judged part only at faithfulness
+  1.0 and correctness 1.0 (`FAITHFUL_AT`, `CORRECT_AT` in `labeler.py`); relax them only with a recorded reason.
+- **Resume uses the result rows**, not the `RunProgress` file from T079d. The row is written in the same
+  transaction as the item, so it cannot disagree with a second progress file. `RunProgress` is not used by
+  the runner and can be removed in a refactor.
+- **Not run items.** Besides the injected instruction items, any item whose route is not `documents` is
+  recorded as not run ("needs the router and SQL branch"), so a future structured item cannot skew B0.
+- **Retrieval only runs have no prompt bundle** (the run's `prompt_bundle_id` is empty), so they can never
+  resume or be mistaken for a full run. They skip the input policy check, because no answer is produced.
+- **The judge is called through the Groq client** for now. There is no OpenRouter adapter yet, so the judge
+  model id in the config must be one Groq serves, or the first judge call fails with a typed provider error
+  and the run stops. Decide this before T098.
+- **Known limit:** the generator's cache hits are not counted in the report, because `AnswerResult` does not
+  carry the cache flag. Judge cache hits are counted.
+- **Report numbers.** Pass rate is the share of items with no failure label. Intervals are 95 percent
+  bootstrap, 2000 resamples, seed 0, resampling items that share a source document together.
+
