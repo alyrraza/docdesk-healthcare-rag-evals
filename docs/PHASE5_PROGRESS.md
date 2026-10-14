@@ -56,10 +56,11 @@ for judge calibration. It is reported as measured, not as a blind result.
 Results table (primary metric: strict pass on 30 answerable dev items, baseline 15):
 | technique | config | strict pass | change | paired interval | verdict (rule) |
 |---|---|---|---|---|---|
+| E3 hybrid | e3_hybrid (run b509fe25) | 16 of 30 | +1 (gained gi-008, 014, 024, 047; lost gi-003, 016, 026) | [-0.133, +0.200] on the rate: no clear difference | kept by the mechanical rule (+1 item, faithfulness not lowered) but weak: MRR 0.67 against 0.81, recall@5 0.82 against 0.84, wrong abstains 11 against 10 |
 | E5 cap 4 | calib_cap4 (reused run 80c1977c) | 19 of 30 | +4 | [+0.033, +0.267] on the rate | kept by the rule (+4 items, faithfulness not lowered). Not blind, see disclosure. |
 
 - [x] P5-3 E5 cap 4 done (no new tokens)
-- [ ] P5-4 hybrid
+- [x] P5-4 hybrid done (retrieval only run 6ba747df, full run b509fe25, 12m43 wall, 88705 tokens billed; budget guard: generator ledger 151293 of 170000 allowed per 24 hours)
 - [ ] P5-5 depth and top_k
 - [ ] P5-6 title drop
 - [ ] P5-7 decomposition

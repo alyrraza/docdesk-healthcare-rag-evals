@@ -1,0 +1,257 @@
+{
+  "baseline_config": "b0",
+  "baseline_run": "dfaad803-c59e-466c-8e2e-609471d82cee",
+  "candidate_config": "e3_hybrid",
+  "candidate_run": "b509fe25-240f-4ecd-8aa5-753d0eca22ca",
+  "categories": [
+    {
+      "name": "single_fact",
+      "rows": [
+        {
+          "baseline": 0.7368421052631579,
+          "candidate": 0.7368421052631579,
+          "difference": 0.0,
+          "high": 0.2631578947368421,
+          "low": -0.2631578947368421,
+          "metric": "strict_pass",
+          "n": 19,
+          "verdict": "no clear difference"
+        },
+        {
+          "baseline": 0.8421052631578947,
+          "candidate": 0.8421052631578947,
+          "difference": 0.0,
+          "high": 0.21052631578947367,
+          "low": -0.21052631578947367,
+          "metric": "recall",
+          "n": 19,
+          "verdict": "no clear difference"
+        },
+        {
+          "baseline": 0.7631578947368421,
+          "candidate": 0.6684210526315789,
+          "difference": -0.09473684210526319,
+          "high": 0.1053070175438594,
+          "low": -0.3140350877192983,
+          "metric": "mrr",
+          "n": 19,
+          "verdict": "no clear difference"
+        },
+        {
+          "baseline": 1.0,
+          "candidate": 1.0,
+          "difference": 0.0,
+          "high": 0.0,
+          "low": 0.0,
+          "metric": "faithfulness",
+          "n": 13,
+          "verdict": "no clear difference"
+        },
+        {
+          "baseline": 0.7894736842105263,
+          "candidate": 0.7894736842105263,
+          "difference": 0.0,
+          "high": 0.2631578947368421,
+          "low": -0.2631578947368421,
+          "metric": "correctness",
+          "n": 19,
+          "verdict": "no clear difference"
+        }
+      ]
+    },
+    {
+      "name": "multi_chunk",
+      "rows": [
+        {
+          "baseline": 0.09090909090909091,
+          "candidate": 0.18181818181818182,
+          "difference": 0.09090909090909091,
+          "high": 0.2727272727272727,
+          "low": 0.0,
+          "metric": "strict_pass",
+          "n": 11,
+          "verdict": "no clear difference"
+        },
+        {
+          "baseline": 0.8333333333333333,
+          "candidate": 0.787878787878788,
+          "difference": -0.045454545454545456,
+          "high": 0.0,
+          "low": -0.13636363636363635,
+          "metric": "recall",
+          "n": 11,
+          "verdict": "no clear difference"
+        },
+        {
+          "baseline": 0.8787878787878789,
+          "candidate": 0.6666666666666666,
+          "difference": -0.2121212121212121,
+          "high": -0.060606060606060594,
+          "low": -0.36363636363636365,
+          "metric": "mrr",
+          "n": 11,
+          "verdict": "candidate is worse"
+        },
+        {
+          "baseline": 0.8888888888888888,
+          "candidate": 0.8888888888888888,
+          "difference": 0.0,
+          "high": 0.0,
+          "low": 0.0,
+          "metric": "faithfulness",
+          "n": 3,
+          "verdict": "no clear difference"
+        },
+        {
+          "baseline": 0.18181818181818182,
+          "candidate": 0.2727272727272727,
+          "difference": 0.09090909090909091,
+          "high": 0.2727272727272727,
+          "low": 0.0,
+          "metric": "correctness",
+          "n": 11,
+          "verdict": "no clear difference"
+        }
+      ]
+    },
+    {
+      "name": "unanswerable",
+      "rows": [
+        {
+          "metric": "strict_pass",
+          "n": 0
+        },
+        {
+          "metric": "recall",
+          "n": 0
+        },
+        {
+          "metric": "mrr",
+          "n": 0
+        },
+        {
+          "metric": "faithfulness",
+          "n": 0
+        },
+        {
+          "metric": "correctness",
+          "n": 0
+        }
+      ]
+    },
+    {
+      "name": "adversarial",
+      "rows": [
+        {
+          "metric": "strict_pass",
+          "n": 0
+        },
+        {
+          "metric": "recall",
+          "n": 0
+        },
+        {
+          "metric": "mrr",
+          "n": 0
+        },
+        {
+          "metric": "faithfulness",
+          "n": 0
+        },
+        {
+          "metric": "correctness",
+          "n": 0
+        }
+      ]
+    }
+  ],
+  "overall": [
+    {
+      "baseline": 0.5,
+      "candidate": 0.5333333333333333,
+      "difference": 0.03333333333333333,
+      "high": 0.2,
+      "low": -0.13333333333333333,
+      "metric": "strict_pass",
+      "n": 30,
+      "verdict": "no clear difference"
+    },
+    {
+      "baseline": 0.8388888888888889,
+      "candidate": 0.8222222222222223,
+      "difference": -0.016666666666666666,
+      "high": 0.11666666666666667,
+      "low": -0.15,
+      "metric": "recall",
+      "n": 30,
+      "verdict": "no clear difference"
+    },
+    {
+      "baseline": 0.8055555555555555,
+      "candidate": 0.6677777777777777,
+      "difference": -0.1377777777777778,
+      "high": 0.01666666666666666,
+      "low": -0.28777777777777774,
+      "metric": "mrr",
+      "n": 30,
+      "verdict": "no clear difference"
+    },
+    {
+      "baseline": 0.9791666666666666,
+      "candidate": 0.9791666666666666,
+      "difference": 0.0,
+      "high": 0.0,
+      "low": 0.0,
+      "metric": "faithfulness",
+      "n": 16,
+      "verdict": "no clear difference"
+    },
+    {
+      "baseline": 0.5666666666666667,
+      "candidate": 0.6,
+      "difference": 0.03333333333333333,
+      "high": 0.2,
+      "low": -0.13333333333333333,
+      "metric": "correctness",
+      "n": 30,
+      "verdict": "no clear difference"
+    }
+  ],
+  "p95_total_ms": {
+    "baseline": null,
+    "candidate": 47054.83117500048
+  },
+  "rule": {
+    "faithfulness_lowered": false,
+    "improves_by_one_item": true,
+    "kept": true
+  },
+  "shared_items": 44,
+  "split": "dev",
+  "strict_pass": {
+    "answerable": 30,
+    "baseline": 15,
+    "candidate": 16,
+    "gained": [
+      "gi-008",
+      "gi-014",
+      "gi-024",
+      "gi-047"
+    ],
+    "lost": [
+      "gi-003",
+      "gi-016",
+      "gi-026"
+    ]
+  },
+  "technique": "e3_hybrid",
+  "tokens_billed": {
+    "baseline": null,
+    "candidate": 88705
+  },
+  "warnings": [],
+  "wrong_abstain": {
+    "baseline": 10,
+    "candidate": 11
+  }
+}

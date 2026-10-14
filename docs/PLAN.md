@@ -172,7 +172,7 @@ Replaces T106 to T115 for this session. Chunking techniques (T106, T107) and the
 - [x] P5-1 phase 4 review fixes F1 to F9, F13, F14, F17 to F19, F21 (Step 1)
 - [x] P5-2 pre-register the techniques, configs and the final rule
 - [x] P5-3 E5 per document cap 4 (reuse of run 80c1977c), `evals/results/e5_cap4_vs_b0.md`
-- [ ] P5-4 E3 hybrid retrieval (`e3_hybrid`)
+- [x] P5-4 E3 hybrid retrieval (`e3_hybrid`)
 - [ ] P5-5 candidate depth and top_k (`e5_topk8`, `e5_topn50`)
 - [ ] P5-6 drop title only chunks (`e4_title_drop`)
 - [ ] P5-7 rule based query decomposition (`e7_decompose`)
