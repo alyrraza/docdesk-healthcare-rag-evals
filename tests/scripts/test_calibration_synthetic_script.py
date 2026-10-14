@@ -11,7 +11,8 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from calibration_synthetic import SynthSource, main  # noqa: E402
+from calibration_synthetic import SynthSource, main, sheet_entries  # noqa: E402
+from docdesk.evals.calib_labels import parse_sheet  # noqa: E402
 from docdesk.evals.calib_sample import answer_hash  # noqa: E402
 from docdesk.evals.calib_sheet import ChunkView  # noqa: E402
 from docdesk.evals.calib_synth import Candidate  # noqa: E402
@@ -39,8 +40,10 @@ def answer_of(item_id: str) -> str:
 def record(item_id: str) -> ResultRecord:
     kind = "multi_chunk" if item_id in MULTI else "single_fact"
     metrics = {"status": "ok", "type": kind, "outcome": "answered"}
-    trace = {"answer": answer_of(item_id), "used_ids": ["ch-a"]}
-    return ResultRecord(item_id, metrics, None, trace)
+    metrics |= {"faithfulness": 0.4217, "correctness": 0.4217, "passed": False}
+    trace = {"answer": answer_of(item_id), "used_ids": ["ch-a"], "judge_model": "judge-x",
+             "faithfulness_labels": [{"claim": "JUDGE-CLAIM-MARKER", "label": "unsupported"}]}
+    return ResultRecord(item_id, metrics, "unfaithful", trace)
 
 
 def natural_manifest() -> dict:
@@ -124,3 +127,79 @@ def test_ac_evl_07_calib_63_the_natural_manifest_is_not_touched(project: Path) -
     before = path.read_bytes()
     build(project)
     assert path.read_bytes() == before
+
+
+SHEET = Path("docs") / "calibration" / "sheet_synthetic.md"
+TELLS = ("synthetic", "insertion", "omission", "perturb", "syn-", "parent", "source_document",
+         "seed:openfda", "manifest", "run-1")
+
+
+def sheet_text(project: Path) -> str:
+    build(project)
+    assert main(["--sheet"], project_root=project, source=make_source()) == 0
+    return (project / SHEET).read_text(encoding="utf-8")
+
+
+def test_ac_evl_07_calib_64_the_sheet_has_the_natural_format_in_manifest_order(
+    project: Path,
+) -> None:
+    text = sheet_text(project)
+    manifest = read_manifest(project)
+    parsed = parse_sheet(text)
+    assert [parsed[n].item_id for n in sorted(parsed)] == [
+        o["parent_item_id"] for o in manifest["outputs"]]
+    assert "## 1 of 10 | " in text and "### Your labels" in text
+    assert all(f"> {o['answer']}" in text for o in manifest["outputs"])
+    kinds = [o["perturbation"] for o in manifest["outputs"]]
+    assert kinds != sorted(kinds)  # the seeded order mixes the two kinds
+
+
+def test_ac_evl_07_calib_65_the_sheet_is_blind_to_judge_output_and_to_the_perturbation(
+    project: Path, judge_leak_words
+) -> None:
+    text = sheet_text(project)
+    lowered = text.lower()
+    manifest = read_manifest(project)
+    keys = [o["source_document"] for o in manifest["outputs"] if "source_document" in o]
+    hashes = [o[f] for o in manifest["outputs"] for f in ("answer_hash", "parent_answer_hash")]
+    for word in (*judge_leak_words, *TELLS, *keys, *hashes):
+        assert word.lower() not in lowered, word
+
+
+def test_ac_evl_07_calib_66_an_existing_synthetic_sheet_is_never_overwritten(
+    project: Path,
+) -> None:
+    sheet_text(project)
+    before = (project / SHEET).read_bytes()
+    with pytest.raises(SystemExit, match="already exists"):
+        main(["--sheet"], project_root=project, source=make_source())
+    assert (project / SHEET).read_bytes() == before
+
+
+def test_ac_evl_07_calib_67_the_sheet_needs_the_manifest_and_leaves_the_natural_sheet_alone(
+    project: Path,
+) -> None:
+    natural = project / "docs" / "calibration" / "sheet.md"
+    natural.parent.mkdir(parents=True)
+    natural.write_text("Ali is filling this in.\n", encoding="utf-8")
+    with pytest.raises(SystemExit, match="build the manifest first"):
+        main(["--sheet"], project_root=project, source=make_source())
+    sheet_text(project)
+    assert natural.read_text(encoding="utf-8") == "Ali is filling this in.\n"
+
+
+def test_ac_evl_07_calib_68_a_parent_whose_answer_is_in_two_runs_is_found_in_its_own_run(
+    project: Path,
+) -> None:
+    runs = {"run-a": [record("gi-001"), record("gi-002")], "run-b": [record("gi-001")]}
+    source = SynthSource(
+        runs=lambda ids: [(run, runs[run]) for run in ids],
+        chunks=lambda ids: [ChunkView("alphadrug drug label", "Text.") for _ in ids],
+        candidates=lambda: [])
+    outputs = [
+        {"n": n, "parent_item_id": item, "parent_run_id": run, "answer": f"Cut {item}.",
+         "parent_answer_hash": answer_hash(answer_of(item)),
+         "answer_hash": answer_hash(f"Cut {item}.")}
+        for n, (item, run) in enumerate([("gi-001", "run-b"), ("gi-002", "run-a")], start=1)]
+    entries = sheet_entries({"outputs": outputs}, source, project)
+    assert [e.output.run_id for e in entries] == ["run-b", "run-a"]

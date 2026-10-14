@@ -74,3 +74,10 @@ def db_session(migrated_url: str) -> Iterator[Session]:
         yield session
         session.rollback()
     engine.dispose()
+
+
+@pytest.fixture(scope="session")
+def judge_leak_words() -> tuple[str, ...]:
+    """Words that must never appear in a calibration sheet, natural or synthetic (T099)."""
+    return ("faithfulness", "correctness", "judge", "score", "passed", "failure", "0.4217",
+            "JUDGE-CLAIM-MARKER", "unfaithful", "wrong_abstain", "decided_by_code", "parse_failed")

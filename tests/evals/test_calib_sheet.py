@@ -13,8 +13,6 @@ from docdesk.evals.calib_sample import SEED, pool_from_runs, sample_outputs
 from docdesk.evals.calib_sheet import ChunkView, SheetEntry, manifest_of, render_sheet
 from docdesk.evals.report_data import ResultRecord
 
-FORBIDDEN = ("faithfulness", "correctness", "judge", "score", "passed", "failure", "0.4217",
-             "JUDGE-CLAIM-MARKER", "unfaithful", "wrong_abstain", "decided_by_code", "parse_failed")
 TODAY = date(2026, 10, 15)
 
 
@@ -51,13 +49,15 @@ def manifest(entries: list[SheetEntry]) -> dict:
     return manifest_of(entries, seed=SEED, pool_size=6, shortfall=0, created=date(2026, 10, 14))
 
 
-def test_ac_evl_07_calib_10_the_sheet_shows_the_task_and_no_judge_output(entries) -> None:
+def test_ac_evl_07_calib_10_the_sheet_shows_the_task_and_no_judge_output(
+    entries, judge_leak_words
+) -> None:
     text = render_sheet(entries)
     assert "Question for" in text and "[c1] Label A" in text and "[c2] Label B" in text
     assert "1. Fact one" in text and "2. Fact two" in text
     assert "key 1:" in text and "unsupported claims:" in text and "contradicted:" in text
     lowered = text.lower()
-    for word in FORBIDDEN:
+    for word in judge_leak_words:
         assert word.lower() not in lowered, word
 
 
