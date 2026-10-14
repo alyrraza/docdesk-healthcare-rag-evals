@@ -13,6 +13,7 @@ from docdesk.evals.report import report_markdown
 from docdesk.evals.report_data import build_report, load_run_data
 from docdesk.evals.report_summary import summary_json
 from docdesk.evals.rescore import rescored
+from docdesk.evals.technique_compare import compare_technique, technique_json, technique_markdown
 
 if TYPE_CHECKING:  # cli imports this file, so the import is for type checkers only
     from docdesk.evals.cli import Runtime
@@ -23,6 +24,11 @@ def add_tool_parsers(commands: argparse._SubParsersAction) -> None:  # type: ign
     rescore = commands.add_parser("rescore", help="apply the one pass rule to a stored run")
     rescore.add_argument("run_id")
     rescore.add_argument("--apply", action="store_true", help="write changes (default: dry run)")
+    vs = commands.add_parser("technique", help="compare a technique run with the baseline run")
+    vs.add_argument("name")
+    vs.add_argument("baseline")
+    vs.add_argument("candidate")
+    vs.add_argument("--out", type=Path, required=True, help="markdown file; json goes beside it")
     verify = commands.add_parser("verify-report", help="fail when a report file is stale")
     verify.add_argument("run_id")
     verify.add_argument("--report", type=Path, required=True)
@@ -32,6 +38,18 @@ def add_tool_parsers(commands: argparse._SubParsersAction) -> None:  # type: ign
 def stale(committed: str, fresh: str) -> bool:
     """Why: line endings differ between machines and must not make a report look stale."""
     return committed.replace("\r\n", "\n") != fresh.replace("\r\n", "\n")
+
+
+def cmd_technique(rt: Runtime, args: argparse.Namespace) -> int:
+    """Write evals/results/<name>_vs_b0.md and .json from two stored runs, by code."""
+    with rt.open_session() as session:
+        baseline = load_run_data(session, uuid.UUID(args.baseline))
+        candidate = load_run_data(session, uuid.UUID(args.candidate))
+    result = compare_technique(args.name, baseline, candidate)
+    args.out.write_text(technique_markdown(result), encoding="utf-8")
+    args.out.with_suffix(".json").write_text(technique_json(result), encoding="utf-8")
+    print(f"wrote {args.out} and {args.out.with_suffix('.json')}")
+    return 0
 
 
 def cmd_rescore(rt: Runtime, args: argparse.Namespace) -> int:

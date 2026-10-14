@@ -23,7 +23,7 @@ from sqlalchemy.orm import Session
 from docdesk.evals.budget import BudgetStop
 from docdesk.evals.cache import DEFAULT_CACHE_DIR
 from docdesk.evals.cli_check import answer_prompt_for, check_all
-from docdesk.evals.cli_tools import add_tool_parsers, cmd_rescore, cmd_verify_report
+from docdesk.evals.cli_tools import add_tool_parsers, cmd_rescore, cmd_technique, cmd_verify_report
 from docdesk.evals.config import EvalConfig, PromptPinMismatch, load_eval_config
 from docdesk.evals.golden.corpus import GoldenCorpus
 from docdesk.evals.golden.loader import SplitLockedError
@@ -183,7 +183,8 @@ def main(argv: Sequence[str] | None = None, runtime: Runtime | None = None) -> i
                 runtime.golden_dir, runtime.prompts_dir,
             )
     commands = {"run": cmd_run, "report": cmd_report, "compare": cmd_compare,
-                "rescore": cmd_rescore, "verify-report": cmd_verify_report}
+                "rescore": cmd_rescore, "verify-report": cmd_verify_report,
+                "technique": cmd_technique}
     return commands[args.command](runtime, args)
 
 
