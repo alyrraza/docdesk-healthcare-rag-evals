@@ -1,0 +1,288 @@
+- id: gi-035
+  type: multi_chunk
+  split: dev
+  question: What most often causes infectious mononucleosis, and how is it diagnosed?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - It is most often caused by the Epstein-Barr virus (EBV), though many viruses can cause it
+  - A healthcare provider may diagnose it based on the symptoms and a physical exam
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-298
+    text: What causes infectious mononucleosis (mono)? Mono can be caused by many different viruses. But it is most often caused by the Epstein-Barr virus (EBV).
+  - source: seed:medlineplus:medlineplus-298
+    text: How is infectious mononucleosis (mono) diagnosed? Your healthcare provider may diagnose mono based on your symptoms and a physical exam.
+  verified: false
+- id: gi-036
+  type: multi_chunk
+  split: test
+  question: What lasting damage can sarcoidosis cause, and can it be cured?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Over time it can cause permanent scarring of organs
+  - There is no cure; the goal of treatment is remission
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-389
+    text: Over time, sarcoidosis can cause permanent scarring of organs.
+  - source: seed:medlineplus:medlineplus-389
+    text: There is no cure for sarcoidosis. The goal of treatment for sarcoidosis is remission, which means you still have the condition, but it does not cause you problems.
+  verified: false
+- id: gi-037
+  type: multi_chunk
+  split: dev
+  question: What causes hemorrhoids, and how can they most often be treated at home?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Too much pressure on the veins around the anus
+  - Eating high-fiber foods, taking a stool softener or fiber supplement, and drinking enough fluids
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-1226
+    text: Hemorrhoids happen when there is too much pressure on the veins around the anus.
+  - source: seed:medlineplus:medlineplus-1226
+    text: 'You can most often treat your hemorrhoids at home by: - Eating foods that are high in fiber. - Taking a stool softener or a fiber supplement. - Drinking enough fluids every day.'
+  verified: false
+- id: gi-038
+  type: multi_chunk
+  split: test
+  question: What happens in mitral valve prolapse, and do most people who have it have symptoms?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - The flaps of the mitral valve become floppy and do not close tightly
+  - Most people who have it do not have any symptoms
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-1605
+    text: Mitral valve prolapse (MVP) happens when the flaps of the mitral valve become floppy and don't close tightly.
+  - source: seed:medlineplus:medlineplus-1605
+    text: What are the symptoms of mitral valve prolapse (MVP)? Most people who have MVP don't have any symptoms.
+  verified: false
+- id: gi-039
+  type: multi_chunk
+  split: dev
+  question: What can cause sudden cardiac arrest, and how is it treated?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - It can happen when the heart's electrical system is not working right and causes irregular heartbeats
+  - It needs treatment with a defibrillator right away, a device that sends an electric shock to the heart
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-4266
+    text: What causes sudden cardiac arrest (SCA)? Your heart has an electrical system that controls the rate and rhythm of your heartbeat. An SCA can happen when the heart's electrical system is not working right and causes irregular heartbeats.
+  - source: seed:medlineplus:medlineplus-4266
+    text: What are the treatments for sudden cardiac arrest (SCA)? SCA is an emergency. A person having SCA needs to be treated with a defibrillator right away. A defibrillator is a device that sends an electric shock to the heart.
+  verified: false
+- id: gi-040
+  type: multi_chunk
+  split: test
+  question: How serious a cause of death is heart disease in the United States, and what do treatment plans for heart disease depend on?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Heart disease is the leading cause of death in the United States
+  - Treatment depends on the type of heart disease, how serious the symptoms are, and what other health conditions the person has
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-277
+    text: Heart disease is the leading cause of death in the United States, but there are ways to prevent and manage many types of heart disease.
+  - source: seed:medlineplus:medlineplus-277
+    text: Treatment plans for heart disease depend on the type of heart disease you have, how serious your symptoms are, and what other health conditions you have.
+  verified: false
+- id: gi-041
+  type: multi_chunk
+  split: dev
+  question: Which type of tremor is the most common, and in which age group is tremor most common?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Essential tremor is the most common type
+  - Tremor is most common in middle-aged and older adults
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-1315
+    text: Essential tremor, sometimes called benign essential tremor or familial tremor. This is the most common type.
+  - source: seed:medlineplus:medlineplus-1315
+    text: Anyone can get tremor, but it is most common in middle-aged and older adults.
+  verified: false
+- id: gi-042
+  type: multi_chunk
+  split: dev
+  question: How many yes answers to the screening questions suggest an alcohol use disorder, and what should someone who thinks they might have one do?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Yes to two or more of the questions suggests an AUD
+  - See a health care provider for an evaluation
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-120
+    text: 'How do I know if I have an alcohol use disorder (AUD)? You may have an AUD if you can answer yes to two or more of these questions: In the past year, have you:'
+  - source: seed:medlineplus:medlineplus-120
+    text: What should I do if I think that I might have an alcohol use disorder (AUD)? If you think you might have an AUD, see your health care provider for an evaluation.
+  verified: false
+- id: gi-043
+  type: multi_chunk
+  split: test
+  question: When should you call 911 in an emergency, and what should a basic first aid kit include?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Right away for life-threatening emergencies, such as when someone collapses, can't breathe, or is unresponsive
+  - Adhesive bandages, sterile gauze pads, adhesive tape, antiseptic wipes, disposable gloves, scissors and a first-aid guide
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-240
+    text: Call 911 right away for life-threatening emergencies, such as when someone collapses, can't breathe, or is unresponsive.
+  - source: seed:medlineplus:medlineplus-240
+    text: 'A basic first aid kit should include: - Adhesive bandages - Sterile gauze pads - Adhesive tape - Antiseptic wipes - Disposable gloves - Scissors - A first-aid guide, so you know how to use each item'
+  verified: false
+- id: gi-044
+  type: multi_chunk
+  split: dev
+  question: Are tetanus and botulism caused by the same type of bacteria?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Tetanus is caused by Clostridium bacteria
+  - Botulism is caused by a toxin made by Clostridium botulinum
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-435
+    text: Tetanus is a serious illness caused by Clostridium bacteria.
+  - source: seed:medlineplus:medlineplus-1557
+    text: Botulism is a rare but serious illness. The cause is a toxin (poison) made by a bacterium called Clostridium botulinum.
+  verified: false
+- id: gi-045
+  type: multi_chunk
+  split: test
+  question: Which diabetic condition is a contraindication in both the glipizide and the glyburide labels?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Glipizide is contraindicated in diabetic ketoacidosis, with or without coma
+  - Glyburide is contraindicated in diabetic ketoacidosis, with or without coma
+  gold_evidence:
+  - source: seed:openfda:00729e82-150a-464a-abe7-a3319721fbdb
+    text: 'Glipizide is contraindicated in patients with: 1. Known hypersensitivity to the drug. 2. Type 1 diabetes mellitus, diabetic ketoacidosis, with or without coma.'
+  - source: seed:openfda:05341afe-5b7a-462a-a196-689cb09f83fc
+    text: 'Glyburide tablets are contraindicated in patients with: Known hypersensitivity or allergy to the drug. Diabetic ketoacidosis, with or without coma.'
+  verified: false
+- id: gi-046
+  type: multi_chunk
+  split: dev
+  question: What are apixaban and irbesartan each indicated for?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Apixaban reduces the risk of stroke and systemic embolism in patients with nonvalvular atrial fibrillation
+  - Irbesartan is used for the treatment of hypertension, to lower blood pressure
+  gold_evidence:
+  - source: seed:openfda:095a08ac-cf0e-497e-a682-ddef38d6b29c
+    text: 'Apixaban is a factor Xa inhibitor indicated: to reduce the risk of stroke and systemic embolism in patients with nonvalvular atrial fibrillation.'
+  - source: seed:openfda:029a90b6-0722-49be-8400-3ec29526aafd
+    text: 'Irbesartan tablets are an angiotensin II receptor blocker (ARB) indicated for: Treatment of hypertension, to lower blood pressure.'
+  verified: false
+- id: gi-047
+  type: multi_chunk
+  split: dev
+  question: What do the boxed warnings of lithium carbonate and warfarin sodium each warn about?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Lithium toxicity is closely related to serum lithium concentrations and can occur at doses close to therapeutic concentrations
+  - Warfarin sodium can cause major or fatal bleeding
+  gold_evidence:
+  - source: seed:openfda:01c4facd-ed79-4078-ba33-2044de372d0f
+    text: Lithium toxicity is closely related to serum lithium concentrations, and can occur at doses close to therapeutic concentrations.
+  - source: seed:openfda:0cbce382-9c88-4f58-ae0f-532a841e8f95
+    text: Warfarin sodium can cause major or fatal bleeding
+  verified: false
+- id: gi-048
+  type: multi_chunk
+  split: test
+  question: What serious skin reactions do the lamotrigine and carbamazepine labels warn about?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Lamotrigine can cause serious rashes requiring hospitalization and discontinuation of treatment
+  - Carbamazepine can cause serious and sometimes fatal dermatologic reactions, including toxic epidermal necrolysis and Stevens-Johnson syndrome
+  gold_evidence:
+  - source: seed:openfda:003663e5-c0c7-4fc1-a64d-313f2a5b10d2
+    text: Lamotrigine can cause serious rashes requiring hospitalization and discontinuation of treatment.
+  - source: seed:openfda:047bc284-060a-4db9-bf37-75d10f95a0a6
+    text: SERIOUS AND SOMETIMES FATAL DERMATOLOGIC REACTIONS, INCLUDING TOXIC EPIDERMAL NECROLYSIS (TEN) AND STEVENS-JOHNSON SYNDROME (SJS), HAVE BEEN REPORTED DURING TREATMENT WITH CARBAMAZEPINE.
+  verified: false
+- id: gi-049
+  type: multi_chunk
+  split: dev
+  question: What is benazepril hydrochloride indicated for, in which patients is it contraindicated, and what tablet strengths are supplied?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Treatment of hypertension, to lower blood pressure
+  - Contraindicated in patients who are hypersensitive to benazepril or any other ACE inhibitor
+  - Supplied as film-coated tablets of 5 mg, 10 mg, 20 mg and 40 mg
+  gold_evidence:
+  - source: seed:openfda:01a3c9f6-41aa-47a7-8c56-5462c6b54416
+    text: Benazepril hydrochloride tablets are indicated for the treatment of hypertension, to lower blood pressure.
+  - source: seed:openfda:01a3c9f6-41aa-47a7-8c56-5462c6b54416
+    text: 'Benazepril hydrochloride tablets are contraindicated in patients: • who are hypersensitive to benazepril or to any other ACE inhibitor'
+  - source: seed:openfda:01a3c9f6-41aa-47a7-8c56-5462c6b54416
+    text: Benazepril hydrochloride is supplied as film-coated tablets containing 5 mg, 10 mg, 20 mg, and 40 mg of benazepril hydrochloride for oral administration.
+  verified: false
+- id: gi-050
+  type: multi_chunk
+  split: test
+  question: What is atorvastatin calcium indicated to reduce the risk of, and which liver condition makes it contraindicated?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Myocardial infarction, stroke, revascularization procedures, and angina in adults with multiple risk factors for coronary heart disease
+  - Acute liver failure or decompensated cirrhosis
+  gold_evidence:
+  - source: seed:openfda:00afce9b-48c9-487a-a738-e359c005c707
+    text: 'Atorvastatin calcium tablets are indicated: To reduce the risk of: Myocardial infarction (MI), stroke, revascularization procedures, and angina in adults with multiple risk factors for coronary heart disease (CHD)'
+  - source: seed:openfda:00afce9b-48c9-487a-a738-e359c005c707
+    text: CONTRAINDICATIONS Acute liver failure or decompensated cirrhosis [see Warnings and Precautions (5.3) ] Hypersensitivity to atorvastatin or any excipients in atorvastatin calcium.
+  verified: false
+- id: gi-051
+  type: multi_chunk
+  split: dev
+  question: What is extended-release methylphenidate indicated for, and what risk does its boxed warning describe?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Treatment of ADHD in pediatric patients 6 to 15 years of age
+  - A high potential for abuse and misuse, which can lead to a substance use disorder, including addiction
+  gold_evidence:
+  - source: seed:openfda:10aa0dc0-bd0e-4927-a19a-8722d78ad67d
+    text: Methylphenidate hydrochloride extended-release capsules are indicated for the treatment of Attention Deficit Hyperactivity Disorder (ADHD) in pediatric patients 6 to 15 years of age.
+  - source: seed:openfda:10aa0dc0-bd0e-4927-a19a-8722d78ad67d
+    text: Methylphenidate hydrochloride extended-release has a high potential for abuse and misuse, which can lead to the development of a substance use disorder, including addiction.
+  verified: false
+- id: gi-052
+  type: multi_chunk
+  split: test
+  question: What does the boxed warning of phenytoin sodium injection say about the infusion rate, and which seizure emergency is the injection indicated for?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - The rate of intravenous administration should not exceed 50 mg per minute in adults and 1 to 3 mg/kg/min (or 50 mg per minute, whichever is slower) in pediatric patients, because of the risk of severe hypotension and cardiac arrhythmias
+  - It is indicated for generalized tonic-clonic status epilepticus, and for prevention and treatment of seizures occurring during neurosurgery
+  gold_evidence:
+  - source: seed:openfda:035a8d4e-2063-4240-83cb-d7eebcabe301
+    text: The rate of intravenous Phenytoin Sodium Injection administration should not exceed 50 mg per minute in adults and 1 to 3 mg/kg/min (or 50 mg per minute, whichever is slower) in pediatric patients because of the risk of severe hypotension and cardiac arrhythmias.
+  - source: seed:openfda:035a8d4e-2063-4240-83cb-d7eebcabe301
+    text: Parenteral Phenytoin Sodium Injection is indicated for the treatment of generalized tonic-clonic status epilepticus, and prevention and treatment of seizures occurring during neurosurgery.
+  verified: false
+- id: gi-053
+  type: multi_chunk
+  split: dev
+  question: Which infections does the doxycycline label list first as treatable, and in which persons is doxycycline contraindicated?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Rocky Mountain spotted fever, typhus fever and the typhus group, Q fever, rickettsialpox, and tick fevers caused by Rickettsiae
+  - Persons who have shown hypersensitivity to any of the tetracyclines
+  gold_evidence:
+  - source: seed:openfda:00b2aa98-dea2-90c3-e063-6294a90a35d6
+    text: 'Doxycycline is indicated for the treatment of the following infections: Rocky Mountain spotted fever, typhus fever and the typhus group, Q fever, rickettsialpox, and tick fevers caused by Rickettsiae.'
+  - source: seed:openfda:00b2aa98-dea2-90c3-e063-6294a90a35d6
+    text: This drug is contraindicated in persons who have shown hypersensitivity to any of the tetracyclines.
+  verified: false
