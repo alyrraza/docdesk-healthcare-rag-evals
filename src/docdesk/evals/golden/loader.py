@@ -10,6 +10,7 @@ from typing import Any, Literal
 import yaml
 from pydantic import ValidationError
 
+from docdesk.evals.golden.absence import absence_problems
 from docdesk.evals.golden.corpus import GoldenCorpus
 from docdesk.evals.golden.counts import ItemCounts, count_found
 from docdesk.evals.golden.duplicates import (
@@ -97,6 +98,8 @@ def resolve_item(
     item: GoldenItem, corpus: GoldenCorpus, texts: dict[uuid.UUID, str], scan: CorpusScan
 ) -> ResolvedItem:
     """Resolve source keys to ids, check each quote and its alternates; raise naming the problem."""
+    if problems := absence_problems(item, corpus, scan):
+        raise ValueError("; ".join(problems))
     resolved = []
     for entry in item.gold_evidence:
         document_id = corpus.document_id(entry.source)

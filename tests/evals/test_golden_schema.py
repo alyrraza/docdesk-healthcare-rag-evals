@@ -38,6 +38,8 @@ def unanswerable(**changes: Any) -> dict[str, Any]:
         gold_facts=[],
         gold_evidence=[],
         no_evidence_reason="No label in the corpus covers this drug",
+        absent_terms=["examplemab"],
+        absence_scope="corpus",
     )
     return {**item, **changes}
 

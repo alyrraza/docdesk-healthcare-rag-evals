@@ -75,6 +75,8 @@ class GoldenItem(BaseModel):
     gold_facts: list[str] = []
     gold_evidence: list[Evidence] = []
     no_evidence_reason: str = ""
+    absent_terms: list[str] = []
+    absence_scope: str | None = None
     gold_sql: str | None = None
     gold_result: list[Any] | None = None
     adversarial_kind: AdversarialKind = "none"
@@ -88,6 +90,7 @@ class GoldenItem(BaseModel):
         problems = [
             *self.answer_problems(),
             *self.evidence_problems(),
+            *self.absence_problems(),
             *self.sql_problems(),
             *self.verification_problems(),
         ]
@@ -130,6 +133,25 @@ class GoldenItem(BaseModel):
             problems.append("an item without evidence needs a no_evidence_reason")
         if count and self.no_evidence_reason:
             problems.append("no_evidence_reason is only for items without gold_evidence")
+        return problems
+
+    def absence_problems(self) -> list[str]:
+        """Unanswerable items carry the terms code checks for absence; answerable ones none."""
+        if self.answerable:
+            if self.absent_terms or self.absence_scope:
+                return ["absent_terms and absence_scope are only for items without an answer"]
+            return []
+        problems = []
+        if self.type == "unanswerable" and not self.absent_terms:
+            problems.append("an unanswerable item needs absent_terms")
+        if self.type == "unanswerable" and self.absence_scope is None:
+            problems.append("an unanswerable item needs an absence_scope")
+        folded = [" ".join(term.split()).casefold() for term in self.absent_terms]
+        if any(not term for term in folded) or len(set(folded)) != len(folded):
+            problems.append("absent_terms must be non-empty and listed once, ignoring case")
+        scope = self.absence_scope
+        if scope is not None and scope != "corpus" and not SOURCE_KEY.fullmatch(scope):
+            problems.append("absence_scope must be 'corpus' or a source key")
         return problems
 
     def sql_problems(self) -> list[str]:
