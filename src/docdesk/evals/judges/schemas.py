@@ -21,3 +21,19 @@ class FaithfulnessJudgement(BaseModel):
     """The whole reply of the faithfulness judge."""
 
     claims: list[ClaimLabel]
+
+
+KeyPointVerdict = Literal["covered", "missing", "contradicted"]
+
+
+class KeyPointLabel(BaseModel):
+    """What the answer does with one reference key point; point is its 1 based number."""
+
+    point: int
+    label: KeyPointVerdict
+
+
+class CorrectnessJudgement(BaseModel):
+    """The whole reply of the correctness judge."""
+
+    key_points: list[KeyPointLabel]

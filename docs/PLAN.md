@@ -136,7 +136,7 @@ no eval run is safe without them (see "Eval budget and pacing" in `docs/modules/
 - [x] T088 `evals/stats.py` bootstrap and paired comparison (AC-EVL-05)
 - [x] T089 moved to T079b (the disk cache is built first). Unit coverage of AC-EVL-04 is done there; wiring the cache into the real runner (cache outside budget outside pacer outside client) belongs to T094.
 - [x] T090 `evals/judges/faithfulness.py` labels, code computes score
-- [ ] T091 `evals/judges/correctness.py`
+- [x] T091 `evals/judges/correctness.py`
 - [ ] T092 `evals/metrics/citation.py` and `abstention.py`
 - [ ] T093 `evals/labeler.py` failure labels (AC-EVL-03)
 - [ ] T094 `evals/runner.py` resumable, uses the pacer, cache and budget guard, with a fake pipeline test. The runner reads the corpus fingerprint (T080a) and refuses to start when it differs from the config it was given. It also wires the LLM cache around every call in this order, outermost first: cache, then budget guard, then pacer, then client, so a cache hit costs no budget and no wait (AC-EVL-04).

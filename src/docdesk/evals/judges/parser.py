@@ -40,6 +40,10 @@ class JudgeParser(Generic[T]):
             kinds = ", ".join(sorted({str(e["type"]) for e in error.errors()}))
             return self._fail(f"invalid judge json: {kinds}")
 
+    def reject(self, reason: str) -> None:
+        """Count a reply that parsed but does not fit this item, so it is reported as a failure."""
+        self._fail(reason)
+
     @staticmethod
     def _unwrap(reply: str) -> str:
         """Take the content of a fenced block when there is one, else the whole reply."""

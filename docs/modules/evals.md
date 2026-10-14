@@ -140,6 +140,14 @@ If code already decided the outcome (an abstain or refuse answer, or an empty an
   was given. Score = supported claims / all claims. Zero claims on a non empty answer gives no score
   (status `no_claims`), because 1.0 would reward an answer the judge could not break down. Labels per claim
   are kept in the result for the report. `judge_faithfulness.v1` is the earlier draft and is not used.
+- **Correctness** (`judge_correctness.v2`, schema `CorrectnessJudgement@2`): the input is the question, the
+  answer and the golden item's `gold_facts` as numbered reference key points. The judge labels each point
+  `covered`, `missing` or `contradicted`. Score = covered / all key points. Extra information that is
+  supported by the evidence is not an error, and the judge has no label for it. A reply that does not give
+  exactly one label per key point is counted as a parse failure. Unanswerable and adversarial items have no
+  key points, so the judge is not called for them. An answerable item whose answer abstained, or is empty,
+  gets every point `missing` and score 0.0 from code, with no judge call (status `decided_by_code`).
+  `judge_correctness.v1` is the earlier draft and is not used.
 
 ## Failure labeling (AC-EVL-03)
 Each failed item gets exactly one primary label. Decision order, first match wins:
