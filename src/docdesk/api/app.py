@@ -6,7 +6,7 @@ from collections.abc import Awaitable, Callable
 
 from fastapi import FastAPI, Request, Response
 
-from docdesk.api.routers import auth, documents, health, query
+from docdesk.api.routers import auth, documents, health, query, retrieve
 from docdesk.core.config import Settings, get_settings
 from docdesk.core.errors import register_error_handlers
 from docdesk.core.ids import new_trace_id
@@ -45,4 +45,5 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(auth.router)
     app.include_router(documents.router)
     app.include_router(query.router)
+    app.include_router(retrieve.router)
     return app
