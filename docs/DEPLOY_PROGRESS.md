@@ -20,8 +20,8 @@ CI job image-build -> F12 gate proof -> readme_results.py -> README + architectu
 
 ## Checklist
 - [x] Step 1 inspect and plan
-- [ ] Step 2 container files, demo path
-- [ ] Step 3 verify container (no Docker here, moved to CI)
+- [x] Step 2 container files, demo path (make_env, demo_seed, demo_retrieve, Dockerfile, compose)
+- [x] Step 3 no Docker on this laptop, verification moved to CI (Step 4)
 - [ ] Step 4 CI job image-build, push to ghcr on main
 - [ ] Step 5 F12 gate proof and test
 - [ ] Step 6 README, readme_results.py, architecture diagram, LICENSE
