@@ -100,3 +100,10 @@ def test_ac_dep_05_techniques_that_did_not_finish_are_listed(tmp_path: Path) -> 
     final["not_completed"] = ["top_k 8: not completed, stopped by the daily token budget."]
     write(tmp_path, "final_vs_b0", final)
     assert "top_k 8: not completed" in render_results(tmp_path)
+
+
+def test_ac_dep_05_test_paragraph_says_the_dev_gain_was_not_confirmed(tmp_path: Path) -> None:
+    synthetic(tmp_path, with_test=True)
+    text = render_results(tmp_path)
+    assert "does not confirm the dev gain" in text
+    assert "consistent with the dev result" not in text

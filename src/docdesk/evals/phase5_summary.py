@@ -100,10 +100,20 @@ def test_split_lines(split: dict[str, Any] | None) -> list[str]:
         "## Test split", "",
         f"B0 and FINAL, run once each. Strict pass on {s['answerable']} answerable items: B0 "
         f"{s['baseline']}, FINAL {s['candidate']}. Gained {', '.join(s['gained']) or 'none'}, "
-        f"lost {', '.join(s['lost']) or 'none'}. See `test_split_b0_vs_final.md`.", "",
+        f"lost {', '.join(s['lost']) or 'none'}. {overall_sentence(split)} The test split does not "
+        "confirm the dev gain. See `test_split_b0_vs_final.md`.", "",
         *table(["category", "n", "B0", "FINAL", "difference (paired interval)", "verdict"], rows),
         "",
     ]
+
+
+def overall_sentence(split: dict[str, Any]) -> str:
+    """The paired change in the strict rate on the test split, with its interval and reading."""
+    row = next((r for r in split.get("overall", []) if r["metric"] == "strict_pass"), None)
+    if row is None or not row.get("n"):
+        return ""
+    return (f"Paired change in rate {row['difference']:+.3f} "
+            f"[{row['low']:+.3f}, {row['high']:+.3f}]: {row['verdict']}.")
 
 
 def summary_markdown(entries: list[Entry], test_split: dict[str, Any] | None) -> str:

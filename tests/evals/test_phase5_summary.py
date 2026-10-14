@@ -90,3 +90,11 @@ def test_ac_evl_05_p5sum_06_the_test_split_shows_each_category_with_its_n() -> N
          "low": -0.1, "high": 0.3, "verdict": "no clear difference"}]}]
     text = summary_markdown(entries(), test_split=split)
     assert "## Test split" in text and "single_fact" in text and "| 7 |" in text
+
+
+def test_ac_evl_05_p5sum_07_the_test_split_says_the_dev_gain_was_not_confirmed() -> None:
+    split = comparison(0.1, -0.1, 0.3, 3, 1)
+    split["split"] = "test"
+    text = summary_markdown(entries(), test_split=split)
+    assert "+0.100 [-0.100, +0.300]" in text
+    assert "does not confirm the dev gain" in text

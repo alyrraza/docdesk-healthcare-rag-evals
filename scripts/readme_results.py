@@ -97,7 +97,8 @@ def test_section(folder: Path) -> list[str]:
         f"setup. Strict pass on {sp['answerable']} answerable test questions: B0 "
         f"{of(sp['baseline'], sp['answerable'])}, FINAL {of(sp['candidate'], sp['answerable'])}. "
         f"Paired change in rate {interval(data)}: {reading(data)}. With 20 questions this is weak "
-        "evidence, and I read it as consistent with the dev result, not as a confirmed gain.",
+        "evidence. The test split does not confirm the dev gain: the data cannot say whether cap 4 "
+        "helps.",
     ]
 
 

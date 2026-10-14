@@ -144,7 +144,7 @@ Not completed:
 
 ### Test split
 
-The test split was run once for each setup, with no tuning afterwards. FINAL is the cap 4 setup. Strict pass on 20 answerable test questions: B0 13 of 20, FINAL 15 of 20. Paired change in rate +0.100 [-0.100, +0.300]: no clear difference. With 20 questions this is weak evidence, and I read it as consistent with the dev result, not as a confirmed gain.
+The test split was run once for each setup, with no tuning afterwards. FINAL is the cap 4 setup. Strict pass on 20 answerable test questions: B0 13 of 20, FINAL 15 of 20. Paired change in rate +0.100 [-0.100, +0.300]: no clear difference. With 20 questions this is weak evidence. The test split does not confirm the dev gain: the data cannot say whether cap 4 helps.
 
 Judge labels are Claude drafts with the author's review pending. Faithfulness and correctness are scored by a language model judge that I have not yet checked by hand.
 <!-- results:end -->
