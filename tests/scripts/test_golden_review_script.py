@@ -118,3 +118,24 @@ def test_ac_evl_01_the_probe_flag_adds_retrieval_results_for_items_without_an_an
     text = (tmp_path / "docs" / "golden_review" / "batch1.md").read_text(encoding="utf-8")
     assert asked == ["gi-055"]
     assert "aspirin text" in text and "keyword top 3: no chunk matched" in text
+
+
+def test_ac_evl_01_verify_marks_only_the_listed_items_and_leaves_the_rest(tmp_path: Path) -> None:
+    batch = project(tmp_path)
+    second = dict(ITEM, id="gi-002")
+    batch.write_text(yaml.safe_dump([ITEM, second], sort_keys=False), encoding="utf-8")
+    assert main([str(batch), "--verify", "gi-002", "--by", "ali"], project_root=tmp_path) == 0
+    saved = {entry["id"]: entry for entry in yaml.safe_load(batch.read_text(encoding="utf-8"))}
+    assert saved["gi-002"]["verified"] is True
+    assert saved["gi-002"]["verified_by"] == "ali"
+    assert not saved["gi-001"].get("verified")
+
+
+def test_ac_evl_01_verify_with_an_unknown_id_is_an_error_and_changes_nothing(
+    tmp_path: Path,
+) -> None:
+    batch = project(tmp_path)
+    before = batch.read_text(encoding="utf-8")
+    with pytest.raises(SystemExit, match="gi-404"):
+        main([str(batch), "--verify", "gi-001,gi-404"], project_root=tmp_path)
+    assert batch.read_text(encoding="utf-8") == before
