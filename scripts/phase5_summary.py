@@ -22,7 +22,8 @@ CONFIGS = (
     ("E7 rule based decomposition", "multi entity (gi-047)", "e7_decompose"),
     ("T111a abstain gate 0.55", "unanswerable answered", "t111a_abstain055"),
     ("T111a abstain gate 0.60 (risky)", "unanswerable answered", "t111a_abstain060"),
-    ("FINAL (techniques that pass the rule)", "all", "final"),
+    ("FINAL = FINAL_SIMPLE (cap 4 alone), frozen", "context_overflow", "final"),
+    ("FINAL_FULL (cap 4 plus hybrid)", "all", "final_full"),
 )
 
 

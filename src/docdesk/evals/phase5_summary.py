@@ -18,6 +18,10 @@ LIMITATIONS = (
     "judges yet, and kappa rests on 24 independent items.",
     "The policy filter gaps (dose and diagnosis cases) remain open and are not part of these runs.",
     "The injection items (gi-078, gi-079) are not run: they need the fixture loader (T122).",
+    "E5 cap 4 was seen before the pre-registration, because its run was made earlier for judge "
+    "calibration, so it is not a blind result.",
+    "Hybrid retrieval showed no clear difference, and top_k 8 was not completed because the daily "
+    "generator token budget was spent.",
     "Chunk size and strategy techniques were not tried: a re-ingest changes chunk ids and "
     "invalidates the stored runs (review finding F8), and a reranker needs a model download "
     "outside the dependency list.",
@@ -61,7 +65,7 @@ def entry_row(entry: Entry) -> list[str]:
     c = entry.comparison
     if c is None:
         return [entry.name, entry.target, "n/a", "not finished", "n/a", "n/a", "n/a",
-                "not finished (resumes after the token window)"]
+                "not completed, the daily generator token budget was spent"]
     change, phrase = strict_cell(c)
     recall = metric(c, "recall")
     verdict = f"kept, {phrase}" if c["rule"]["kept"] else f"not kept, {phrase}"
@@ -71,16 +75,34 @@ def entry_row(entry: Entry) -> list[str]:
             verdict]
 
 
+AMENDMENTS = (
+    "First amendment (2026-10-15, before any FINAL run): superseded for the final choice by the "
+    "second. The one item rule would have turned hybrid noise into a kept technique, so the "
+    "candidates became FINAL_SIMPLE (cap 4 alone) and FINAL_FULL (cap 4 plus hybrid, plus top_k 8 "
+    "if it passed), with FINAL_FULL frozen only if it beat FINAL_SIMPLE by 2 items.",
+    "Second amendment (2026-10-15, before any FINAL_FULL run and any test run): FINAL_FULL and "
+    "top_k 8 were not completed because the daily generator token budget was spent (168122 of "
+    "170000). FINAL is FINAL_SIMPLE, E5 cap 4 alone, the only technique whose paired interval "
+    "excludes zero on dev.",
+)
+
+
 def test_split_lines(split: dict[str, Any] | None) -> list[str]:
     """The held-out result, only when it was run (once, with no tuning afterwards)."""
     if split is None:
         return ["The held-out test split was not run in this report.", ""]
     s = split["strict_pass"]
+    rows = [[c["name"], str(r["n"]), f"{r['baseline']:.2f}", f"{r['candidate']:.2f}",
+             f"{r['difference']:+.3f} [{r['low']:+.3f}, {r['high']:+.3f}]", r["verdict"]]
+            for c in split.get("categories", []) for r in c["rows"]
+            if r["metric"] == "strict_pass" and r.get("n")]
     return [
         "## Test split", "",
         f"B0 and FINAL, run once each. Strict pass on {s['answerable']} answerable items: B0 "
         f"{s['baseline']}, FINAL {s['candidate']}. Gained {', '.join(s['gained']) or 'none'}, "
         f"lost {', '.join(s['lost']) or 'none'}. See `test_split_b0_vs_final.md`.", "",
+        *table(["category", "n", "B0", "FINAL", "difference (paired interval)", "verdict"], rows),
+        "",
     ]
 
 
@@ -94,6 +116,7 @@ def summary_markdown(entries: list[Entry], test_split: dict[str, Any] | None) ->
         "no clear difference. The verdict follows the pre-registered rule: at least one item "
         "more than B0 and faithfulness not lowered, ties and losses excluded.", "",
         *table(HEADER, [entry_row(e) for e in entries]), "",
+        "## Amendments to the FINAL rule", "", *[f"- {text}" for text in AMENDMENTS], "",
         "## Limitations", "", *[f"- {text}" for text in LIMITATIONS], "",
         *test_split_lines(test_split),
     ]
