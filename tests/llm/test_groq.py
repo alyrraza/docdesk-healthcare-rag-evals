@@ -133,3 +133,25 @@ def test_ac_gen_04_the_provider_code_is_available_on_the_error_object() -> None:
     with pytest.raises(ProviderError) as caught:
         client_for(handler).complete(REQ)
     assert caught.value.code == "json_validate_failed" and caught.value.retryable
+
+
+def test_ac_evl_pool_01_a_daily_limit_429_is_marked_daily_and_not_retryable() -> None:
+    message = "Rate limit reached for model x on tokens per day (TPD): Limit 200000, Used 199000"
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        error = {"message": message, "code": "rate_limit_exceeded"}
+        return httpx.Response(429, json={"error": error})
+
+    with pytest.raises(RateLimitedError) as caught:
+        client_for(handler).complete(REQ)
+    assert caught.value.daily is True and caught.value.retryable is False
+    assert message not in str(caught.value)
+
+
+def test_ac_evl_pool_01_a_per_minute_429_stays_retryable() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(429, json={"error": {"message": "tokens per minute (TPM)"}})
+
+    with pytest.raises(RateLimitedError) as caught:
+        client_for(handler).complete(REQ)
+    assert caught.value.daily is False and caught.value.retryable is True

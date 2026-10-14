@@ -31,7 +31,7 @@ class ProgressMismatch(Exception):
     """A progress file belongs to another run, so reusing it would skip the wrong items."""
 
 
-def _write_json(path: Path, data: object) -> None:
+def write_json(path: Path, data: object) -> None:
     """Write through a temp file so a stopped run never leaves a half written file."""
     path.parent.mkdir(parents=True, exist_ok=True)
     temp = path.with_suffix(".tmp")
@@ -65,7 +65,7 @@ class TokenLedger:
         entries = self._recent(model)
         entries.append((self._clock(), tokens))
         data[model] = entries
-        _write_json(self._path, data)
+        write_json(self._path, data)
 
     def check(self, model: str, estimated_tokens: int) -> None:
         """Raise BudgetStop when this call could take the model past the guard."""
@@ -167,7 +167,7 @@ class RunProgress:
         if item_id in self._done:
             return
         self._done.append(item_id)
-        _write_json(
+        write_json(
             self._path,
             {"config_id": self._config_id, "bundle_id": self._bundle_id, "done": self._done},
         )

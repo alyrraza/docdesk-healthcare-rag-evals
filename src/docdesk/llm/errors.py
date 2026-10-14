@@ -12,11 +12,18 @@ class LLMError(Exception):
 class RateLimitedError(LLMError):
     """The provider said slow down; it may tell us how long to wait."""
 
-    retryable = True
-
-    def __init__(self, message: str, retry_after: float | None = None) -> None:
+    def __init__(
+        self, message: str, retry_after: float | None = None, daily: bool = False
+    ) -> None:
         super().__init__(message)
         self.retry_after = retry_after
+        # A daily limit will not pass in seconds, so waiting is pointless: another key may serve.
+        self.daily = daily
+
+    @property
+    def retryable(self) -> bool:  # type: ignore[override]
+        """Retry a per minute limit; never a daily one."""
+        return not self.daily
 
 
 class LLMTimeoutError(LLMError):

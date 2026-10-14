@@ -35,6 +35,8 @@ class LLMResult:
     cost_usd: Decimal
     # True when the eval cache answered; tokens and latency are then the original call's.
     cache_hit: bool = False
+    # Which key slot of a key pool served the call; None without a pool or on a cache hit.
+    slot: int | None = None
 
 
 class LLMClient(Protocol):

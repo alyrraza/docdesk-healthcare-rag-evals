@@ -63,7 +63,12 @@ class GroqClient:
         if response.status_code < 400:
             return
         if response.status_code == 429:
-            raise RateLimitedError("Groq rate limit reached", _retry_after(response))
+            daily = _is_daily_limit(response)
+            raise RateLimitedError(
+                "Groq daily limit reached" if daily else "Groq rate limit reached",
+                _retry_after(response),
+                daily=daily,
+            )
         code = _error_code(response)
         suffix = f" ({code})" if code else ""
         raise ProviderError(
@@ -97,6 +102,15 @@ def _retry_after(response: httpx.Response) -> float | None:
         return float(response.headers["retry-after"])
     except (KeyError, ValueError):
         return None
+
+
+def _is_daily_limit(response: httpx.Response) -> bool:
+    """Whether a 429 is the per day limit; only a yes or no leaves, the message may echo input."""
+    try:
+        message = str(response.json()["error"]["message"]).lower()
+    except (ValueError, KeyError, TypeError):
+        return False
+    return "per day" in message or "(tpd)" in message or "(rpd)" in message
 
 
 def _error_code(response: httpx.Response) -> str | None:
