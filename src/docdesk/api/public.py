@@ -15,6 +15,9 @@ from docdesk.core.config import Settings
 PUBLIC_ROUTES: frozenset[tuple[str, str]] = frozenset(
     {
         ("GET", "/health"),
+        # The web page and its files: static, no data, the API calls behind it need a login.
+        ("GET", "/"),
+        ("GET", "/static/{name}"),
         ("POST", "/auth/register"),
         ("POST", "/auth/login"),
     }

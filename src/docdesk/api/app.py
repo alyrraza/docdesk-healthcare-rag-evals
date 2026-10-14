@@ -11,6 +11,7 @@ from docdesk.core.config import Settings, get_settings
 from docdesk.core.errors import register_error_handlers
 from docdesk.core.ids import new_trace_id
 from docdesk.core.logging import bind_trace_id
+from docdesk.web import routes as web
 from docdesk.worker.celery_app import make_celery
 
 
@@ -46,4 +47,5 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(documents.router)
     app.include_router(query.router)
     app.include_router(retrieve.router)
+    app.include_router(web.router)
     return app

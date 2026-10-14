@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>DocDesk</title>
+<link rel="stylesheet" href="/static/style.css">
+<script type="module" src="/static/main.js"></script>
+</head>
+<body>
+<a class="skip" href="#question">Skip to the question box</a>
+<header>
+  <h1>DocDesk</h1>
+  <p class="tagline">Ask a health question. Answers come only from the documents in this server, with sources you can open.</p>
+  <p class="disclaimer" role="note"><strong>Not medical advice.</strong> This is information retrieval over public MedlinePlus and DailyMed labels. It does not diagnose and it does not give doses.</p>
+</header>
+<main>
+  <section id="auth" aria-labelledby="auth-title">
+    <h2 id="auth-title">Sign in</h2>
+    <p class="hint">The API needs an account. Register once, then sign in. The token stays in this tab only.</p>
+    <form id="auth-form">
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="username" required>
+      <label for="password">Password (8 characters or more)</label>
+      <input id="password" type="password" autocomplete="current-password" minlength="8" required>
+      <div class="row">
+        <button type="submit" id="login-btn">Sign in</button>
+        <button type="button" id="register-btn" class="secondary">Register</button>
+      </div>
+    </form>
+  </section>
+
+  <section id="ask" aria-labelledby="ask-title" hidden>
+    <div class="row between">
+      <h2 id="ask-title">Your question</h2>
+      <button type="button" id="logout-btn" class="link">Sign out</button>
+    </div>
+    <form id="ask-form">
+      <label for="question">Question (up to 1000 characters)</label>
+      <textarea id="question" rows="3" maxlength="1000" required></textarea>
+      <div class="row">
+        <button type="submit" id="ask-btn">Ask</button>
+      </div>
+    </form>
+    <p class="hint">Examples from the demo corpus:</p>
+    <ul id="examples" class="examples"></ul>
+  </section>
+
+  <p id="status" role="status" aria-live="polite"></p>
+
+  <section id="result" aria-labelledby="result-title" hidden>
+    <div class="row between">
+      <h2 id="result-title">Answer</h2>
+      <span id="badge" class="badge"></span>
+    </div>
+    <p id="badge-note" class="hint"></p>
+    <div id="answer" class="answer"></div>
+    <div id="citations"></div>
+    <p id="result-disclaimer" class="disclaimer small"></p>
+    <details id="retrieval">
+      <summary>Retrieval: the top chunks the search found</summary>
+      <p class="hint" id="retrieval-note"></p>
+      <ol id="chunks" class="chunks"></ol>
+    </details>
+  </section>
+</main>
+<footer>
+  <p>Illustrative demo, not an evaluation. Source and limits: <a href="https://github.com/alyrraza/docdesk-healthcare-rag-evals">the repository</a>.</p>
+</footer>
+</body>
+</html>
