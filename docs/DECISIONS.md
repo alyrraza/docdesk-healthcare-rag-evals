@@ -865,7 +865,7 @@ strict pass on answerable dev items. Every config tried is in `evals/results/pha
 - Run once each, no tuning: B0 run 40488aff, FINAL run 6e8a809d. Strict pass on 20 answerable test items: B0 13, FINAL 15
   (gained gi-038, gi-040, gi-054, lost gi-045), +0.100 with paired interval [-0.100, +0.300]: no clear difference.
   multi_chunk 0.12 to 0.38 (n 8), single_fact 1.00 to 1.00 (n 12). The direction matches dev, the evidence is weak at n 20.
-- The technique report prints a "Result: kept" line from the dev rule; on the test split it must not be read as a verdict.
+- The technique report printed a "Result: kept" line from the dev rule; on the test split it must not be read as a verdict. Superseded by the entry below: the line is now "Dev rule verdict" and the test split report does not print it.
 - The injected adversarial item is not run.
 
 ## 2026-10-15 CI: image is pushed only after tests, gate and smoke
@@ -873,4 +873,19 @@ strict pass on answerable dev items. Every config tried is in `evals/results/pha
   never pushes. `image-push` runs on a push to main only, has `needs: [test, retrieval-gate, build-smoke]`, and is the only job with
   `packages: write`. It rebuilds the image from the Dockerfile and pushes `:<sha>` and `:latest`. This closes the weakness noted above
   (an image could be pushed from a commit whose tests fail). The cost is one extra image build on main.
+
+## 2026-10-15: dev rule verdict label, wording audit and what the README must say (unattended session, no model calls)
+- **Report label.** The technique report line "Result: kept" is now "Dev rule verdict: kept". The test split report prints no rule verdict at
+  all (the json keeps the field, nothing prints it). All 14 technique reports were regenerated with the tracked `technique` command from
+  the stored runs. Only that line changed, the json files are identical. `verify-report` passes on the B0 dev, B0 test, FINAL dev and FINAL
+  test reports.
+- **Wording audit.** The test split gave 13 of 20 for B0 and 15 of 20 for FINAL, interval -0.10 to +0.30: no clear difference. So no
+  sentence may say cap 4 improved the test result. The README and phase 5 summary generators now say the test split does not confirm the dev
+  gain (the older text said "consistent with the dev result"). The judge labels are Claude drafts with the author's review pending, so
+  no sentence may say the judge is human validated (`docs/modules/evals.md` said "labeled by hand" in two places, fixed).
+  DocDesk is not deployed on a live server: it is a Docker image on GHCR plus a compose file. "Live API" in `evals.md` meant the code
+  default and is now "default API setting".
+- **README states plainly** (new section "What was run and what was not"): dev experiments and test arms ran on Groq, two Groq API keys
+  were pooled to fit the daily token limit, FINAL_FULL and top_k 8 were not completed, injection items were not run, chunking techniques
+  and the reranker were skipped.
 

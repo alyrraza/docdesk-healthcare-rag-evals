@@ -6,7 +6,7 @@ Read with `FAILURE_MODES.md`.
 ## Three separate datasets (never mix them)
 1. Golden set: 100 hand-verified items. 60 dev (tuning, debugging), 40 held-out test (final reports
    and the CI baseline only).
-2. Judge calibration set: 40 judge outputs labeled by hand. Kept apart from anything used to write or tune the judge prompt.
+2. Judge calibration set: 40 judge outputs, meant to be labeled by hand. Today the labels are Claude drafts and the author's review is pending, so the judge is not human validated. Kept apart from anything used to write or tune the judge prompt.
 3. Regression set: failures from eval runs and traces, added over time. Lives with the dev split.
 
 ## Golden item (YAML, validated against a schema, AC-EVL-01)
@@ -357,6 +357,7 @@ failed, 2 stopped by the daily token guard (progress is saved, run the same comm
 - Report per-slice results, not just the overall average, because averages hide a regression in one slice.
 
 ## Judge calibration (AC-EVL-07)
+Status: the steps below are the plan. The labels are Claude drafts with the author's review pending, so the judge has not been validated by a human and its scores are a model grading a model.
 1. Freeze the judge: model, prompt, schema, parameters.
 2. Hand-label the calibration set. Label first, discuss later. Keep the original labels.
 3. Run the frozen judge. Count parse failures and refusals as errors, not as missing data.
@@ -417,9 +418,9 @@ cap, rerank off, prompt name and version, generator model id, judge model id, ab
 budget slots. Once the first B0 result is stored the file is frozen. A change means a new baseline with
 a new id (b1, b2), never an edit. Every result stores the config id and its hash.
 
-The live API default is different on purpose: `POST /query` uses hybrid retrieval (dense plus keyword,
+The default API setting is different on purpose: `POST /query` uses hybrid retrieval (dense plus keyword,
 RRF, n=20, k=5). B0 is dense top-5, so E3 can measure what hybrid adds. Numbers measured on B0 do not
-describe the live API until the hybrid config has its own eval run.
+describe the API default until the hybrid config has its own eval run.
 
 Each experiment commits its config change, then its results file. The report generator builds the
 results table and the quality, cost and latency plot.

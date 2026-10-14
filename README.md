@@ -78,7 +78,7 @@ The first result is the MedlinePlus rubella page. The same command with `--expec
 
 To get generated answers, put your own key in `.env` as `GROQ_API_KEY=...` (a free key from console.groq.com), run `docker compose up -d` again, log in with `POST /auth/login` using `ADMIN_EMAIL` and `ADMIN_PASSWORD` from `.env`, and call `POST /query` with the token. Without a key, `POST /query` returns a 503 with the code `llm_not_configured` and a plain message, not a stack trace. API docs are turned off in the production setting that compose uses.
 
-CI builds this image and runs the same three commands on every push. On a push to main it also publishes the image to `ghcr.io/alyrraza/docdesk-healthcare-rag-evals` (tags `latest` and the commit sha). A package published by a workflow can start private, so its visibility is set on the package page (see [docs/GO_PUBLIC_CHECKLIST.md](docs/GO_PUBLIC_CHECKLIST.md)).
+CI builds this image and runs the same three commands on every push and pull request (job `build-smoke`, it never pushes). On a push to main, a separate job `image-push` runs only after the tests, the retrieval gate and the smoke all passed, and publishes the image to `ghcr.io/alyrraza/docdesk-healthcare-rag-evals` (tags `latest` and the commit sha). A package published by a workflow can start private, so its visibility is set on the package page (see [docs/GO_PUBLIC_CHECKLIST.md](docs/GO_PUBLIC_CHECKLIST.md)).
 
 ## Run locally
 
@@ -149,6 +149,16 @@ The test split was run once for each setup, with no tuning afterwards. FINAL is 
 Judge labels are Claude drafts with the author's review pending. Faithfulness and correctness are scored by a language model judge that I have not yet checked by hand.
 <!-- results:end -->
 
+## What was run and what was not
+
+- **Provider.** The dev experiments and both test arms ran on Groq (openai/gpt-oss-120b for generation, qwen/qwen3.8-27b for judging).
+- **Two Groq keys.** The free tier caps tokens per model per day for each account. I pooled two Groq API keys (two accounts of mine) so the test split fit the daily limit. Every call uses the same request, model and prompt whichever key serves it.
+- **Not completed.** FINAL_FULL (cap 4 plus hybrid) and top_k 8 were not completed, the daily token budget ran out. FINAL is cap 4 alone.
+- **Not run.** The injection items in the golden set (gi-078, gi-079) were not run.
+- **Skipped.** Chunking techniques (chunk size and strategy) and the reranker were skipped. A re-ingest changes chunk ids and invalidates the stored runs, and the reranker needs a model download outside the dependency list.
+- **Test result.** The test split does not show that cap 4 helps: 13 of 20 for B0 and 15 of 20 for FINAL, interval -0.10 to +0.30, no clear difference.
+- **Not deployed.** There is no live server. What exists is a Docker image on GHCR and a compose file that starts the whole stack on a machine that has Docker.
+
 The CI retrieval gate (`scripts/ci_gate.py`) is a smoke test for retrieval pipeline regressions of one config. It is not a quality drift detector.
 
 ## Limitations
@@ -157,7 +167,7 @@ The CI retrieval gate (`scripts/ci_gate.py`) is a smoke test for retrieval pipel
 - **The judge is not validated by a human yet.** Judge labels are Claude drafts with the author's review pending. Until that review is done, faithfulness and correctness are a model grading a model, and I would not quote them as accuracy.
 - **Policy filter gaps.** The input policy check is a list of cues, not a classifier. Two of the four policy questions in the golden set get through it: "can I double it to 80 mg" (a dose change phrased without a dose cue) and "is this a blood clot" (a diagnosis phrased as "is this X"). The fix is planned and will be measured before and after, it is not done. Four questions are too few to estimate a miss rate. Injection checks are heuristics too, and the defence is meant to be the delimiters and the output checks together.
 - **Small corpus.** 298 documents, MedlinePlus topics and DailyMed labels. No other languages, no OCR for scanned PDFs, no images.
-- **Retrieval is the weak spot.** Recall at 5 is about 0.84 on dev,. In the dev failure labels, ranking misses and context overflow are the largest groups, with 5 items each.
+- **Retrieval is the weak spot.** Recall at 5 is about 0.84 on dev. In the dev failure labels, ranking misses and context overflow are the largest groups, with 5 items each.
 - **Not built yet.** The SQL branch and router for structured questions, the semantic cache, the rate limiter and the frontend are planned in [docs/PLAN.md](docs/PLAN.md) and do not exist in the code. The compose stack has no TLS and no metrics.
 - **The Docker path is checked in CI, not on my laptop,** which has no Docker. The demo steps without Docker (migrate, seed, retrieve) were run by hand against a scratch database.
 - **Free tier models.** Generation and judging depend on Groq free tier limits, so full runs are paced and capped by the budget guard, and model behaviour can change under me.
