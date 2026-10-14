@@ -3,6 +3,18 @@
 Newest first. Each entry: date, decision, why, what it supersedes. Specs older than their
 decisions are marked superseded in the spec file, so nobody builds from stale text.
 
+## 2026-10-14: T097 B0 retrieval numbers come from a summary script, not the stock report
+Decision: the stock `report` shows recall at k=5 only, and a retrieval only row stores no outcome, scores or
+candidates, so it shows "No failed items". `scripts/b0_run.py` retrieves the 44 runnable dev items again
+(same top_n then top_k, no model, dev only) and `scripts/b0_summary.py` computes recall@1/3/5, hit@5, MRR, the
+share of multi_chunk items with all gold in the top 5, retrieval_miss versus ranking_miss, and top-1 dense
+score spread. Intervals reuse the report code (2000 resamples, seed 0, items of one document together).
+- Labels use the labeler rules `retrieval_miss` and `ranking_miss` on each answerable item as if it were not
+  answered; retrieval_miss wins when both match, as in the labeler order.
+- Worst five items: lowest recall@5, then lowest MRR, then id.
+- Only gi-079 is "not run, needs T122" among the 45 verified dev items; gi-078 is not in the verified dev set.
+- No src file changed. Results are under `evals/results/`.
+
 ## 2026-10-14: the seed corpus keeps only some label sections, so "unanswerable" is relative to it
 Decision: `label_to_document` in `ingestion/seed/openfda.py` keeps nine openFDA fields and drops the rest.
 Each kept section is also clipped to 8000 characters (`MAX_SECTION_CHARS`), so a very long section can lose its end.
