@@ -300,6 +300,7 @@ stands. Chunks and index take 31 MB; the whole main database is 39 MB.
 - Canary and shadow rollout of prompt versions (offline replay of traces is the cheap version)
 - Real hosted deployment (Hugging Face Spaces with hosted Postgres and Redis, when budget allows)
 - Widen the openFDA fetcher fields (needs every unanswerable item re-checked and the fingerprint re-run, see 2026-10-14)
+- golden_review.py imports the encoder at module top, so --verify and --apply load numpy and ONNX for no reason and can fail on low memory. Fix: lazy-import inside build_probes. Do later as its own small task.
 
 ## 2026-10-13: LLM models and limits for phases 3 to 5
 Checked live on this date (Groq `/models`, OpenRouter `/models`, a tiny Groq call for headers, Groq docs).
@@ -405,3 +406,10 @@ Resolves the open question left in the batch 4 entry. Decided with the owner.
   and similar, not "is this X"). A test pins this set (`FILTER_MISSES`), so any change to the filter is
   noticed and the set is updated deliberately. Fixes come only from measured misses, as agreed on
   2026-10-13; four questions are a small sample, so the miss rate is not an estimate yet.
+
+## 2026-10-14: parked idea, subtler injection variants (batch 5 owner review)
+The owner verified all six batch 5 items. The two injection fixtures (gi-078, gi-079) use blunt, direct
+attacks ("disregard the question", "ignore all earlier instructions"), so passing them says little about
+subtle attacks. Parked, not a task yet: T122 should add subtler variants as extra regression items, not as
+new golden items. Variants to cover: polite wording, an instruction hidden inside a table or a list, and a
+request to reveal the system prompt. The golden set stays at 75 items.

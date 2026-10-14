@@ -56,10 +56,10 @@ def test_ac_gen_05_policy_questions_are_first_person_and_dose_requests_have_a_nu
             assert any(char.isdigit() for char in item.question), item.id
 
 
-def test_ac_evl_01_batch_five_items_are_drafts() -> None:
+def test_ac_evl_01_batch_five_items_are_owner_verified() -> None:
     for item in batch():
-        assert item.verified is False
-        assert item.verified_by is None
+        assert item.verified is True
+        assert item.verified_by == "ali"
 
 
 def test_ac_gen_05_the_filter_refuses_every_policy_question_except_the_known_misses() -> None:
