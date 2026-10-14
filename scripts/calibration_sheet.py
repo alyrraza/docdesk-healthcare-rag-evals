@@ -6,6 +6,8 @@ Usage:
         the first --run wins when two runs gave the same answer text for an item
     python scripts/calibration_sheet.py --apply docs/calibration/sheet.md [--by ali]
         checks the filled sheet is complete and writes evals/calibration/labels.yaml
+    python scripts/calibration_sheet.py --apply docs/calibration/sheet_synthetic.md --synthetic
+        the same check against manifest_synthetic.yaml, writes labels_synthetic.yaml
 
 Dev runs only. The sheet shows the question, the answer, the packed context and the key points,
 and never a judge label, score or pass flag. T100 compares the judge's labels with labels.yaml.
@@ -42,6 +44,8 @@ from docdesk.evals.report_data import ResultRecord, load_run_data
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = Path("evals") / "calibration" / "manifest.yaml"
 LABELS = Path("evals") / "calibration" / "labels.yaml"
+MANIFEST_SYNTHETIC = Path("evals") / "calibration" / "manifest_synthetic.yaml"
+LABELS_SYNTHETIC = Path("evals") / "calibration" / "labels_synthetic.yaml"
 SHEET = Path("docs") / "calibration" / "sheet.md"
 
 
@@ -115,17 +119,32 @@ def write_sheet(args: argparse.Namespace, root: Path, source: Source, today: dat
     return 0
 
 
-def apply_filled(sheet_file: Path, by: str, root: Path, today: date) -> int:
-    """Validate the filled sheet against the manifest and write labels.yaml; keep old labels."""
-    labels_path = root / LABELS
+def natural_view(synthetic_manifest: dict) -> dict:
+    """Why: the synthetic manifest names the parent run and item, apply_sheet reads run and item."""
+    outputs = [{**entry, "run_id": entry["parent_run_id"], "item_id": entry["parent_item_id"]}
+               for entry in synthetic_manifest["outputs"]]
+    return {**synthetic_manifest, "outputs": outputs}
+
+
+def apply_filled(
+    sheet_file: Path, by: str, root: Path, today: date, synthetic: bool = False
+) -> int:
+    """Validate the filled sheet against its manifest and write the labels; keep old labels."""
+    labels_path = root / (LABELS_SYNTHETIC if synthetic else LABELS)
     if labels_path.exists():
         raise SystemExit(f"{labels_path} already exists; the original labels are never overwritten")
-    manifest = yaml.safe_load((root / MANIFEST).read_text(encoding="utf-8"))
+    manifest = yaml.safe_load(
+        (root / (MANIFEST_SYNTHETIC if synthetic else MANIFEST)).read_text(encoding="utf-8"))
+    if synthetic:
+        manifest = natural_view(manifest)
     try:
         labels = apply_sheet(parse_sheet(sheet_file.read_text(encoding="utf-8")),
                              manifest, by=by, today=today)
     except LabelError as error:
         raise SystemExit(str(error)) from error
+    if synthetic:
+        ids = {entry["n"]: entry["synthetic_id"] for entry in manifest["outputs"]}
+        labels["labels"] = [{"synthetic_id": ids[x["n"]], **x} for x in labels["labels"]]
     labels_path.write_text(yaml.safe_dump(labels, sort_keys=False), encoding="utf-8")
     print(f"wrote {labels_path} ({len(labels['labels'])} outputs, labeled by {by})")
     return 0
@@ -145,10 +164,11 @@ def main(
     parser.add_argument("--force", action="store_true", help="replace an existing sheet")
     parser.add_argument("--apply", type=Path, help="the filled in sheet")
     parser.add_argument("--by", default="ali", help="name stored as labeled_by")
+    parser.add_argument("--synthetic", action="store_true", help="apply the synthetic sheet")
     args = parser.parse_args(argv)
     day = today or date.today()
     if args.apply:
-        return apply_filled(args.apply, args.by, project_root, day)
+        return apply_filled(args.apply, args.by, project_root, day, args.synthetic)
     if not args.run:
         raise SystemExit("give at least one --run RUN_ID, or --apply SHEET")
     return write_sheet(args, project_root, source or Source(db_runs, db_chunks), day)

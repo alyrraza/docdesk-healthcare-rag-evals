@@ -11,6 +11,7 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
+from calibration_sheet import main as sheet_main  # noqa: E402
 from calibration_synthetic import SynthSource, main, sheet_entries  # noqa: E402
 from docdesk.evals.calib_labels import parse_sheet  # noqa: E402
 from docdesk.evals.calib_sample import answer_hash  # noqa: E402
@@ -203,3 +204,63 @@ def test_ac_evl_07_calib_68_a_parent_whose_answer_is_in_two_runs_is_found_in_its
         for n, (item, run) in enumerate([("gi-001", "run-b"), ("gi-002", "run-a")], start=1)]
     entries = sheet_entries({"outputs": outputs}, source, project)
     assert [e.output.run_id for e in entries] == ["run-b", "run-a"]
+
+
+LABELS_SYNTHETIC = Path("evals") / "calibration" / "labels_synthetic.yaml"
+
+
+def fill(sheet: Path) -> None:
+    out = []
+    for line in sheet.read_text(encoding="utf-8").splitlines():
+        if line.startswith("key ") and line.endswith(":"):
+            line += " covered"
+        elif line == "unsupported claims:":
+            line += " none"
+        elif line == "contradicted:":
+            line += " no"
+        out.append(line)
+    sheet.write_text("\n".join(out) + "\n", encoding="utf-8")
+
+
+def apply_synthetic(project: Path, sheet: Path, day: date = date(2026, 10, 16)) -> int:
+    return sheet_main(["--apply", str(sheet), "--synthetic"], project_root=project, today=day)
+
+
+def test_ac_evl_07_calib_69_apply_writes_labels_synthetic_and_not_the_natural_labels(
+    project: Path,
+) -> None:
+    sheet = project / SHEET
+    sheet_text(project)
+    with pytest.raises(SystemExit, match="not complete"):
+        apply_synthetic(project, sheet)
+    assert not (project / LABELS_SYNTHETIC).exists()
+    fill(sheet)
+    assert apply_synthetic(project, sheet) == 0
+    labels = yaml.safe_load((project / LABELS_SYNTHETIC).read_text(encoding="utf-8"))
+    manifest = read_manifest(project)
+    assert labels["labeled_by"] == "ali" and labels["labeled_on"] == "2026-10-16"
+    assert [x["synthetic_id"] for x in labels["labels"]] == [
+        o["synthetic_id"] for o in manifest["outputs"]]
+    assert [x["answer_hash"] for x in labels["labels"]] == [
+        o["answer_hash"] for o in manifest["outputs"]]
+    assert not (project / "evals" / "calibration" / "labels.yaml").exists()
+
+
+def test_ac_evl_07_calib_70_original_synthetic_labels_are_not_overwritten(project: Path) -> None:
+    sheet = project / SHEET
+    sheet_text(project)
+    fill(sheet)
+    apply_synthetic(project, sheet)
+    before = (project / LABELS_SYNTHETIC).read_bytes()
+    with pytest.raises(SystemExit, match="already exists"):
+        apply_synthetic(project, sheet, date(2026, 10, 20))
+    assert (project / LABELS_SYNTHETIC).read_bytes() == before
+
+
+def test_ac_evl_07_calib_71_the_natural_apply_still_reads_the_natural_manifest(
+    project: Path,
+) -> None:
+    sheet_text(project)
+    with pytest.raises(SystemExit, match="not complete"):
+        sheet_main(["--apply", str(project / SHEET)], project_root=project)
+    assert not (project / LABELS_SYNTHETIC).exists()
