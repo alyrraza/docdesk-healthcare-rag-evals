@@ -174,6 +174,49 @@ Each failed item gets exactly one primary label. Decision order, first match win
 8. `sql_error`, `provider_error`, `judge_error`
 The labeler is deterministic code over trace data. The judge only supplies claim and fact labels.
 
+Runner labeler (T093, decided 2026-10-14). The B0 runner uses the labels below. They are a subset of the
+list above, in the same root cause first spirit. The labeler runs only on a failed item.
+
+### First match order
+1. `retrieval_miss`
+2. `ranking_miss`
+3. `context_overflow`
+4. `context_distraction`
+5. `wrong_abstain`
+6. `missed_abstain`
+7. `wrong_refusal`
+8. `missed_refusal`
+9. `unfaithful`
+10. `incorrect`
+11. `other`
+
+A failed item is one with a wrong outcome (see the cells in the section on citation and abstention
+metrics) or a correct outcome of "answer" whose judged scores are below 1.0. A system error answer is a
+failure with a wrong outcome. Judged scores that are missing (a parse failure) do not fail an item; the
+report counts them separately.
+
+| Label | Exact condition (all must hold) |
+|---|---|
+| retrieval_miss | answer expected, retrieval ran, no system error, some required evidence entry has no gold chunk among the top_n candidates |
+| ranking_miss | same gates, every entry has a gold chunk among the candidates, some entry has none in the top_k |
+| context_overflow | same gates, every entry has a gold chunk in the top_k, the packer ran, some entry has none in the prompt |
+| context_distraction | same gates, all gold is in the prompt, the first chunk of the prompt is not gold, and the answer abstained or failed its judged scores |
+| wrong_abstain | answer expected, the system abstained (insufficient evidence) |
+| missed_abstain | abstain expected, the system answered |
+| wrong_refusal | the system gave the policy refusal where it was not expected |
+| missed_refusal | refuse expected, the system answered or abstained |
+| unfaithful | answered, faithfulness below 1.0 (some claim unsupported or contradicted) |
+| incorrect | answered, correctness below 1.0 or any contradicted key point |
+| other | failed, nothing above matched, for example a system error answer |
+
+Why this order. The first four name where the evidence was lost, which is the root cause of the next
+four. An abstain after a retrieval miss is therefore a `retrieval_miss`, not a `wrong_abstain`. The
+overflow and distraction labels need the packer to have run, so an abstain before packing (weak
+evidence) stays a `wrong_abstain`. Unfaithful comes before incorrect because an unsupported claim makes
+the correctness score untrustworthy. The suggested order was kept; the only additions are the gates
+(retrieval ran, packer ran, no system error) that stop a label from firing on an item the stage never
+saw. `context_distraction` is a heuristic: a non gold chunk first in the prompt.
+
 ## Runner
 `evals/runner.py` loads the split, runs each item through the real pipeline with a given config and
 bundle, stores trace and metrics in `eval_results`, then calls the report writer.
