@@ -4,7 +4,7 @@ Candidate run 89af9b7b-92bc-492d-82ad-4b6fd0d775af (config e7_decompose), baseli
 
 Strict pass on answerable items: baseline 15 of 30, candidate 15 of 30. Gained: none. Lost: none.
 
-Rule for the final config: at least one item more than the baseline on the strict rate (not met) and faithfulness not lowered (not lowered). Result: not kept.
+Rule for the final config: at least one item more than the baseline on the strict rate (not met) and faithfulness not lowered (not lowered). Dev rule verdict: not kept.
 
 Wrong abstains (answerable items declined): baseline 10, candidate 10. Tokens billed: baseline not recorded, candidate 3186. p95 total latency over non cached items, ms: baseline not recorded, candidate too few non cached items.
 

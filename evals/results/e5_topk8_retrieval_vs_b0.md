@@ -4,7 +4,7 @@ Candidate run 6b8247b4-a3d6-47eb-b267-4477c2f012db (config e5_topk8), baseline r
 
 Strict pass on answerable items: baseline 0 of 30, candidate 0 of 30. Gained: none. Lost: none.
 
-Rule for the final config: at least one item more than the baseline on the strict rate (not met) and faithfulness not lowered (not lowered). Result: not kept.
+Rule for the final config: at least one item more than the baseline on the strict rate (not met) and faithfulness not lowered (not lowered). Dev rule verdict: not kept.
 
 Wrong abstains (answerable items declined): baseline 0, candidate 0. Tokens billed: baseline 0, candidate 0. p95 total latency over non cached items, ms: baseline 7965, candidate 989.
 

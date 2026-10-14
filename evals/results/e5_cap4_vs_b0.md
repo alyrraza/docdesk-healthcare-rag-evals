@@ -4,7 +4,7 @@ Candidate run 80c1977c-a2fb-4792-91cc-c2c44b775a2a (config calib_cap4), baseline
 
 Strict pass on answerable items: baseline 15 of 30, candidate 19 of 30. Gained: gi-035, gi-039, gi-041, gi-042. Lost: none.
 
-Rule for the final config: at least one item more than the baseline on the strict rate (met) and faithfulness not lowered (not lowered). Result: kept.
+Rule for the final config: at least one item more than the baseline on the strict rate (met) and faithfulness not lowered (not lowered). Dev rule verdict: kept.
 
 Wrong abstains (answerable items declined): baseline 10, candidate 6. Tokens billed: baseline not recorded, candidate 59375. p95 total latency over non cached items, ms: baseline not recorded, candidate not recorded.
 

@@ -4,8 +4,6 @@ Candidate run 6e8a809d-34b3-41c4-8ca5-56eb634d0134 (config final), baseline run 
 
 Strict pass on answerable items: baseline 13 of 20, candidate 15 of 20. Gained: gi-038, gi-040, gi-054. Lost: gi-045.
 
-Rule for the final config: at least one item more than the baseline on the strict rate (met) and faithfulness not lowered (not lowered). Result: kept.
-
 Wrong abstains (answerable items declined): baseline 5, candidate 3. Tokens billed: baseline 54019, candidate 39030. p95 total latency over non cached items, ms: baseline 41609, candidate 44030.
 
 ## Overall

@@ -4,7 +4,7 @@ Candidate run f4a588e4-1eee-40ee-b183-2a27fc0727ec (config e4_title_drop), basel
 
 Strict pass on answerable items: baseline 15 of 30, candidate 15 of 30. Gained: none. Lost: none.
 
-Rule for the final config: at least one item more than the baseline on the strict rate (not met) and faithfulness not lowered (not lowered). Result: not kept.
+Rule for the final config: at least one item more than the baseline on the strict rate (not met) and faithfulness not lowered (not lowered). Dev rule verdict: not kept.
 
 Wrong abstains (answerable items declined): baseline 10, candidate 10. Tokens billed: baseline not recorded, candidate 8435. p95 total latency over non cached items, ms: baseline not recorded, candidate too few non cached items.
 
