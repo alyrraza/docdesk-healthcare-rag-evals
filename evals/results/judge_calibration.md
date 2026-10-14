@@ -7,7 +7,7 @@ These labels were drafted by Claude and have not been reviewed by Ali, so the ag
 - The sample is small: 30 natural and 10 synthetic outputs, so every interval is wide.
 - Natural outputs are almost all faithful: 28 of 30 have no unsupported claim and no contradiction in the reference labels, so kappa on faithfulness is unstable there.
 - Synthetic outputs are a sensitivity check built by code (inserted or removed sentences). They are not real answers and are never pooled with the natural outputs.
-- Intervals are 95 percent percentile bootstrap intervals over whole outputs, 2000 resamples, seed 0. A resample where one side has a single class has no kappa and is left out of the interval.
+- Intervals are 95 percent percentile bootstrap intervals over whole items (all outputs of one item resample together), 2000 resamples, seed 0. A resample where one side has a single class has kappa 0 and stays in the interval; a resample where both sides have a single class has no kappa and is left out. Both counts are shown next to the interval.
 - Kappa is reported as undefined when the reference or the judge uses one class only.
 - This report gives no pass or fail verdict.
 
@@ -21,10 +21,10 @@ Judge model: qwen/qwen3.8-27b. Prompts: judge_faithfulness@2.0.0 23b3fee6a584, j
 
 | Measure | n | Raw agreement | Kappa | 95% interval (valid resamples) | Note |
 |---|---|---|---|---|---|
-| Faithfulness, item level | 30 | 0.967 | 0.651 | 0.366 to 1.000 (1257 of 2000) | kappa unstable, one class has 97 percent of labels |
-| Key points, three classes | 58 | 1.000 | 1.000 | 1.000 to 1.000 (1997 of 2000) |  |
-| Key points, covered or not | 58 | 1.000 | 1.000 | 1.000 to 1.000 (1997 of 2000) |  |
-| Correctness, item level | 30 | 1.000 | 1.000 | 1.000 to 1.000 (1997 of 2000) |  |
+| Faithfulness, item level | 30 | 0.967 | 0.651 | 0.000 to 1.000 (1739 of 2000; 471 counted as 0, 261 left out) | kappa unstable, one class has 97 percent of labels |
+| Key points, three classes | 58 | 1.000 | 1.000 | 1.000 to 1.000 (1997 of 2000; 0 counted as 0, 3 left out) |  |
+| Key points, covered or not | 58 | 1.000 | 1.000 | 1.000 to 1.000 (1997 of 2000; 0 counted as 0, 3 left out) |  |
+| Correctness, item level | 30 | 1.000 | 1.000 | 1.000 to 1.000 (1997 of 2000; 0 counted as 0, 3 left out) |  |
 
 Faithfulness, item level (n 30, rows are the reference, columns the judge)
 
@@ -67,9 +67,9 @@ Outputs with no judge faithfulness score (zero claims), left out of the faithful
 | Measure | n | Raw agreement | Kappa | 95% interval (valid resamples) | Note |
 |---|---|---|---|---|---|
 | Faithfulness, item level | 24 | 1.000 | undefined, single class | n/a | one class only on one side, counts in the matrix |
-| Key points, three classes | 46 | 1.000 | 1.000 | 1.000 to 1.000 (1295 of 2000) | kappa unstable, one class has 98 percent of labels |
-| Key points, covered or not | 46 | 1.000 | 1.000 | 1.000 to 1.000 (1295 of 2000) | kappa unstable, one class has 98 percent of labels |
-| Correctness, item level | 24 | 1.000 | 1.000 | 1.000 to 1.000 (1295 of 2000) | kappa unstable, one class has 96 percent of labels |
+| Key points, three classes | 46 | 1.000 | 1.000 | 1.000 to 1.000 (1318 of 2000; 0 counted as 0, 682 left out) | kappa unstable, one class has 98 percent of labels |
+| Key points, covered or not | 46 | 1.000 | 1.000 | 1.000 to 1.000 (1318 of 2000; 0 counted as 0, 682 left out) | kappa unstable, one class has 98 percent of labels |
+| Correctness, item level | 24 | 1.000 | 1.000 | 1.000 to 1.000 (1318 of 2000; 0 counted as 0, 682 left out) | kappa unstable, one class has 96 percent of labels |
 
 Faithfulness, item level (n 24, rows are the reference, columns the judge)
 
@@ -123,10 +123,10 @@ Number of disagreements: 1.
 
 | Measure | n | Raw agreement | Kappa | 95% interval (valid resamples) | Note |
 |---|---|---|---|---|---|
-| Faithfulness, item level | 10 | 1.000 | 1.000 | 1.000 to 1.000 (1998 of 2000) |  |
-| Key points, three classes | 21 | 1.000 | 1.000 | 1.000 to 1.000 (1999 of 2000) |  |
-| Key points, covered or not | 21 | 1.000 | 1.000 | 1.000 to 1.000 (1999 of 2000) |  |
-| Correctness, item level | 10 | 1.000 | 1.000 | 1.000 to 1.000 (1998 of 2000) |  |
+| Faithfulness, item level | 10 | 1.000 | 1.000 | 1.000 to 1.000 (1999 of 2000; 0 counted as 0, 1 left out) |  |
+| Key points, three classes | 21 | 1.000 | 1.000 | 1.000 to 1.000 (1999 of 2000; 0 counted as 0, 1 left out) |  |
+| Key points, covered or not | 21 | 1.000 | 1.000 | 1.000 to 1.000 (1999 of 2000; 0 counted as 0, 1 left out) |  |
+| Correctness, item level | 10 | 1.000 | 1.000 | 1.000 to 1.000 (1999 of 2000; 0 counted as 0, 1 left out) |  |
 
 Faithfulness, item level (n 10, rows are the reference, columns the judge)
 
@@ -168,10 +168,10 @@ Outputs with no judge faithfulness score (zero claims), left out of the faithful
 
 | Measure | n | Raw agreement | Kappa | 95% interval (valid resamples) | Note |
 |---|---|---|---|---|---|
-| Faithfulness, item level | 8 | 1.000 | 1.000 | 1.000 to 1.000 (1948 of 2000) |  |
-| Key points, three classes | 17 | 1.000 | 1.000 | 1.000 to 1.000 (1949 of 2000) |  |
-| Key points, covered or not | 17 | 1.000 | 1.000 | 1.000 to 1.000 (1949 of 2000) |  |
-| Correctness, item level | 8 | 1.000 | 1.000 | 1.000 to 1.000 (1948 of 2000) |  |
+| Faithfulness, item level | 8 | 1.000 | 1.000 | 1.000 to 1.000 (1947 of 2000; 0 counted as 0, 53 left out) |  |
+| Key points, three classes | 17 | 1.000 | 1.000 | 1.000 to 1.000 (1949 of 2000; 0 counted as 0, 51 left out) |  |
+| Key points, covered or not | 17 | 1.000 | 1.000 | 1.000 to 1.000 (1949 of 2000; 0 counted as 0, 51 left out) |  |
+| Correctness, item level | 8 | 1.000 | 1.000 | 1.000 to 1.000 (1947 of 2000; 0 counted as 0, 53 left out) |  |
 
 Faithfulness, item level (n 8, rows are the reference, columns the judge)
 

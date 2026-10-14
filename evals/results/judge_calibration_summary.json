@@ -63,10 +63,12 @@
               "kappa": 0.6511627906976744,
               "kappa_text": "0.651",
               "interval": {
-                "low": 0.36619718309859134,
+                "low": 0.0,
                 "high": 1.0,
-                "valid": 1257,
-                "resamples": 2000
+                "valid": 1739,
+                "resamples": 2000,
+                "zero_single_class": 471,
+                "undefined": 261
               },
               "majority_share": 0.9666666666666667,
               "unstable": true
@@ -103,7 +105,9 @@
                 "low": 1.0,
                 "high": 1.0,
                 "valid": 1997,
-                "resamples": 2000
+                "resamples": 2000,
+                "zero_single_class": 0,
+                "undefined": 3
               },
               "majority_share": 0.8448275862068966,
               "unstable": false
@@ -132,7 +136,9 @@
                 "low": 1.0,
                 "high": 1.0,
                 "valid": 1997,
-                "resamples": 2000
+                "resamples": 2000,
+                "zero_single_class": 0,
+                "undefined": 3
               },
               "majority_share": 0.8448275862068966,
               "unstable": false
@@ -161,7 +167,9 @@
                 "low": 1.0,
                 "high": 1.0,
                 "valid": 1997,
-                "resamples": 2000
+                "resamples": 2000,
+                "zero_single_class": 0,
+                "undefined": 3
               },
               "majority_share": 0.8,
               "unstable": false
@@ -235,8 +243,10 @@
               "interval": {
                 "low": 1.0,
                 "high": 1.0,
-                "valid": 1295,
-                "resamples": 2000
+                "valid": 1318,
+                "resamples": 2000,
+                "zero_single_class": 0,
+                "undefined": 682
               },
               "majority_share": 0.9782608695652174,
               "unstable": true
@@ -264,8 +274,10 @@
               "interval": {
                 "low": 1.0,
                 "high": 1.0,
-                "valid": 1295,
-                "resamples": 2000
+                "valid": 1318,
+                "resamples": 2000,
+                "zero_single_class": 0,
+                "undefined": 682
               },
               "majority_share": 0.9782608695652174,
               "unstable": true
@@ -293,8 +305,10 @@
               "interval": {
                 "low": 1.0,
                 "high": 1.0,
-                "valid": 1295,
-                "resamples": 2000
+                "valid": 1318,
+                "resamples": 2000,
+                "zero_single_class": 0,
+                "undefined": 682
               },
               "majority_share": 0.9583333333333334,
               "unstable": true
@@ -357,8 +371,10 @@
               "interval": {
                 "low": 1.0,
                 "high": 1.0,
-                "valid": 1998,
-                "resamples": 2000
+                "valid": 1999,
+                "resamples": 2000,
+                "zero_single_class": 0,
+                "undefined": 1
               },
               "majority_share": 0.5,
               "unstable": false
@@ -395,7 +411,9 @@
                 "low": 1.0,
                 "high": 1.0,
                 "valid": 1999,
-                "resamples": 2000
+                "resamples": 2000,
+                "zero_single_class": 0,
+                "undefined": 1
               },
               "majority_share": 0.7142857142857143,
               "unstable": false
@@ -424,7 +442,9 @@
                 "low": 1.0,
                 "high": 1.0,
                 "valid": 1999,
-                "resamples": 2000
+                "resamples": 2000,
+                "zero_single_class": 0,
+                "undefined": 1
               },
               "majority_share": 0.7142857142857143,
               "unstable": false
@@ -452,8 +472,10 @@
               "interval": {
                 "low": 1.0,
                 "high": 1.0,
-                "valid": 1998,
-                "resamples": 2000
+                "valid": 1999,
+                "resamples": 2000,
+                "zero_single_class": 0,
+                "undefined": 1
               },
               "majority_share": 0.5,
               "unstable": false
@@ -495,8 +517,10 @@
               "interval": {
                 "low": 1.0,
                 "high": 1.0,
-                "valid": 1948,
-                "resamples": 2000
+                "valid": 1947,
+                "resamples": 2000,
+                "zero_single_class": 0,
+                "undefined": 53
               },
               "majority_share": 0.625,
               "unstable": false
@@ -533,7 +557,9 @@
                 "low": 1.0,
                 "high": 1.0,
                 "valid": 1949,
-                "resamples": 2000
+                "resamples": 2000,
+                "zero_single_class": 0,
+                "undefined": 51
               },
               "majority_share": 0.8235294117647058,
               "unstable": false
@@ -562,7 +588,9 @@
                 "low": 1.0,
                 "high": 1.0,
                 "valid": 1949,
-                "resamples": 2000
+                "resamples": 2000,
+                "zero_single_class": 0,
+                "undefined": 51
               },
               "majority_share": 0.8235294117647058,
               "unstable": false
@@ -590,8 +618,10 @@
               "interval": {
                 "low": 1.0,
                 "high": 1.0,
-                "valid": 1948,
-                "resamples": 2000
+                "valid": 1947,
+                "resamples": 2000,
+                "zero_single_class": 0,
+                "undefined": 53
               },
               "majority_share": 0.625,
               "unstable": false
