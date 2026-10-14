@@ -1,0 +1,507 @@
+{
+  "b0_threshold": 0.0,
+  "config": "b0",
+  "facts": {
+    "answerable_below_unanswerable_max": 4,
+    "answerable_generator_abstained": 10,
+    "answerable_items": 30,
+    "answerable_top1_median": 0.7252259471509197,
+    "answerable_top1_min": 0.5566543672474852,
+    "ranges_overlap": true,
+    "unanswerable_above_answerable_min": 3,
+    "unanswerable_generator_abstained": [
+      11,
+      11
+    ],
+    "unanswerable_items": 11,
+    "unanswerable_top1_max": 0.6288806574869649,
+    "unanswerable_top1_median": 0.5106253027915955
+  },
+  "items": [
+    {
+      "id": "gi-001",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.7283111052698569
+    },
+    {
+      "id": "gi-003",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.74142341264626
+    },
+    {
+      "id": "gi-005",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.704343381912415
+    },
+    {
+      "id": "gi-006",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.7324162562141584
+    },
+    {
+      "id": "gi-008",
+      "kind": "answerable",
+      "outcome": "abstained",
+      "top1": 0.6386427498672765
+    },
+    {
+      "id": "gi-009",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.6261310577392578
+    },
+    {
+      "id": "gi-014",
+      "kind": "answerable",
+      "outcome": "abstained",
+      "top1": 0.6860525625395113
+    },
+    {
+      "id": "gi-016",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.7361356019973755
+    },
+    {
+      "id": "gi-017",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.6510725797501348
+    },
+    {
+      "id": "gi-019",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.6717387041967796
+    },
+    {
+      "id": "gi-021",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.5730540410844074
+    },
+    {
+      "id": "gi-022",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.7800884944279639
+    },
+    {
+      "id": "gi-024",
+      "kind": "answerable",
+      "outcome": "abstained",
+      "top1": 0.8225740439466851
+    },
+    {
+      "id": "gi-026",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.7950664995630621
+    },
+    {
+      "id": "gi-027",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.7559492362752814
+    },
+    {
+      "id": "gi-029",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.6898653322378011
+    },
+    {
+      "id": "gi-030",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.847755338184695
+    },
+    {
+      "id": "gi-032",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.6595856344452878
+    },
+    {
+      "id": "gi-034",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.5566543672474852
+    },
+    {
+      "id": "gi-035",
+      "kind": "answerable",
+      "outcome": "abstained",
+      "top1": 0.749584883401976
+    },
+    {
+      "id": "gi-037",
+      "kind": "answerable",
+      "outcome": "abstained",
+      "top1": 0.7328683137893677
+    },
+    {
+      "id": "gi-039",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.6867459025009248
+    },
+    {
+      "id": "gi-041",
+      "kind": "answerable",
+      "outcome": "abstained",
+      "top1": 0.7157249450683594
+    },
+    {
+      "id": "gi-042",
+      "kind": "answerable",
+      "outcome": "abstained",
+      "top1": 0.7962471003827033
+    },
+    {
+      "id": "gi-044",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.5875504788026359
+    },
+    {
+      "id": "gi-046",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.7221407890319824
+    },
+    {
+      "id": "gi-047",
+      "kind": "answerable",
+      "outcome": "answered",
+      "top1": 0.6897957140085539
+    },
+    {
+      "id": "gi-049",
+      "kind": "answerable",
+      "outcome": "abstained",
+      "top1": 0.7579617952085624
+    },
+    {
+      "id": "gi-051",
+      "kind": "answerable",
+      "outcome": "abstained",
+      "top1": 0.7462679592530717
+    },
+    {
+      "id": "gi-053",
+      "kind": "answerable",
+      "outcome": "abstained",
+      "top1": 0.7459590435028076
+    },
+    {
+      "id": "gi-055",
+      "kind": "unanswerable",
+      "outcome": "abstained",
+      "top1": 0.57051346126279
+    },
+    {
+      "id": "gi-057",
+      "kind": "unanswerable",
+      "outcome": "abstained",
+      "top1": 0.4567707913151622
+    },
+    {
+      "id": "gi-059",
+      "kind": "unanswerable",
+      "outcome": "abstained",
+      "top1": 0.5202933525689457
+    },
+    {
+      "id": "gi-061",
+      "kind": "unanswerable",
+      "outcome": "abstained",
+      "top1": 0.5106253027915955
+    },
+    {
+      "id": "gi-062",
+      "kind": "unanswerable",
+      "outcome": "abstained",
+      "top1": 0.4694358250330637
+    },
+    {
+      "id": "gi-064",
+      "kind": "unanswerable",
+      "outcome": "abstained",
+      "top1": 0.38006262541563807
+    },
+    {
+      "id": "gi-066",
+      "kind": "unanswerable",
+      "outcome": "abstained",
+      "top1": 0.6288806574869649
+    },
+    {
+      "id": "gi-067",
+      "kind": "unanswerable",
+      "outcome": "abstained",
+      "top1": 0.43532583117485046
+    },
+    {
+      "id": "gi-069",
+      "kind": "unanswerable",
+      "outcome": "abstained",
+      "top1": 0.3530448377132416
+    },
+    {
+      "id": "gi-071",
+      "kind": "unanswerable",
+      "outcome": "abstained",
+      "top1": 0.5437825484211015
+    },
+    {
+      "id": "gi-073",
+      "kind": "unanswerable",
+      "outcome": "abstained",
+      "top1": 0.5892770641611257
+    },
+    {
+      "id": "gi-074",
+      "kind": "adversarial",
+      "outcome": "abstained",
+      "top1": 0.6352133750915527
+    },
+    {
+      "id": "gi-076",
+      "kind": "adversarial",
+      "outcome": "refused",
+      "top1": 0.530556349125127
+    },
+    {
+      "id": "gi-077",
+      "kind": "adversarial",
+      "outcome": "abstained",
+      "top1": 0.4499707490188338
+    }
+  ],
+  "rule": "abstain before generation when the best score is below the threshold",
+  "split": "dev",
+  "sweep": [
+    {
+      "answerable_lost_answers": 0,
+      "answerable_wrongly_abstained": 0,
+      "generator_calls_saved": 2,
+      "threshold": 0.4,
+      "unanswerable_abstained": 2
+    },
+    {
+      "answerable_lost_answers": 0,
+      "answerable_wrongly_abstained": 0,
+      "generator_calls_saved": 2,
+      "threshold": 0.41,
+      "unanswerable_abstained": 2
+    },
+    {
+      "answerable_lost_answers": 0,
+      "answerable_wrongly_abstained": 0,
+      "generator_calls_saved": 2,
+      "threshold": 0.42,
+      "unanswerable_abstained": 2
+    },
+    {
+      "answerable_lost_answers": 0,
+      "answerable_wrongly_abstained": 0,
+      "generator_calls_saved": 2,
+      "threshold": 0.43,
+      "unanswerable_abstained": 2
+    },
+    {
+      "answerable_lost_answers": 0,
+      "answerable_wrongly_abstained": 0,
+      "generator_calls_saved": 3,
+      "threshold": 0.44,
+      "unanswerable_abstained": 3
+    },
+    {
+      "answerable_lost_answers": 0,
+      "answerable_wrongly_abstained": 0,
+      "generator_calls_saved": 4,
+      "threshold": 0.45,
+      "unanswerable_abstained": 3
+    },
+    {
+      "answerable_lost_answers": 0,
+      "answerable_wrongly_abstained": 0,
+      "generator_calls_saved": 5,
+      "threshold": 0.46,
+      "unanswerable_abstained": 4
+    },
+    {
+      "answerable_lost_answers": 0,
+      "answerable_wrongly_abstained": 0,
+      "generator_calls_saved": 6,
+      "threshold": 0.47,
+      "unanswerable_abstained": 5
+    },
+    {
+      "answerable_lost_answers": 0,
+      "answerable_wrongly_abstained": 0,
+      "generator_calls_saved": 6,
+      "threshold": 0.48,
+      "unanswerable_abstained": 5
+    },
+    {
+      "answerable_lost_answers": 0,
+      "answerable_wrongly_abstained": 0,
+      "generator_calls_saved": 6,
+      "threshold": 0.49,
+      "unanswerable_abstained": 5
+    },
+    {
+      "answerable_lost_answers": 0,
+      "answerable_wrongly_abstained": 0,
+      "generator_calls_saved": 6,
+      "threshold": 0.5,
+      "unanswerable_abstained": 5
+    },
+    {
+      "answerable_lost_answers": 0,
+      "answerable_wrongly_abstained": 0,
+      "generator_calls_saved": 6,
+      "threshold": 0.51,
+      "unanswerable_abstained": 5
+    },
+    {
+      "answerable_lost_answers": 0,
+      "answerable_wrongly_abstained": 0,
+      "generator_calls_saved": 7,
+      "threshold": 0.52,
+      "unanswerable_abstained": 6
+    },
+    {
+      "answerable_lost_answers": 0,
+      "answerable_wrongly_abstained": 0,
+      "generator_calls_saved": 8,
+      "threshold": 0.53,
+      "unanswerable_abstained": 7
+    },
+    {
+      "answerable_lost_answers": 0,
+      "answerable_wrongly_abstained": 0,
+      "generator_calls_saved": 8,
+      "threshold": 0.54,
+      "unanswerable_abstained": 7
+    },
+    {
+      "answerable_lost_answers": 0,
+      "answerable_wrongly_abstained": 0,
+      "generator_calls_saved": 9,
+      "threshold": 0.55,
+      "unanswerable_abstained": 8
+    },
+    {
+      "answerable_lost_answers": 1,
+      "answerable_wrongly_abstained": 1,
+      "generator_calls_saved": 10,
+      "threshold": 0.56,
+      "unanswerable_abstained": 8
+    },
+    {
+      "answerable_lost_answers": 1,
+      "answerable_wrongly_abstained": 1,
+      "generator_calls_saved": 10,
+      "threshold": 0.57,
+      "unanswerable_abstained": 8
+    },
+    {
+      "answerable_lost_answers": 2,
+      "answerable_wrongly_abstained": 2,
+      "generator_calls_saved": 12,
+      "threshold": 0.58,
+      "unanswerable_abstained": 9
+    },
+    {
+      "answerable_lost_answers": 3,
+      "answerable_wrongly_abstained": 3,
+      "generator_calls_saved": 14,
+      "threshold": 0.59,
+      "unanswerable_abstained": 10
+    },
+    {
+      "answerable_lost_answers": 3,
+      "answerable_wrongly_abstained": 3,
+      "generator_calls_saved": 14,
+      "threshold": 0.6,
+      "unanswerable_abstained": 10
+    },
+    {
+      "answerable_lost_answers": 3,
+      "answerable_wrongly_abstained": 3,
+      "generator_calls_saved": 14,
+      "threshold": 0.61,
+      "unanswerable_abstained": 10
+    },
+    {
+      "answerable_lost_answers": 3,
+      "answerable_wrongly_abstained": 3,
+      "generator_calls_saved": 14,
+      "threshold": 0.62,
+      "unanswerable_abstained": 10
+    },
+    {
+      "answerable_lost_answers": 4,
+      "answerable_wrongly_abstained": 4,
+      "generator_calls_saved": 16,
+      "threshold": 0.63,
+      "unanswerable_abstained": 11
+    },
+    {
+      "answerable_lost_answers": 4,
+      "answerable_wrongly_abstained": 5,
+      "generator_calls_saved": 18,
+      "threshold": 0.64,
+      "unanswerable_abstained": 11
+    },
+    {
+      "answerable_lost_answers": 4,
+      "answerable_wrongly_abstained": 5,
+      "generator_calls_saved": 18,
+      "threshold": 0.65,
+      "unanswerable_abstained": 11
+    },
+    {
+      "answerable_lost_answers": 6,
+      "answerable_wrongly_abstained": 7,
+      "generator_calls_saved": 20,
+      "threshold": 0.66,
+      "unanswerable_abstained": 11
+    },
+    {
+      "answerable_lost_answers": 6,
+      "answerable_wrongly_abstained": 7,
+      "generator_calls_saved": 20,
+      "threshold": 0.67,
+      "unanswerable_abstained": 11
+    },
+    {
+      "answerable_lost_answers": 7,
+      "answerable_wrongly_abstained": 8,
+      "generator_calls_saved": 21,
+      "threshold": 0.68,
+      "unanswerable_abstained": 11
+    },
+    {
+      "answerable_lost_answers": 10,
+      "answerable_wrongly_abstained": 12,
+      "generator_calls_saved": 25,
+      "threshold": 0.69,
+      "unanswerable_abstained": 11
+    },
+    {
+      "answerable_lost_answers": 10,
+      "answerable_wrongly_abstained": 12,
+      "generator_calls_saved": 25,
+      "threshold": 0.7,
+      "unanswerable_abstained": 11
+    }
+  ]
+}
