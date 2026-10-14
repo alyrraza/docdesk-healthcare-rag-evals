@@ -14,6 +14,14 @@ REAL_JWT = "f3a9c1d27b8e4a60915d2c7e8b4f1a36d0e9c5b7a2f84163"
 REAL_DB = "postgresql://owner:Vq8x2LmP4rTz@db.internal:5432/docdesk"
 
 
+@pytest.fixture(autouse=True)
+def clean_settings_environment(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep these tests independent of the shell or CI variables that Settings would read."""
+    for field in Settings.model_fields:
+        monkeypatch.delenv(field.upper(), raising=False)
+        monkeypatch.delenv(field.lower(), raising=False)
+
+
 def build(**overrides: str | None) -> Settings:
     values = {
         "database_url": REAL_DB,
