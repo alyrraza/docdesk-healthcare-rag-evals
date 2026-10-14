@@ -26,6 +26,7 @@ CI job image-build -> F12 gate proof -> readme_results.py -> README + architectu
 - [x] Step 5 F12 gate proof (scratch Neon databases, exit 1 then exit 0) and test
 - [x] Step 6 README, readme_results.py, architecture diagram (svg, rendered with Edge and checked), LICENSE
 - [x] Step 7 secret scan (only hit: repo name in README, false positive), GO_PUBLIC_CHECKLIST.md
-- [ ] Step 8 targeted tests, b0_regression, push, CI, notes
+- [x] Step 8 targeted tests, b0_regression ok, push, CI green
 
 ## Log
+- 2026-10-15: pushed e145fd9, CI green (test, retrieval-gate, image-build, image pushed). 2 pushes used, 1 failure fixed.
