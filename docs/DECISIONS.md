@@ -606,3 +606,40 @@ Choices made while building the eval runner that the task text did not fix.
   error stops the run; a budget stop exits 2 and a rerun continues from the cache.
 - The report is generated (`scripts/calibration_report.py`), repeatable byte for byte, and em or en dashes in label text
   become hyphens in the markdown and the json. It states the provenance sentence first and gives no pass or fail verdict.
+
+## 2026-10-14: the CI retrieval gate uses a small fixture corpus (T101, AC-EVL-06)
+Decided with the owner: do not ingest the full 298 document corpus in CI (about 25 minutes) and never put the Neon
+url or any secret in the repo. The gate runs on a small committed corpus instead.
+- **Fixture corpus** (`evals/ci/corpus/medlineplus`, 20 documents, about 39 KB). 15 documents are the ones cited by the
+  14 dev items below, 5 are distractors: MedlinePlus topics that no golden item of any split cites. MedlinePlus text is
+  public domain. A test caps the corpus at 20 documents and 60 KB so it cannot grow into a dataset.
+- **Golden subset** (`evals/ci/golden/ci_subset.yaml`): 14 verified dev items (9 single fact, 5 multi chunk), copied
+  verbatim from `evals/golden`. A test compares every copy with the real item, so a gold answer cannot be changed here
+  without Ali changing it in the real file. No test split item is used. Source keys are the real ones, so no item was edited.
+- **Same code as the B0 report.** `scripts/b0_rows.py` (moved out of `b0_run.py`, which still gives a byte identical
+  summary json) builds the ranked rows, `scripts/b0_summary.py` computes the numbers, `scripts/ci_gate_compare.py` decides.
+  Retrieval uses the pinned `b0.toml` settings (dense, top 20 then top 5, recursive chunks of 200 tokens, overlap 40).
+- **Stored numbers** (`evals/ci/expected.json`): recall@5 1.0 and MRR 0.9167 on 14 items, with the config id and hash. A
+  run for another config, or a changed hash, is refused: a new B config means a new stored file (written by hand with
+  `--write-baseline`, never by CI). Two fresh runs from an empty database gave identical numbers.
+- **Tolerance: 0.04 absolute, on recall@5 and MRR of all 14 items.** Retrieval here is deterministic, so the tolerance
+  does not absorb sampling noise, only a possible tie flip from a different CPU. With 14 items the smallest real event
+  moves a number by 0.036 (one item drops from rank 1 to rank 2, or one of two gold chunks leaves the top 5). A tolerance of
+  0.04 lets exactly one such event pass and fails two of them, or any single fact item leaving the top 5 (0.071). Bootstrap
+  intervals are not used here: on 14 items they are far wider than one item step, and they answer a different question
+  (is technique A better than B, Phase 5), not "did the code break retrieval".
+- **What this gate can and cannot catch.** It catches a broken chunker, tokenizer, encoder, pgvector query or fusion
+  change. A small corpus is an easier retrieval problem than 298 documents, so it will not show a subtle ranking loss that
+  only appears at full size. Full size numbers stay with the manual B0 run.
+- **CI shape.** Two jobs, each with its own `pgvector/pgvector:pg16` service container: `test` (ruff, file length, docs
+  style, pytest) and `retrieval-gate` (model download, migrate, gate). The database user has no password
+  (`POSTGRES_HOST_AUTH_METHOD: trust`, reachable only on the runner). The JWT secret and the read-only role password are
+  made with `openssl` during the run and masked. No `secrets.` reference, no provider key.
+- **The embedding model** is downloaded by `scripts/fetch_model.py` at the pinned revision with a sha256 pin per file, and
+  nothing is written when a hash differs. The model files are git ignored, so CI has no other way to get them.
+- **Gap found and fixed:** `pyproject.toml` did not declare `celery` and `redis`, although `src/` imports celery. A clean
+  install would have failed. Both are in `docs/TECHSTACK.md`; a test now checks every third party import of `src/` is declared.
+- **Not verified:** the workflow has not run on GitHub. What was checked: the YAML parses, every script and module it
+  runs exists, no secret or Neon reference, each job has a pgvector service, plus a rehearsal from a clean clone (lint steps
+  and the gate, against the local test database). The `test` job (the full suite on Linux with a superuser database
+  user) is untested there; the first push will show it.

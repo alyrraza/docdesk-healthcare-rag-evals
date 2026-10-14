@@ -339,6 +339,11 @@ failed, 2 stopped by the daily token guard (progress is saved, run the same comm
 
 ## Gates (AC-EVL-06)
 - PR gate (CI): retrieval-only metrics on the dev split. Fails if recall@k or MRR drops more than the tolerance against the stored baseline.
+  Built in T101 (2026-10-14): `.github/workflows/ci.yml`, job `retrieval-gate`. It runs `scripts/ci_gate.py` on a small
+  committed corpus (`evals/ci/corpus`, 20 documents) and 14 dev items (`evals/ci/golden/ci_subset.yaml`), not on the full
+  298 document corpus. It gates recall@5 and MRR over all 14 items with an absolute tolerance of 0.04 against
+  `evals/ci/expected.json`. The numbers come from `scripts/b0_summary.py`, the same code as the B0 report. Reasoning,
+  limits and what was not verified are in `DECISIONS.md` (2026-10-14, the CI retrieval gate).
 - Full gate (manual or nightly): schema validity at least 99 percent, zero critical failures on the adversarial and policy slices, zero access leaks, faithfulness and correctness within tolerance of baseline, tokens per query within about 20 percent.
 - Tolerances are starting values. Choose them after seeing the intervals, record them in `DECISIONS.md`.
 - Gating compares to a stored baseline run, not to an absolute number, because absolute scores drift with the judge and dataset.
