@@ -335,7 +335,8 @@ failed, 2 stopped by the daily token guard (progress is saved, run the same comm
   yes or no. `--apply` refuses a sheet with any blank field or other value and lists all problems at once.
 - The current label files are Claude drafts (`reviewed_by: pending`), not hand labels, see DECISIONS.md.
   `--apply --draft --by ali` writes that stamp.
-- T100 will compare the judge labels with `labels.yaml`. It is not built yet.
+- T100 compares the judge labels with `labels.yaml` (`src/docdesk/evals/calibration.py`, run with
+  `scripts/calibration_report.py`). It is built; the numbers stay against Claude drafted labels until the review is done.
 
 ## Gates (AC-EVL-06)
 - PR gate (CI): retrieval-only metrics on the dev split. Fails if recall@k or MRR drops more than the tolerance against the stored baseline.
