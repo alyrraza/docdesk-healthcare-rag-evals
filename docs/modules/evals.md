@@ -270,6 +270,47 @@ Rules for a full run (added 2026-10-13, tasks T079a to T079e):
   block, because a judge can wrap its answer even when told not to. Every parse failure is counted and
   shown in the report as `judge_error`; none is hidden or silently retried into a pass.
 
+## Run identity, resume and config rules (added 2026-10-14, Phase 5 step 1, supersedes the Resume bullet above)
+AC-EVL-08. These rules come from the phase 4 review (F2, F3, F6, F13, F14).
+- **Identity.** `eval_runs.identity` (migration 0016) stores, at creation: the config hash, the generator
+  sampling settings (temperature, max output tokens), the judge model, the judge prompt hashes, the corpus
+  fingerprint and the declared item set. A run stored before this has no identity. It is called a legacy
+  run: its identity is read from the config hash, judge model and judge prompt hashes that each row trace
+  holds, it has no corpus fingerprint, and reports and comparisons say so. The B0 dev run is a legacy run.
+- **Judge pins.** The judge prompt hashes are pinned in `DEFAULT_JUDGE_PINS` in `evals/config.py`, or in a
+  `[judge_prompts]` table of a config. The judge model is `[models] judge`. A run whose judge prompts or
+  judge model differ from the pins is refused before anything is written.
+- **Resume.** A rerun continues an unfinished run only when the config id, bundle id, split and the whole
+  identity match, including the item set. A different item set (`--items`) always starts its own run and
+  never joins or finishes another. An unfinished run of the same config whose pins differ is refused. A
+  legacy run is never continued. A run is finished only when every item of its declared set has a finished
+  row.
+- **Provider errors.** A generator call that fails at the provider (timeout, rate limit, server error)
+  is stored with status `not_scored` and the reason. It is left out of every rate and every n, shown in
+  its own report section, and retried by the next run of the same command. The run stays unfinished while
+  such an item exists. A model that replied badly twice (`output_invalid`) is a real failure and counts.
+- **Config keys.** `KNOWN_KEYS` in `evals/config.py` lists every key a config may hold. An unknown key is
+  refused at load time. `rerank.enabled = true` is refused until a reranker exists. `models.temperature`
+  and `models.max_output_tokens` reach every generator call (the judges keep their own prompt settings) and
+  are part of the run identity and the bundle id. A technique that needs a new key adds it to the list in
+  the same commit that reads it.
+- **Limits and paths.** The daily token limit and the per minute pacer limits come from an optional
+  `[limits."model id"]` table (`daily_tokens`, `tokens_per_minute`, `requests_per_minute`); a model without
+  one gets the Groq free tier numbers. The ledger and the LLM cache are anchored to the project root
+  (`evals/paths.py`), so the working folder does not matter. `scripts/smoke_llm.py` goes through the same
+  stack, so its spend is counted.
+- **One pass rule.** `evals/passing.py` decides pass: both judge scores present and at 1.0, nothing
+  contradicted. A missing score (parse failure or judge error) is not a pass, gets the label
+  `judge_failure`, and the report shows judge failure counts apart. Strict pass, overall pass and the stage
+  split all use this rule.
+- **Chunking techniques and chunk ids (F8).** There is one global corpus and one fingerprint row. A
+  re-ingest for a chunk size or strategy change (E1, E2) deletes the seed chunks and makes new chunk ids.
+  Stored `trace.used_ids`, `retrieved_ids`, the calibration manifest and `calibration_judge --check` then
+  point at ids that no longer exist, and the B0 rows can no longer be re-judged or audited. Returning to B0
+  chunking makes yet other ids. E1 and E2 are therefore out of scope for Phase 5 lite. Before they are ever
+  run, chunk text (or a content hash and position) must be stored in each row trace, or each chunking config
+  needs its own database. B0 artifacts are frozen.
+
 ## Report (T095, added 2026-10-14)
 `evals/report_data.py` aggregates, `evals/report.py` writes markdown, `evals/report_compare.py` pairs two runs.
 - **Per category tables** for single_fact, multi_chunk, unanswerable and adversarial (structured and mixed
