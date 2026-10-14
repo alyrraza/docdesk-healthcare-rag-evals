@@ -394,6 +394,10 @@ distribution, not a guess. Until T102a, the `weak_evidence` abstain path is not 
 covered by unit tests with other thresholds only, so AC-GEN-03 must not be described as protection
 against weak evidence in demos or in the README.
 
+Superseded 2026-10-14 by the entry "the B0 abstain threshold stays 0.0" below: T102a measured the trade-off and the
+owner decided not to tune a threshold into B0. The 0.0 is now a decision, not a placeholder. The comment in
+`evals/configs/b0.toml` that calls it a placeholder is stale; the file is frozen and was not edited.
+
 ## 2026-10-14: expected behavior, injected instruction items and the batch 5 findings (task T086)
 Resolves the open question left in the batch 4 entry. Decided with the owner.
 - The golden schema gets `expected_behavior`: answer, abstain or refuse. Default is answer for answerable
@@ -643,3 +647,37 @@ url or any secret in the repo. The gate runs on a small committed corpus instead
   runs exists, no secret or Neon reference, each job has a pgvector service, plus a rehearsal from a clean clone (lint steps
   and the gate, against the local test database). The `test` job (the full suite on Linux with a superuser database
   user) is untested there; the first push will show it.
+
+## 2026-10-14: the B0 abstain threshold stays 0.0, the threshold becomes a Phase 5 technique (T102a, AC-GEN-03)
+Decided by the owner after the T102a analysis (`evals/results/abstain_threshold_tradeoff.md` and `.json`,
+`scripts/abstain_sweep.py`). Dev split only, no model call.
+- **Decision.** The B0 threshold stays 0.0. Nothing that reads the threshold was changed, and a test
+  (`test_ac_gen_03_b0_and_the_live_policy_keep_threshold_zero`) pins `b0.toml` and `ABSTAIN_POLICY` at 0.0.
+- **Why.** The generator already abstained on 11 of 11 unanswerable dev items, so a threshold adds no correct abstain,
+  it only saves generator calls. Answerable top-1 dense scores start at 0.557 and unanswerable ones reach 0.629, so
+  the ranges overlap (4 answerable items score at or below 0.629). Any threshold in that band costs answerable items.
+- **Key rows** (answerable wrongly abstained, of which B0 had answered, unanswerable abstained before generation,
+  generator calls saved): 0.50: 0, 0, 5, 6. 0.55: 0, 0, 8, 9. 0.60: 3, 3, 10, 14. 0.65: 5, 4, 11, 18. 0.70: 12, 10, 11, 25.
+  The first answerable loss appears at 0.56. All 11 unanswerable items are caught only from 0.63, where 4 answerable
+  items are lost. B0 had already abstained on 10 of the 30 answerable items (wrong abstains by the generator).
+- **Method note.** The stored runner rows keep no per item score, so the per item top-1 scores come from re-running B0
+  retrieval with the same code as T097 (`scripts/b0_rows.py`). The recomputed min and max per item type match the
+  committed `b0_retrieval_dev_summary.json`. Outcomes come from the stored B0 full dev run.
+- **Phase 5.** The threshold is a technique to compare against B0 with a paired comparison on the same items (added to
+  `PLAN.md` as T111a). The scale is per config: B0 uses dense cosine, the live default uses fused RRF scores that are
+  about 0.03 at most, so a threshold is never reused across configs.
+
+## 2026-10-14: T102 and T103 were not completed in this pass
+- **T102, tolerances.** Done for the retrieval gate (see "the CI retrieval gate uses a small fixture corpus": 0.04
+  absolute). Not done for the full gate (faithfulness, correctness, tokens). Reasons: `PROMPT_STANDARD.md` says to adjust
+  the faithfulness limits after judge calibration, and the calibration labels are still Claude drafts with the owner's
+  review pending, so any limit would rest on an unaccepted judge. For the later decision, the measured B0 dev intervals
+  (n = 30 answerable) are: faithfulness 0.98 [0.95, 1.00] (n = 20 scored), correctness 0.57 [0.38, 0.73], strict
+  pass rate 0.50 [0.33, 0.70]. Half widths of 0.1 to 0.2 mean the "3 percent relative" starting tolerance is well
+  inside the noise at this size, so a fixed percentage would flag or pass by chance. A rule based on the paired
+  comparison interval (as in `evals.md`) fits the data better. That is the owner's call, so it is only noted here.
+- **T103, non-functional targets.** Not done. The B0 dev rows hold no latency, and the per model token and cost numbers
+  are not available for that run (it predates migration 0015). `PRD.md` says latency and cost targets are not to be
+  invented. A real baseline needs a measured run, which for tokens and end to end latency means provider tokens, and the
+  hosted database round trip would inflate retrieval time. Proposal for a later session: a latency run on the final B0
+  config with stage timings recorded, then the targets.

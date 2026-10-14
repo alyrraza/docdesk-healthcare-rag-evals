@@ -31,6 +31,8 @@ break. Postgres full text search keeps this in one database. Measure it in E3, d
 The best final score is exposed so `generation` can abstain below a threshold (AC-GEN-03).
 The threshold is tuned on the dev split using the unanswerable items. Different configs have
 different score scales, so the threshold is stored per config id.
+Update 2026-10-14: B0 keeps threshold 0.0 (owner decision after T102a). Tuning a threshold is a Phase 5 technique
+(T111a), not part of B0. See `DECISIONS.md`.
 
 ## Edge cases
 - Empty corpus or a user with no documents: return an empty result, never an error.
