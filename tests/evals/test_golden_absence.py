@@ -9,7 +9,8 @@ import pytest
 
 from docdesk.evals.golden.absence import absence_problems
 from docdesk.evals.golden.duplicates import CorpusScan
-from docdesk.evals.golden.loader import resolve_item
+from docdesk.evals.golden.loader import ResolvedItem, resolve_item
+from docdesk.evals.golden.report import absence_report
 from docdesk.evals.golden.schema import GoldenItem
 
 ALPHA, BETA = "seed:openfda:alpha", "seed:medlineplus:beta"
@@ -86,3 +87,18 @@ def test_ac_evl_01_resolving_an_item_runs_the_absence_check() -> None:
     with pytest.raises(ValueError, match="warfarin"):
         resolve_item(item(["warfarin"], "corpus"), corpus, {}, CorpusScan(corpus))
     assert resolve_item(item(["apixaban"], "corpus"), corpus, {}, CorpusScan(corpus)).evidence == ()
+
+
+def test_ac_evl_01_the_absence_report_lists_each_item_with_its_scope_and_term_count() -> None:
+    items = [
+        ResolvedItem(item(["apixaban", "eliquis"], "corpus"), ()),
+        ResolvedItem(item(["incubation"], ALPHA), ()),
+    ]
+    lines = absence_report(items).splitlines()
+    assert lines[0] == "absence check: 2 items"
+    assert "gi-055: 2 terms absent from the whole corpus" in lines[1]
+    assert f"gi-055: 1 term absent from {ALPHA}" in lines[2]
+
+
+def test_ac_evl_01_the_absence_report_ignores_answerable_items() -> None:
+    assert absence_report([]) == "absence check: no unanswerable items"

@@ -25,3 +25,18 @@ def duplicate_report(items: list[ResolvedItem]) -> str:
             )
     lines.append(f"{clean} quotes occur in one document only")
     return "\n".join(lines)
+
+
+def absence_report(items: list[ResolvedItem]) -> str:
+    """Why: the owner sees what code proved absent, and where, for every unanswerable item."""
+    mine = [resolved.item for resolved in items if resolved.item.absent_terms]
+    if not mine:
+        return "absence check: no unanswerable items"
+    lines = [f"absence check: {len(mine)} items"]
+    for item in mine:
+        count = len(item.absent_terms)
+        where = "the whole corpus" if item.absence_scope == "corpus" else item.absence_scope
+        noun = "term" if count == 1 else "terms"
+        terms = ", ".join(item.absent_terms)
+        lines.append(f"{item.id}: {count} {noun} absent from {where} ({terms})")
+    return "\n".join(lines)

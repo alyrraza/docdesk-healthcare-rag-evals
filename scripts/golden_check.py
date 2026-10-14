@@ -25,7 +25,7 @@ from docdesk.evals.golden.loader import (
     read_file,
     resolve_item,
 )
-from docdesk.evals.golden.report import duplicate_report
+from docdesk.evals.golden.report import absence_report, duplicate_report
 from docdesk.ingestion.filestore import LocalFileStore
 
 
@@ -55,6 +55,7 @@ def main(argv: list[str] | None = None) -> int:
         corpus = DatabaseCorpus(session, LocalFileStore(Path(settings.upload_dir)))
         good, problems = check_batch(args.file, corpus)
     print(duplicate_report(good))
+    print(absence_report(good))
     for problem in problems:
         print(f"PROBLEM {problem}")
     print(f"{len(good)} items passed, {len(problems)} problems")
