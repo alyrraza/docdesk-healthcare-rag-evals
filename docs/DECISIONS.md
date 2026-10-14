@@ -681,3 +681,17 @@ Decided by the owner after the T102a analysis (`evals/results/abstain_threshold_
   invented. A real baseline needs a measured run, which for tokens and end to end latency means provider tokens, and the
   hosted database round trip would inflate retrieval time. Proposal for a later session: a latency run on the final B0
   config with stage timings recorded, then the targets.
+
+## 2026-10-14: tests must not depend on the outer environment
+- **What happened.** The first GitHub Actions run failed 2 of 1115 tests, both in `tests/core/test_config_placeholders.py`.
+  The CI workflow sets `DATABASE_URL`, `READONLY_DATABASE_URL` and `JWT_SECRET` as real environment variables. The
+  `Settings` class lets real environment variables override both its defaults and the `.env.example` file, so one test saw
+  a read-only url it expected to be empty and the other never saw the placeholder values it expected to reject.
+- **Cause.** A test isolation bug, not an app bug. The tests passed on the laptop only because the shell there did not
+  set those variables.
+- **Decision.** A test that builds `Settings` clears every variable `Settings` declares (names taken from
+  `Settings.model_fields`, so a new field is covered) with `monkeypatch` before it runs. The placeholder check in the app
+  and the assertions in the tests are unchanged.
+- **How to apply.** When a test depends on configuration, set what it needs explicitly and remove the rest. Before
+  trusting a config test, run it once with the CI variables set and once with none. Other test files that build
+  `Settings` were run with the CI variables and pass.
