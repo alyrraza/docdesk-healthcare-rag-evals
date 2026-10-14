@@ -55,15 +55,15 @@ function unavailableMessage(result) {
 }
 
 function chunkNote(chunks) {
-  return chunks.length ? "Top " + chunks.length + " chunks, best first." : "The search found nothing.";
+  return chunks.length ? "Top " + chunks.length + " chunks, best first. The score is the search rank score, higher is closer, only useful for comparing chunks here." : "The search found nothing.";
 }
 
 function showAnswered(data, chunks) {
   const kind = outcomeOf(data);
   renderBadge(kind);
   renderAnswer(data);
-  if (kind === "refused") renderChunks([], "No search was used for this question.");
-  else renderChunks(chunks, chunkNote(chunks));
+  show($("retrieval"), kind !== "refused");
+  renderChunks(chunks, chunkNote(chunks));
 }
 
 async function ask(question) {
@@ -81,6 +81,7 @@ async function ask(question) {
   } else {
     renderBadge("unavailable");
     renderUnavailable(unavailableMessage(answer));
+    show($("retrieval"), true);
     renderChunks(chunks, chunkNote(chunks));
   }
   setStatus("");
