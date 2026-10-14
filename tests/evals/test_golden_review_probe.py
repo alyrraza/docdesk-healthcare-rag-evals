@@ -100,3 +100,10 @@ def test_ac_evl_01_probing_a_question_keeps_the_top_three_of_each_leg(
     assert asked == {"dense": 3, "keyword": 3}
     assert [chunk.title for chunk in probe.dense] == ["D0", "D1", "D2"]
     assert probe.keyword == [ProbeChunk("K0", 0.5, "keyword 0")]
+
+
+def test_ac_evl_01_dashes_in_retrieved_text_are_shown_as_hyphens() -> None:
+    probe = Probe([ProbeChunk("T", 0.5, "dose \u2014 twice daily, 5\u201310 mg")], [])
+    sheet = render_sheet([unanswerable()], {}, "b.yaml", {"gi-055": probe})
+    assert "\u2014" not in sheet and "\u2013" not in sheet
+    assert "dose - twice daily, 5-10 mg" in sheet

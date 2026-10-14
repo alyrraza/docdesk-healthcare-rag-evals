@@ -48,12 +48,13 @@ def probe_question(
 
 
 def render_leg(name: str, chunks: list[ProbeChunk]) -> list[str]:
-    """One leg of the sheet; an empty leg says so instead of showing nothing."""
+    """One leg of the sheet; dashes become hyphens because the docs style check bans them."""
     if not chunks:
         return [f"- {name} top {PROBE_TOP}: no chunk matched"]
     lines = [f"- {name} top {PROBE_TOP}:"]
     for rank, chunk in enumerate(chunks, start=1):
-        lines += [f"  {rank}. {chunk.title} (score {chunk.score:.2f})", f"     > {chunk.text}"]
+        text = chunk.text.replace("—", "-").replace("–", "-")
+        lines += [f"  {rank}. {chunk.title} (score {chunk.score:.2f})", f"     > {text}"]
     return lines
 
 
