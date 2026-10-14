@@ -29,6 +29,7 @@ class ItemScore:
     metrics: dict[str, Any]
     failure_label: str | None
     trace: dict[str, Any]
+    usage: list[dict[str, Any]]
 
 
 def retrieval_block(out: PipelineOutput, gold: list[frozenset[str]], k: int) -> dict[str, Any]:
@@ -113,7 +114,23 @@ def score_item(
         "faithfulness_labels": [x.model_dump() for x in faith.labels] if faith else [],
         "correctness_labels": [x.model_dump() for x in correct.labels] if correct else [],
     }
-    return ItemScore(metrics, label, trace)
+    return ItemScore(metrics, label, trace, usage_entries(out, faith, correct, kit))
+
+
+def usage_entries(
+    out: PipelineOutput, faith: Any, correct: Any, kit: JudgeKit | None
+) -> list[dict[str, Any]]:
+    """Every model call of this item, one dict each, so a run's tokens can be added up exactly."""
+    def entry(role: str, model: str, tokens_in: int, tokens_out: int, cost: Decimal, hit: bool):
+        return {"role": role, "model": model, "tokens_in": tokens_in, "tokens_out": tokens_out,
+                "cost_usd": str(cost), "cache_hit": hit}
+    found = [entry("generator", c.model, c.tokens_in, c.tokens_out, c.cost_usd, c.cache_hit)
+             for c in out.calls]
+    for role, result in (("faithfulness", faith), ("correctness", correct)):
+        if result is not None and result.usage.calls and kit is not None:
+            u = result.usage
+            found.append(entry(role, kit.model, u.tokens_in, u.tokens_out, u.cost_usd, u.cache_hit))
+    return found
 
 
 def totals(out: PipelineOutput, judge_usage: list[JudgeUsage]) -> dict[str, Any]:

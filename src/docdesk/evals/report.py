@@ -81,8 +81,8 @@ def report_markdown(report: Report) -> str:
         "## Tokens and cost", "",
         f"Tokens in {report.tokens_in}, tokens out {report.tokens_out}, "
         f"cost {report.cost_usd} USD, model calls {report.llm_calls}, "
-        f"cache hits {report.cache_hits}. Cache hits count the judge calls only, because the "
-        "generator cache hits are not recorded yet.", "",
+        f"cache hits {report.cache_hits}. Runs stored before T098b count judge cache hits only.",
+        "",
         *usage_lines(report), *stage_lines(report), *outcome_lines(report), *worst_lines(report),
         "## Not run", "",
     ]

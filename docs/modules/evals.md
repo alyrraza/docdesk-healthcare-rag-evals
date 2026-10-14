@@ -237,6 +237,13 @@ Runner behavior (T094, added 2026-10-14):
 - **Rows.** `eval_runs` gets one row per run (config id, bundle id, split, git sha). `eval_results` gets one
   row per item: `metrics` (small numbers and statuses), `failure_label` and `trace` (answer, ids, claim
   and key point labels, config hash, judge model, judge prompt hashes).
+- **Usage column** (T098b, added 2026-10-14). `eval_results.usage` is a JSONB list with one entry per
+  model call of the item: `role` (`generator`, `faithfulness` or `correctness`), `model`, `tokens_in`,
+  `tokens_out`, `cost_usd` (list price, as text) and `cache_hit`. A repair retry of the generator is its own
+  entry. An item that made no call (refusal, abstain before the model, answer decided by code) has `[]`. A
+  `not_run` row and every row stored before migration 0015 have `NULL`, which means "not measured", never
+  zero. A cache hit keeps the original tokens of the call, so `usage` counts them as **saved**; a call that
+  went to the provider counts as **billed**.
 - **Not run.** Items with injected fixtures (gi-078, gi-079) get a row with status `not_run` and the reason
   "not run, needs T122". So does any item whose route is not `documents`. They are listed in the report
   apart from the headline numbers and are never counted as failures.
@@ -268,6 +275,11 @@ Rules for a full run (added 2026-10-13, tasks T079a to T079e):
   percent percentile bootstrap interval: 2000 resamples, seed 0 (`DEFAULT_RESAMPLES` and `DEFAULT_SEED` in
   `stats.py`). Items that share a source document (the first gold evidence source) are resampled together.
   Items with no value for a metric are left out of that cell, never counted as 0, and the cell shows its n.
+- **Tokens and cost per model** (T098b) are added up from the `usage` entries of the rows of THIS run only,
+  never from the cache folder (a cache entry has no run id, so that mixed runs). Columns: calls, cached calls,
+  tokens billed, tokens saved, cost billed. A run whose rows have `usage` NULL shows "not available for this
+  run" instead of a guess. The B0 dev run was stored before migration 0015, so its per model numbers are not
+  available; only its per item totals (`metrics`) exist. Cache entries cannot be attributed to a run exactly.
 - **Failure label counts**, **abstain and refusal counts** (separate cells), **judge failures** (parse
   failures and judge errors per judge), **tokens, cost and cache hits**.
 - **Not run** items are listed in their own section. They are not in any n, any interval or any failure count.

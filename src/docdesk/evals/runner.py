@@ -151,7 +151,9 @@ def run_eval(
             score = score_item(resolved, gold_sets(resolved, corpus), output, kit, top_k)
             trace = {**meta, **score.trace}
             label = score.failure_label
-            run_store.add_result(session, run.id, item_id, score.metrics, label, trace)
+            run_store.add_result(
+                session, run.id, item_id, score.metrics, label, trace, score.usage
+            )
             summary.ran += 1
         if options.commit:
             session.commit()

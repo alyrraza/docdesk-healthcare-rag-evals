@@ -1,50 +1,54 @@
-"""Tokens and cost per model, read from the disk cache entries (T098a).
+"""Tokens and cost per model for ONE run, added up from the per call usage stored on its rows.
 
-The stored result rows only hold totals for the generator and both judges together. Each cache
-entry records its own model, so adding them up gives the split. The cache has no run id, so this
-counts every entry in the folder.
+T098b: the earlier version summed the whole cache folder, so runs were mixed. Each stored entry
+says which role made the call, which model, and whether the cache answered it. A cache hit costs
+nothing this run, so its tokens count as saved, not billed.
 """
 
 from __future__ import annotations
 
-import json
-import logging
-from collections import Counter, defaultdict
+from collections import defaultdict
 from dataclasses import dataclass
 from decimal import Decimal
-from pathlib import Path
+from typing import TYPE_CHECKING
 
-log = logging.getLogger(__name__)
+if TYPE_CHECKING:  # report_data imports this file, so the import is for type checkers only
+    from docdesk.evals.report_data import ResultRecord
 
 
 @dataclass(frozen=True)
 class ModelUsage:
-    """Calls, tokens and list price cost of one model."""
+    """Calls, tokens and list price cost of one model in one run."""
 
     model: str
     calls: int
-    tokens_in: int
-    tokens_out: int
+    cached_calls: int
+    tokens_billed: int
+    tokens_saved: int
     cost_usd: Decimal
+    cost_billed: Decimal
 
 
-def usage_from_cache(directory: Path) -> list[ModelUsage]:
-    """Add up the cache entries by model; a damaged entry is logged and left out."""
-    calls: Counter[str] = Counter()
-    tokens_in: Counter[str] = Counter()
-    tokens_out: Counter[str] = Counter()
-    cost: defaultdict[str, Decimal] = defaultdict(Decimal)
-    for path in sorted(directory.glob("*.json")) if directory.exists() else []:
-        try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-            model = str(data["model"])
-            used_in, used_out, price = int(data["tokens_in"]), int(data["tokens_out"]), Decimal(
-                data["cost_usd"])
-        except (ValueError, KeyError, TypeError) as error:
-            log.warning("cache entry %s is unreadable (%s), left out", path.name, error)
-            continue
-        calls[model] += 1
-        tokens_in[model] += used_in
-        tokens_out[model] += used_out
-        cost[model] += price
-    return [ModelUsage(m, calls[m], tokens_in[m], tokens_out[m], cost[m]) for m in sorted(calls)]
+def usage_from_records(records: list[ResultRecord]) -> list[ModelUsage] | None:
+    """Per model usage of a run, or None when any item that ran has no stored usage.
+
+    None means the run was stored before per call usage existed. It is never estimated.
+    """
+    ran = [r for r in records if r.metrics.get("status") == "ok"]
+    if any(r.usage is None for r in ran):
+        return None
+    totals: dict[str, list] = defaultdict(lambda: [0, 0, 0, 0, Decimal(0), Decimal(0)])
+    for record in ran:
+        for call in record.usage or []:
+            row = totals[call["model"]]
+            tokens, cost = call["tokens_in"] + call["tokens_out"], Decimal(call["cost_usd"])
+            row[0] += 1
+            row[4] += cost
+            if call["cache_hit"]:
+                row[1] += 1
+                row[3] += tokens
+            else:
+                row[2] += tokens
+                row[5] += cost
+    return [ModelUsage(m, int(v[0]), int(v[1]), int(v[2]), int(v[3]), Decimal(v[4]), Decimal(v[5]))
+            for m, v in sorted(totals.items())]

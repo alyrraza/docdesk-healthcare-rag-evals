@@ -10,7 +10,7 @@ from docdesk.context.budget import ContextBudget
 from docdesk.context.packer import Pack, pack
 from docdesk.generation.abstain import AbstainPolicy, abstain_reason
 from docdesk.generation.repair import repair_prompt
-from docdesk.generation.result import AnswerResult, Citation, abstain_output
+from docdesk.generation.result import AnswerResult, CallUsage, Citation, abstain_output
 from docdesk.generation.schema import AnswerOutput
 from docdesk.guardrails.errors import OutputError
 from docdesk.guardrails.output import check_fields, parse_answer, semantic_flags
@@ -121,6 +121,10 @@ def account(result: AnswerResult, attempts: list[Attempt]) -> None:
         if attempt.llm is None:
             continue
         result.llm_calls += 1
+        llm = attempt.llm
+        result.calls.append(
+            CallUsage(llm.model, llm.tokens_in, llm.tokens_out, llm.cost_usd, llm.cache_hit)
+        )
         result.tokens_in += attempt.llm.tokens_in
         result.tokens_out += attempt.llm.tokens_out
         result.cost_usd += attempt.llm.cost_usd

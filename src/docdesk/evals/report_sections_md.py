@@ -67,16 +67,23 @@ def outcome_lines(report: Report) -> list[str]:
 
 
 def usage_lines(report: Report) -> list[str]:
-    """Tokens and cost per model, from the cache entries."""
+    """Tokens and cost per model for this run only, billed apart from cached."""
+    if report.model_usage is None:
+        return ["## Tokens and cost per model", "",
+                "The per run token numbers are not available for this run: it was stored before "
+                "per call usage was recorded, and the cache folder cannot say which run a "
+                "call belonged to.", ""]
     if not report.model_usage:
         return []
-    rows = [[u.model, str(u.calls), str(u.tokens_in), str(u.tokens_out), f"{u.cost_usd:.6f}"]
-            for u in report.model_usage]
+    rows = [[u.model, str(u.calls), str(u.cached_calls), str(u.tokens_billed),
+             str(u.tokens_saved), f"{u.cost_billed:.6f}"] for u in report.model_usage]
     return [
         "## Tokens and cost per model", "",
-        "Counted from every entry in the cache folder, since a cache entry has no run id. "
-        "Cost is the list price equivalent, not what was billed.", "",
-        *table(["model", "calls", "tokens in", "tokens out", "cost USD"], rows), "",
+        "This run only. Billed tokens were sent to the provider. Saved tokens were answered by "
+        "the cache and cost nothing this run. Cost is the list price equivalent of the billed "
+        "calls.", "",
+        *table(["model", "calls", "cached calls", "tokens billed", "tokens saved",
+                "cost billed USD"], rows), "",
     ]
 
 

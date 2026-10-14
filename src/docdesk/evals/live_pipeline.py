@@ -102,4 +102,6 @@ class LivePipeline:
         output.abstain_reason = result.output.abstain_reason
         output.tokens_in, output.tokens_out = result.tokens_in, result.tokens_out
         output.cost_usd, output.llm_calls = result.cost_usd, result.llm_calls
+        output.calls = list(result.calls)
+        output.cache_hits = sum(1 for call in result.calls if call.cache_hit)
         return output

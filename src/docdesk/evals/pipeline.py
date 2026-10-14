@@ -7,6 +7,7 @@ from decimal import Decimal
 from typing import Protocol
 
 from docdesk.evals.outcome import Outcome
+from docdesk.generation.result import CallUsage
 
 
 @dataclass
@@ -30,6 +31,8 @@ class PipelineOutput:
     cost_usd: Decimal = Decimal("0")
     cache_hits: int = 0
     llm_calls: int = 0
+    # Generator calls one by one, for the per run token accounting.
+    calls: list[CallUsage] = field(default_factory=list)
 
 
 class Pipeline(Protocol):

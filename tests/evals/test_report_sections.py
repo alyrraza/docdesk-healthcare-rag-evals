@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 from decimal import Decimal
 from typing import Any
 
@@ -141,9 +142,9 @@ def test_ac_evl_05_sections_06_report_headline_is_the_answerable_number_with_a_n
 
 
 def test_ac_evl_05_sections_07_tokens_and_cost_per_model_with_a_list_price_note() -> None:
-    usage = [ModelUsage("gen-model", 43, 42466, 10090, Decimal("0.0124239")),
-             ModelUsage("judge-model", 40, 23059, 2777, Decimal("0.0295552"))]
-    text = report_markdown(build_report(run(row("gi-001")), usage))
-    assert "| gen-model | 43 | 42466 | 10090 | 0.012424 |" in text
-    assert "| judge-model | 40 | 23059 | 2777 | 0.029555 |" in text
+    usage = [ModelUsage("gen-model", 43, 3, 52556, 4000, Decimal("0.0124239"), Decimal("0.0100")),
+             ModelUsage("judge-model", 40, 0, 25836, 0, Decimal("0.0295552"), Decimal("0.0295552"))]
+    text = report_markdown(replace(build_report(run(row("gi-001"))), model_usage=usage))
+    assert "| gen-model | 43 | 3 | 52556 | 4000 | 0.010000 |" in text
+    assert "| judge-model | 40 | 0 | 25836 | 0 | 0.029555 |" in text
     assert "list price" in text

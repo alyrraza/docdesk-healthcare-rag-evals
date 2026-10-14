@@ -40,3 +40,5 @@ class EvalResultRow(Base):
     metrics: Mapped[dict] = mapped_column(JSONB, nullable=False)
     failure_label: Mapped[str | None] = mapped_column(String(64), nullable=True)
     trace: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    # One entry per model call of this item (T098b); None when nothing was measured.
+    usage: Mapped[list | None] = mapped_column(JSONB, nullable=True)

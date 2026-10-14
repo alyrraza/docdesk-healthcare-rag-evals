@@ -32,7 +32,6 @@ from docdesk.evals.preflight import FingerprintMismatch
 from docdesk.evals.report import compare_markdown, report_markdown
 from docdesk.evals.report_compare import compare_runs
 from docdesk.evals.report_data import build_report, load_run_data
-from docdesk.evals.report_usage import usage_from_cache
 from docdesk.evals.run_store import latest_run_id
 from docdesk.evals.runner import RunOptions, UnknownItemsError, run_eval
 from docdesk.prompts.loader import PromptFile
@@ -140,7 +139,7 @@ def cmd_report(rt: Runtime, args: argparse.Namespace) -> int:
     """Print the report of one run."""
     with rt.open_session() as session:
         run_id = uuid.UUID(args.run_id) if args.run_id else latest_run_id(session)
-        report = build_report(load_run_data(session, run_id), usage_from_cache(rt.cache_dir))
+        report = build_report(load_run_data(session, run_id))
         write_or_print(report_markdown(report), args.out)
     return 0
 

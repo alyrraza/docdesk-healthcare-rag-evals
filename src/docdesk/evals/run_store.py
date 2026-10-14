@@ -71,6 +71,7 @@ def add_result(
     metrics: dict[str, Any],
     failure_label: str | None,
     trace: dict[str, Any],
+    usage: list[dict[str, Any]] | None = None,
 ) -> None:
     """Write one item's row at once, so an interruption never loses a finished item."""
     session.add(
@@ -80,6 +81,7 @@ def add_result(
             metrics=metrics,
             failure_label=failure_label,
             trace=trace,
+            usage=usage,
         )
     )
     session.flush()

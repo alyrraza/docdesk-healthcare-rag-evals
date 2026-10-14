@@ -22,6 +22,17 @@ class Citation:
     page: int | None
 
 
+@dataclass(frozen=True)
+class CallUsage:
+    """One model call: what it used and whether the eval cache answered it (T098b)."""
+
+    model: str
+    tokens_in: int
+    tokens_out: int
+    cost_usd: Decimal
+    cache_hit: bool
+
+
 @dataclass
 class AnswerResult:
     """The final answer (disclaimer included) plus the facts the trace needs (AC-OBS-01)."""
@@ -36,6 +47,8 @@ class AnswerResult:
     tokens_out: int = 0
     cost_usd: Decimal = Decimal("0")
     llm_calls: int = 0
+    # One entry per answered model call, so an eval run can split billed from cached tokens.
+    calls: list[CallUsage] = field(default_factory=list)
     retry_used: bool = False
     finish_reason: str | None = None
     flags: list[str] = field(default_factory=list)

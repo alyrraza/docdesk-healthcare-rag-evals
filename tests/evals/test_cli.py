@@ -140,7 +140,7 @@ def test_ac_evl_06_cli_07_a_budget_stop_exits_cleanly_with_the_resume_message(
     assert "progress is saved" in capsys.readouterr().out
 
 
-def test_ac_evl_04_cli_report_reads_tokens_per_model_from_the_runtime_cache_folder(
+def test_ac_evl_04_cli_report_ignores_the_cache_folder_and_uses_the_run_rows(
     setup, capsys, tmp_path
 ) -> None:
     _, runtime, _ = setup
@@ -153,7 +153,7 @@ def test_ac_evl_04_cli_report_reads_tokens_per_model_from_the_runtime_cache_fold
     assert cli(runtime, "run") == 0
     capsys.readouterr()
     assert cli(runtime, "report") == 0
-    assert "| cache-model | 1 | 10 | 2 | 0.500000 |" in capsys.readouterr().out
+    assert "cache-model" not in capsys.readouterr().out
 
 
 def test_ac_evl_06_cli_08_items_flag_runs_only_the_named_verified_items(setup, capsys) -> None:
