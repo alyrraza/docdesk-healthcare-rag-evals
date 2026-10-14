@@ -52,6 +52,10 @@ golden item never stores one. It points at evidence in the documents instead.
 - **Several entries.** A multi chunk item has several entries and all are required: item recall is
   the share of entries that at least one retrieved chunk is gold for. Hit rate needs one entry.
   Unanswerable items have an empty list and a `no_evidence_reason`.
+- **Duplicate evidence** (added 2026-10-14). The loader lists every other document that also holds
+  a quote. The item then names its own document in the question, or lists the others in
+  `alt_sources` on that entry, which the resolver counts as gold too. A multi chunk item fails when
+  two quotes share a gold chunk. See `DECISIONS.md`.
 - **Splits.** Loading the `test` split needs an explicit `allow_test=True`.
 
 ## Metrics (all pure functions; LLM parts return labels, code computes scores)

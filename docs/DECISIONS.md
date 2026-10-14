@@ -3,6 +3,33 @@
 Newest first. Each entry: date, decision, why, what it supersedes. Specs older than their
 decisions are marked superseded in the spec file, so nobody builds from stale text.
 
+## 2026-10-14: duplicate evidence, alt_sources and the lessons from the batch 1 review
+Decision: the golden loader now reports, for every evidence quote, each other corpus document whose
+cleaned text (whitespace folded) also holds it. An item with such a duplicate must either name its
+own source document in the question (the brand or generic name of a label, the title of a topic), or
+list the other documents in `alt_sources` on that evidence entry. The resolver treats an alternate as
+gold too (its chunks that hold the quote count). Naming the document is preferred, so retrieval
+metrics stay about one document. An alternate must exist and must hold the quote. The loader also
+fails a quote that has no gold chunk, and fails a multi chunk item when two of its quotes land in the
+same stored chunk (checked against the B0 chunking in the database).
+Result on batch 1 before the review fixes: one duplicated quote (gi-006, the benzodiazepine and opioid
+warning, held by four other labels). Naming temazepam in the question clears it. The 21 quotes of batch 2
+and the 39 quotes of batch 3 each occur in one document only.
+Lessons from the owner's review of batch 1, applied to every later batch:
+- A quote carries its own context. If it starts mid list, include the heading sentence. A quote must
+  not refer to something it does not name, so abbreviations are expanded inside the quote.
+- A question must not add a claim the quote does not make.
+- Single part questions for single fact items. Drug label questions name the drug.
+- No clinical trial remarks or reassuring generalisations. Prefer dosage forms, strengths, warnings,
+  indications, definitions and schedules.
+- At most 2 items per source document in the whole set (tested). Both corpora are mixed.
+Replaced ids: gi-002 and gi-007 could not be widened within the 300 character limit (399 and 500
+characters needed) and were dropped; gi-010 was dropped by the owner. They are replaced by gi-012,
+gi-013 and gi-011, placed in the same file slots so the split plan order holds. Batch 2 therefore
+starts at gi-014 and batch 3 at gi-035.
+Why: a quote shared by several labels makes the gold document arbitrary, and a multi chunk item
+whose quotes share a chunk would be a single chunk item in disguise.
+
 ## 2026-10-14: the quote validator folds whitespace like the resolver
 Decision: `check_quote` collapses every whitespace run to one space on both the quote and the document
 text before comparing, the same way `quote_spans` does. A quote that crosses a line break is written

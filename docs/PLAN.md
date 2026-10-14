@@ -127,9 +127,9 @@ no eval run is safe without them (see "Eval budget and pacing" in `docs/modules/
 - [x] T080a make the corpus match B0: `scripts/reingest_corpus.py` clears the seed documents and chunks, re-runs the normal ingest with the config from `b0.toml`, and stores a corpus fingerprint (chunker, chunk size, overlap, embedding model) that can be read from the database
 - [x] T080 golden item schema and validator (AC-EVL-01), with `gold_evidence` quotes and their resolver instead of chunk ids
 - [x] T081 golden loader with split handling
-- [x] T082 golden items batch 1, single fact, 10 items, hand verified, evidence quotes (10 drafts written and validated, `verified: false` until the owner marks them OK in `docs/golden_review/batch1_single_fact.md` and runs `scripts/golden_review.py --apply`)
-- [ ] T083 golden items batch 2, single fact, 21 items, evidence quotes
-- [ ] T084 golden items batch 3, multi chunk, 19 items, evidence quotes
+- [x] T082 golden items batch 1, single fact, 10 items, hand verified, evidence quotes (10 drafts written and validated, `verified: false` until the owner marks them OK in `docs/golden_review/batch1_single_fact.md` and runs `scripts/golden_review.py --apply`; the owner reviewed it on 2026-10-14: 4 OK, 3 reworded, 3 replaced, re-review sheet `docs/golden_review/batch1_changed.md`)
+- [x] T083 golden items batch 2, single fact, 21 items, evidence quotes (21 drafts, ids gi-014 to gi-034, 13 dev and 8 test, all `verified: false`, awaiting the owner's review in `docs/golden_review/batch2_single_fact.md`)
+- [x] T084 golden items batch 3, multi chunk, 19 items, evidence quotes (19 drafts, ids gi-035 to gi-053, 11 dev and 8 test, all `verified: false`, awaiting the owner's review in `docs/golden_review/batch3_multi_chunk.md`)
 - [ ] T085 golden items batch 4, unanswerable, 19 items, empty evidence plus a reason
 - [ ] T086 golden items batch 5, adversarial, 6 items
 - [x] T087 `evals/metrics/retrieval.py` recall@k, MRR, hit rate (AC-EVL-02)
