@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
@@ -10,6 +11,7 @@ from typing import Any
 
 import yaml
 
+from docdesk.evals.golden.probe import Probe, render_probe
 from docdesk.evals.golden.schema import GoldenItem
 
 BATCH_LINE = re.compile(r"^Batch file:\s*(.+?)\s*$", re.MULTILINE)
@@ -48,7 +50,18 @@ class ApplyResult:
     undecided: list[str] = field(default_factory=list)
 
 
-def render_item(item: GoldenItem, titles: dict[str, str]) -> str:
+def render_absence(item: GoldenItem, probe: Probe | None) -> list[str]:
+    """For an item without an answer: why, what code proved absent, and what retrieval finds."""
+    if item.answerable:
+        return []
+    lines = [
+        f"- why there is no answer: {item.no_evidence_reason}",
+        f"- absent terms: {', '.join(item.absent_terms)} (scope: {item.absence_scope})",
+    ]
+    return lines + (render_probe(probe) if probe else [])
+
+
+def render_item(item: GoldenItem, titles: dict[str, str], probe: Probe | None = None) -> str:
     """One item's block: every field the owner needs to judge the question, answer and quotes."""
     lines = [
         f"## {item.id}",
@@ -66,10 +79,16 @@ def render_item(item: GoldenItem, titles: dict[str, str]) -> str:
             f"  - document: {title}",
             f"  > {entry.text}",
         ]
+    lines += render_absence(item, probe)
     return "\n".join([*lines, "", "Decision:", ""])
 
 
-def render_sheet(items: list[GoldenItem], titles: dict[str, str], batch_file: str) -> str:
+def render_sheet(
+    items: list[GoldenItem],
+    titles: dict[str, str],
+    batch_file: str,
+    probes: Mapping[str, Probe] | None = None,
+) -> str:
     """The whole review sheet; the owner types a decision after each `Decision:` line."""
     header = [
         f"# Golden review: {Path(batch_file).stem}",
@@ -81,7 +100,8 @@ def render_sheet(items: list[GoldenItem], titles: dict[str, str], batch_file: st
         "answer is fully supported by the quote alone.",
         "",
     ]
-    return "\n".join(header) + "\n" + "\n".join(render_item(item, titles) for item in items)
+    blocks = [render_item(item, titles, (probes or {}).get(item.id)) for item in items]
+    return "\n".join(header) + "\n" + "\n".join(blocks)
 
 
 def parse_decision(item_id: str, text: str) -> Decision:

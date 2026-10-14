@@ -11,6 +11,8 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
+from docdesk.evals.golden.probe import Probe, ProbeChunk  # noqa: E402
+from docdesk.evals.golden.schema import GoldenItem  # noqa: E402
 from golden_review import load_titles, main  # noqa: E402
 
 SOURCE = "seed:openfda:abc"
@@ -88,3 +90,31 @@ def test_ac_evl_01_an_unknown_item_id_in_only_is_an_error(tmp_path: Path) -> Non
     batch = project(tmp_path)
     with pytest.raises(SystemExit, match="gi-404"):
         main([str(batch), "--only", "gi-404"], project_root=tmp_path)
+
+
+def test_ac_evl_01_the_probe_flag_adds_retrieval_results_for_items_without_an_answer(
+    tmp_path: Path,
+) -> None:
+    batch = project(tmp_path)
+    unanswerable = {
+        "id": "gi-055",
+        "type": "unanswerable",
+        "split": "dev",
+        "question": "What is the usual adult dose of warfarin?",
+        "answerable": False,
+        "gold_route": "documents",
+        "no_evidence_reason": "No document is about warfarin.",
+        "absent_terms": ["warfarin"],
+        "absence_scope": "corpus",
+    }
+    batch.write_text(yaml.safe_dump([ITEM, unanswerable], sort_keys=False), encoding="utf-8")
+    asked: list[str] = []
+
+    def fake_probe(items: list[GoldenItem]) -> dict[str, Probe]:
+        asked.extend(item.id for item in items)
+        return {"gi-055": Probe([ProbeChunk("Aspirin", 0.4, "aspirin text")], [])}
+
+    assert main([str(batch), "--probe"], project_root=tmp_path, probe=fake_probe) == 0
+    text = (tmp_path / "docs" / "golden_review" / "batch1.md").read_text(encoding="utf-8")
+    assert asked == ["gi-055"]
+    assert "aspirin text" in text and "keyword top 3: no chunk matched" in text
