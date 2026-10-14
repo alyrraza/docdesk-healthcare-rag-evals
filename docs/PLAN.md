@@ -234,7 +234,7 @@ Replaces T106 to T115 for this session. Chunking techniques (T106, T107) and the
 - [x] T148 Dockerfile for the API (one image for API and worker, `Dockerfile`)
 - [x] T149 Dockerfile for the worker (same image, compose command, see `DECISIONS.md` 2026-10-15)
 - [x] T150 `docker-compose.yml`
-- [x] T151 CI job that builds the image (AC-DKR-01): job `image-build`, compose smoke, ghcr push
+- [x] T151 CI job that builds the image (AC-DKR-01): jobs `build-smoke` (compose smoke, never pushes) and `image-push` (main only, after test, retrieval-gate and build-smoke)
 - [ ] T152 final eval run on the held-out test split, commit the numbers
 - [x] T153 README: architecture, setup, Docker, results, limitations, honest status
 - [ ] T154 final review in a fresh session against the whole PRD

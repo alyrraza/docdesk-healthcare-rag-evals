@@ -98,13 +98,10 @@ jobs:
       - name: Retrieval gate on the small CI corpus (recall at 5 and MRR, no model call)
         run: python scripts/ci_gate.py
 
-  image-build:
+  build-smoke:
     runs-on: ubuntu-24.04
     timeout-minutes: 40
-    # Only this job may write packages, and only a push to main reaches the push steps below.
-    permissions:
-      contents: read
-      packages: write
+    # Builds and smoke tests the image on every push and pull request. It never pushes.
     steps:
       - uses: actions/checkout@v6
       - name: Create a throwaway .env with random secrets for this run only
@@ -123,16 +120,27 @@ jobs:
       - name: Show the stack logs when something failed
         if: failure()
         run: docker compose logs --no-color --tail 200
+
+  image-push:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    # Publishes only after the tests, the retrieval gate and the smoke all passed, on main.
+    needs: [test, retrieval-gate, build-smoke]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v6
       - name: Log in to ghcr.io with the workflow token
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
           REGISTRY_TOKEN: ${{ github.token }}
         run: echo "$REGISTRY_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
-      - name: Push the image tagged with the commit and latest
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - name: Build the image tagged with the commit and latest
         run: |
           IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}"
-          docker tag docdesk:local "$IMAGE:$GITHUB_SHA"
-          docker tag docdesk:local "$IMAGE:latest"
+          docker build -t "$IMAGE:$GITHUB_SHA" -t "$IMAGE:latest" .
+      - name: Push both tags
+        run: |
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}"
           docker push "$IMAGE:$GITHUB_SHA"
           docker push "$IMAGE:latest"

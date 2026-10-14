@@ -1,7 +1,7 @@
 """AC-DEP-03: the Dockerfile, .dockerignore and compose file keep the deployment promises.
 
 Docker is not installed on the author's laptop, so these tests read the files. The real build
-and the compose smoke run in the image-build CI job.
+and the compose smoke run in the build-smoke CI job.
 """
 
 from __future__ import annotations

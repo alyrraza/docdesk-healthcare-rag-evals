@@ -31,7 +31,7 @@ push and changes every commit id, so do it only on purpose, with a backup clone.
    from a public repository can still start as private, so look at it.
 4. Test the pull without a login, from a machine where you are logged out of ghcr.io:
    `docker pull ghcr.io/alyrraza/docdesk-healthcare-rag-evals:latest`
-5. Settings, Actions, General: workflow permissions can stay on "Read repository contents". The image-build job asks for
+5. Settings, Actions, General: workflow permissions can stay on "Read repository contents". The image-push job asks for
    `packages: write` by itself.
 6. Settings, Secrets and variables: confirm no repository secret is stored that the workflows do not need. The workflows use none.
 7. Settings, Code security: turn on secret scanning and push protection if they are available for this repository.

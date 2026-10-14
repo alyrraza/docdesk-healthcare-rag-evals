@@ -867,3 +867,10 @@ strict pass on answerable dev items. Every config tried is in `evals/results/pha
   multi_chunk 0.12 to 0.38 (n 8), single_fact 1.00 to 1.00 (n 12). The direction matches dev, the evidence is weak at n 20.
 - The technique report prints a "Result: kept" line from the dev rule; on the test split it must not be read as a verdict.
 - The injected adversarial item is not run.
+
+## 2026-10-15 CI: image is pushed only after tests, gate and smoke
+- The old `image-build` job is split. `build-smoke` builds, starts compose and runs the rubella smoke on every push and pull request and
+  never pushes. `image-push` runs on a push to main only, has `needs: [test, retrieval-gate, build-smoke]`, and is the only job with
+  `packages: write`. It rebuilds the image from the Dockerfile and pushes `:<sha>` and `:latest`. This closes the weakness noted above
+  (an image could be pushed from a commit whose tests fail). The cost is one extra image build on main.
+

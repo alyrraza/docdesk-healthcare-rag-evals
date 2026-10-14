@@ -40,9 +40,9 @@ def test_ac_evl_06_workflow_has_a_test_job_and_a_retrieval_gate_job() -> None:
 
 
 def test_ac_evl_06_every_python_job_uses_a_pgvector_postgres_service() -> None:
-    """The image-build job gets its database from docker-compose.yml (test_docker_files)."""
+    """The image jobs get its database from docker-compose.yml (test_docker_files)."""
     for name, job in workflow()["jobs"].items():
-        if name != "image-build":
+        if name not in ("build-smoke", "image-push"):
             assert "pgvector" in job["services"]["postgres"]["image"], name
 
 
@@ -107,45 +107,56 @@ def test_ci_runner_is_pinned_and_actions_are_node_24_majors() -> None:
     assert "actions/checkout@v4" not in text and "actions/setup-python@v5" not in text
 
 
-def image_build() -> dict[str, Any]:
-    """The image-build job, which builds the Dockerfile and starts the compose stack."""
-    return workflow()["jobs"]["image-build"]
+def build_smoke() -> dict[str, Any]:
+    """The build-smoke job, which builds the Dockerfile and starts the compose stack."""
+    return workflow()["jobs"]["build-smoke"]
 
 
-def test_ac_dep_04_image_build_runs_the_compose_smoke_in_order() -> None:
-    lines = run_lines(image_build())
+def image_push() -> dict[str, Any]:
+    """The image-push job, the only one allowed to publish the image."""
+    return workflow()["jobs"]["image-push"]
+
+
+def test_ac_dep_04_build_smoke_runs_the_compose_smoke_in_order() -> None:
+    lines = run_lines(build_smoke())
     order = [next(i for i, line in enumerate(lines) if key in line)
              for key in ("make_env.py", "docker compose up", "demo_seed.py", "demo_retrieve.py")]
     assert order == sorted(order)
     assert "--expect seed:medlineplus:medlineplus-387" in " ".join(lines)
 
 
-def test_ac_dep_04_image_build_never_calls_the_model() -> None:
-    text = " ".join(run_lines(image_build()))
+def test_ac_dep_04_image_jobs_never_call_the_model() -> None:
+    text = " ".join(run_lines(build_smoke()) + run_lines(image_push()))
     for word in ("smoke_llm", "evals.cli", "GROQ", "/query"):
         assert word not in text, word
 
 
-def test_ac_dep_04_only_the_image_build_job_may_write_packages() -> None:
+def test_ac_dep_04_build_smoke_never_pushes_and_runs_on_every_event() -> None:
+    steps = build_smoke()["steps"]
+    assert not any("docker push" in s.get("run", "") or "docker login" in s.get("run", "")
+                   for s in steps)
+    assert "if" not in build_smoke() and "permissions" not in build_smoke()
+
+
+def test_ac_dep_04_only_the_image_push_job_may_write_packages() -> None:
     jobs = workflow()["jobs"]
     assert workflow()["permissions"] == {"contents": "read"}
-    assert image_build()["permissions"] == {"contents": "read", "packages": "write"}
-    assert [n for n, j in jobs.items() if "permissions" in j] == ["image-build"]
+    assert image_push()["permissions"] == {"packages": "write"}
+    assert [n for n, j in jobs.items() if "permissions" in j] == ["image-push"]
 
 
-def test_ac_dep_04_push_runs_on_main_pushes_only_and_after_the_smoke() -> None:
-    steps = image_build()["steps"]
-    pushes = [i for i, s in enumerate(steps) if "docker push" in s.get("run", "")]
-    assert pushes, "no push step"
-    for index in pushes:
-        condition = steps[index].get("if", "")
-        assert "github.event_name == 'push'" in condition and "refs/heads/main" in condition
-    smoke = next(i for i, s in enumerate(steps) if "demo_retrieve.py" in s.get("run", ""))
-    login = next(i for i, s in enumerate(steps) if "docker login" in s.get("run", ""))
-    assert smoke < login < min(pushes)
+def test_ac_dep_04_image_push_needs_tests_gate_and_smoke_and_runs_on_main_push() -> None:
+    job = image_push()
+    assert sorted(job["needs"]) == ["build-smoke", "retrieval-gate", "test"]
+    condition = job["if"]
+    assert "github.event_name == 'push'" in condition and "refs/heads/main" in condition
 
 
 def test_ac_dep_04_push_uses_the_workflow_token_and_tags_sha_and_latest() -> None:
-    text = " ".join(s.get("run", "") for s in image_build()["steps"])
+    steps = image_push()["steps"]
+    text = " ".join(s.get("run", "") for s in steps)
     assert "--password-stdin" in text and "ghcr.io/${GITHUB_REPOSITORY,,}" in text
     assert "$GITHUB_SHA" in text and ":latest" in text
+    login = next(i for i, s in enumerate(steps) if "docker login" in s.get("run", ""))
+    push = next(i for i, s in enumerate(steps) if "docker push" in s.get("run", ""))
+    assert login < push
