@@ -126,9 +126,21 @@ def cell(r: dict[str, Any]) -> list[str]:
 HEADER = ["metric", "items", "baseline", "candidate", "difference", "interval", "verdict"]
 
 
+def rule_lines(result: dict[str, Any]) -> list[str]:
+    """The dev rule line; the test split never prints it, so it cannot be read as a verdict."""
+    if result["split"] == "test":
+        return []
+    rule = result["rule"]
+    return [
+        "Rule for the final config: at least one item more than the baseline on the strict rate "
+        f"({'met' if rule['improves_by_one_item'] else 'not met'}) and faithfulness not lowered "
+        f"({'lowered' if rule['faithfulness_lowered'] else 'not lowered'}). Dev rule verdict: "
+        f"{'kept' if rule['kept'] else 'not kept'}.", ""]
+
+
 def technique_markdown(result: dict[str, Any]) -> str:
     """The report: headline counts, the rule, the overall table and one table per category."""
-    s, rule = result["strict_pass"], result["rule"]
+    s = result["strict_pass"]
     tok, lat = result["tokens_billed"], result["p95_total_ms"]
     lines = [
         f"# {result['technique']} against the baseline, {result['split']} split", "",
@@ -142,10 +154,7 @@ def technique_markdown(result: dict[str, Any]) -> str:
         f"Strict pass on answerable items: baseline {s['baseline']} of {s['answerable']}, "
         f"candidate {s['candidate']} of {s['answerable']}. "
         f"Gained: {', '.join(s['gained']) or 'none'}. Lost: {', '.join(s['lost']) or 'none'}.", "",
-        "Rule for the final config: at least one item more than the baseline on the strict rate "
-        f"({'met' if rule['improves_by_one_item'] else 'not met'}) and faithfulness not lowered "
-        f"({'lowered' if rule['faithfulness_lowered'] else 'not lowered'}). Result: "
-        f"{'kept' if rule['kept'] else 'not kept'}.", "",
+        *rule_lines(result),
         "Wrong abstains (answerable items declined): baseline "
         f"{result['wrong_abstain']['baseline']}, candidate {result['wrong_abstain']['candidate']}. "
         "Tokens billed: baseline "

@@ -83,3 +83,19 @@ def test_ac_evl_05_tech_09_not_completed_configs_are_listed() -> None:
     text = technique_markdown(result)
     assert "## Not completed" in text and "final_full: budget spent" in text
     assert "Not completed" not in technique_markdown(compare_technique("t", base(), base()))
+
+
+def test_ac_evl_05_tech_09_dev_report_labels_the_rule_line_as_a_dev_rule_verdict() -> None:
+    better = run("cand", [item(f"gi-{n:03d}", strict=n > 2) for n in range(1, 21)])
+    text = technique_markdown(compare_technique("t", base(), better))
+    assert "Dev rule verdict: kept." in text
+    assert "Result:" not in text
+
+
+def test_ac_evl_05_tech_10_test_split_report_prints_no_dev_rule_verdict() -> None:
+    better = run("cand", [item(f"gi-{n:03d}", strict=n > 2) for n in range(1, 21)])
+    on_test = RunData("cand", "final", "test", "full", better.records,
+                      identity={"judge_model": "j"})
+    text = technique_markdown(compare_technique("t", base(), on_test))
+    assert "verdict: kept" not in text and "not kept" not in text and "Result:" not in text
+    assert "Strict pass on answerable items" in text
