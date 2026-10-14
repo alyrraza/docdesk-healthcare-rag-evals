@@ -222,6 +222,27 @@ saw. `context_distraction` is a heuristic: a non gold chunk first in the prompt.
 bundle, stores trace and metrics in `eval_results`, then calls the report writer.
 Run in two modes: retrieval-only (free, used in CI) and full (generator plus judges, run by hand or nightly).
 
+Runner behavior (T094, added 2026-10-14):
+- **Refusals before any write.** `evals/preflight.py` refuses to start when the stored corpus fingerprint
+  (chunker, size, overlap, embedding model) differs from the config, when there is no fingerprint, or when the
+  answer prompt hash differs from the one pinned in the config. The message names what differs.
+- **Splits.** The dev split is the default. The test split needs `allow_test=True` and raises
+  `SplitLockedError` without it, before anything is written. Only verified items are loaded.
+- **Layers.** `evals/stack.py` builds the call layers outermost first: cache, budget guard, pacer, client.
+  A cache hit returns before the guard and the pacer, so it costs no budget and no wait. A test pins the order.
+- **Resume.** Each item is written (and committed) as soon as it is finished. A rerun finds the newest
+  unfinished run with the same config id, prompt bundle id and split, and skips every item that already has a
+  row. The row is the progress record, so there is no second file to disagree with it. A run that finished
+  is never continued; a new run is started, and the disk cache makes it free when nothing changed.
+- **Rows.** `eval_runs` gets one row per run (config id, bundle id, split, git sha). `eval_results` gets one
+  row per item: `metrics` (small numbers and statuses), `failure_label` and `trace` (answer, ids, claim
+  and key point labels, config hash, judge model, judge prompt hashes).
+- **Not run.** Items with injected fixtures (gi-078, gi-079) get a row with status `not_run` and the reason
+  "not run, needs T122". So does any item whose route is not `documents`. They are listed in the report
+  apart from the headline numbers and are never counted as failures.
+- **Retrieval only mode** (`retrieval_only=True`) runs retrieval and the retrieval metrics only. It builds no
+  judge, makes no model call and has no prompt bundle (the run's bundle id is empty).
+
 Rules for a full run (added 2026-10-13, tasks T079a to T079e):
 - **Pacer** (`llm/pacer.py`): limits tokens per minute and requests per minute per model. When a limit
   is reached the call waits; it never fails and never becomes a `system_error` row. In process only.
