@@ -485,12 +485,13 @@ Choices made while building the eval runner that the task text did not fix.
 ## 2026-10-14: T098 B0 full run on dev
 - Dev has 45 verified items, not 60. 44 ran, gi-079 is not run (needs T122). Run id and numbers are in
   `evals/results/b0_dev_report.md` and `b0_dev_summary.json`.
-- The CLI has no flag to pick items and no run label, so the 3 item smoke run was a scratch script outside the
+- (DONE in T098a: `run --items` and `--label` exist now.) The CLI had no flag to pick items and no run label, so the 3 item smoke run was a scratch script outside the
   repo. It used the same stack (cache, budget guard, pacer, client), the same pinned config and the same pipeline
   and judge code, wrote no database rows, and its calls were cached, so the full run reused them for free.
 - The extra report sections (pass rate with faithfulness and correctness both 1.0, retrieval versus packing versus
   generation split, tokens and cost per model, five worst items) were built by a scratch script from the stored rows
   and the cache entries. They are not in `report.py`. Parked: move them into the report code with tests.
+  DONE in T098a (2026-10-14): they are in `report_sections.py` and `report_usage.py`, with tests.
 - Stage split for answerable items: retrieval is retrieval_miss and ranking_miss (gold not in the top 5), packing is
   context_overflow, generation is every other label.
 - Parked: the Groq adapter drops the response headers (remaining tokens, reset times) and the reasoning token count
@@ -498,5 +499,20 @@ Choices made while building the eval runner that the task text did not fix.
   and `LLMResult`. The completion token count of gpt-oss includes reasoning tokens, and max output 600 was never
   reached (largest generator output 480 tokens, all 43 generator calls and 40 judge calls ended with finish_reason stop).
 - Parked: the generator cache hits are still not counted in the report (see the T090 to T096 note), so the report's
-  cache hit count is lower than the real one.
+  cache hit count is lower than the real one. Checked again in T098a: `LLMResult` already has `cache_hit`, but
+  an `AnswerResult.from_cache` flag also needs `account()` in `generation/answer.py`, `live_pipeline.py` and
+  `scoring.py`, which is more than the cache layer and the result dataclass, so it stays parked. The report
+  now says that cache hits count the judge calls only.
 
+## 2026-10-14: T098a report extras in code, run flags
+- The report has a headline line: strict pass rate on answerable items (faithfulness 1.0 and correctness 1.0)
+  with a bootstrap interval, next to the overall pass rate, plus the note that unanswerable items pass by abstaining.
+- Stage split labels: retrieval is retrieval_miss and ranking_miss, packing is context_overflow, generation is every
+  other label. The label by outcome table covers every item that ran, not only answerable ones.
+- Tokens and cost per model come from the cache folder, because result rows hold only the sum of generator and
+  judges. A cache entry has no run id, so the table counts every entry in the folder. The ledger and guard left
+  columns were dropped from the report: they depend on the time of day. The numbers stay in `b0_dev_summary.json`.
+- `run --items` needs ids that are verified items of the chosen split, else the run is refused before any row is
+  written. `--label` is stored in a new nullable column `eval_runs.label` (migration 0014, applied to the dev database).
+- The B0 dev report was regenerated with the CLI report command from the stored rows and the cache. Every number in
+  `b0_dev_summary.json` was reproduced. `b0_dev_summary.json` itself was not edited.
