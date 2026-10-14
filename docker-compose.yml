@@ -1,0 +1,76 @@
+# DocDesk demo stack: api, worker, Postgres with pgvector, Redis.
+# Needs a .env file: run  python scripts/make_env.py  once. Secrets come only from .env.
+name: docdesk
+
+x-app-env: &app-env
+  ENVIRONMENT: production
+  DATABASE_URL: postgresql+psycopg://docdesk:${POSTGRES_PASSWORD:?run python scripts/make_env.py}@db:5432/docdesk
+  READONLY_DATABASE_URL: postgresql+psycopg://docdesk_readonly:${READONLY_PASSWORD:?run python scripts/make_env.py}@db:5432/docdesk
+  REDIS_URL: redis://redis:6379/0
+  JWT_SECRET: ${JWT_SECRET:?run python scripts/make_env.py}
+  ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+  ADMIN_PASSWORD: ${ADMIN_PASSWORD:?run python scripts/make_env.py}
+  GROQ_API_KEY: ${GROQ_API_KEY:-}
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: docdesk
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?run python scripts/make_env.py}
+      POSTGRES_DB: docdesk
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U docdesk -d docdesk"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  redis:
+    image: redis:7.4
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  api:
+    build: .
+    image: ${DOCDESK_IMAGE:-docdesk:local}
+    environment:
+      <<: *app-env
+      # Only the api migrates, so two services never race on the schema.
+      RUN_MIGRATIONS: "1"
+    ports:
+      - "8000:8000"
+    volumes:
+      - uploads:/app/data/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    image: ${DOCDESK_IMAGE:-docdesk:local}
+    command: ["celery", "-A", "docdesk.worker.entry", "worker", "--loglevel=info"]
+    environment: *app-env
+    volumes:
+      - uploads:/app/data/uploads
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A docdesk.worker.entry inspect ping -d celery@$$HOSTNAME"]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+      start_period: 40s
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  redisdata:
+  uploads:
