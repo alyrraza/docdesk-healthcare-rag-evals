@@ -132,3 +132,10 @@ def test_ac_evl_pool_16_build_pool_seeds_slot_one_and_names_every_slot(tmp_path:
                              tmp_path / "pool.json", old)
     request = LLMRequest(system="s", user="u", model=MODEL, max_output_tokens=100)
     assert pool_client.complete(request).slot == 2
+
+
+def test_ac_evl_pool_17_a_smoke_run_can_use_a_scratch_cache_folder(tmp_path: Path) -> None:
+    from docdesk.evals.paths import PROJECT_ROOT, resolve_cache_dir
+
+    assert resolve_cache_dir({}) == PROJECT_ROOT / ".cache" / "llm"
+    assert resolve_cache_dir({"DOCDESK_LLM_CACHE_DIR": str(tmp_path)}) == tmp_path
