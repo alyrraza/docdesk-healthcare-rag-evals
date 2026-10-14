@@ -1,0 +1,342 @@
+judge_model: qwen/qwen3.8-27b
+prompts:
+  judge_faithfulness@2.0.0: 23b3fee6a584bfdc1ef6ef13cb8418907b3eaec1a2a6b417c956ceefc71534fc
+  judge_correctness@2.0.0: a49dd90ae421f479f7f2a58554064e302f7879b6ff75c0963f8232a7a9c2d631
+results:
+- synthetic_id: syn-01
+  n: 1
+  parent_item_id: gi-003
+  answer_hash: 0a3ffc655b2001c7b24646314959b23038c2e50e3bf9f3eae3868c1e8e3a2918
+  faithfulness:
+    status: scored
+    score: 0.5
+    claims:
+    - claim: Metoprolol tartrate tablets are available in 25 mg, 50 mg, and 100 mg
+        strengths.
+      label: supported
+      evidence_id: c1
+    - claim: The maintenance dose ranged from 12 mcg to 2,003 mcg per day.
+      label: unsupported
+      evidence_id: null
+  correctness:
+    status: scored
+    score: 1.0
+    key_points:
+    - point: 1
+      label: covered
+  usage:
+    calls: 2
+    tokens_in: 927
+    tokens_out: 109
+    cost_usd: '0.0011776'
+    cache_hits: 0
+- synthetic_id: syn-02
+  n: 2
+  parent_item_id: gi-027
+  answer_hash: a35ec18d359b5dea92c7b48b2c1f7cfbb0102ee6bec76719a0d4f63fee5ae5aa
+  faithfulness:
+    status: scored
+    score: 0.8
+    claims:
+    - claim: "A person about to faint typically feels dizzy, light\u2011headed or\
+        \ nauseous"
+      label: supported
+      evidence_id: c2
+    - claim: "A person about to faint may see their vision \u201Cwhite\u2011out\u201D\
+        \ or \u201Cblack\u2011out\u201D"
+      label: supported
+      evidence_id: c2
+    - claim: A person about to faint may notice cold, clammy skin
+      label: supported
+      evidence_id: c2
+    - claim: A person about to faint loses muscle control as they are about to lose
+        consciousness
+      label: supported
+      evidence_id: c2
+    - claim: The usual initial dosage is 100 mg daily, given in two divided doses
+      label: unsupported
+      evidence_id: null
+  correctness:
+    status: scored
+    score: 1.0
+    key_points:
+    - point: 1
+      label: covered
+    - point: 2
+      label: covered
+    - point: 3
+      label: covered
+  usage:
+    calls: 2
+    tokens_in: 1512
+    tokens_out: 224
+    cost_usd: '0.0021056'
+    cache_hits: 0
+- synthetic_id: syn-03
+  n: 3
+  parent_item_id: gi-001
+  answer_hash: 4b8162b36fd1af85111da7bdcb9624184cf74556e9137d410bd58384722cf8a7
+  faithfulness:
+    status: scored
+    score: 0.8
+    claims:
+    - claim: When rubella causes symptoms, it typically includes a rash that begins
+        on the face and spreads to the body
+      label: supported
+      evidence_id: c1
+    - claim: When rubella causes symptoms, it typically includes a mild fever
+      label: supported
+      evidence_id: c1
+    - claim: When rubella causes symptoms, it typically includes aching joints (especially
+        in young women)
+      label: supported
+      evidence_id: c1
+    - claim: When rubella causes symptoms, it typically includes swollen glands
+      label: supported
+      evidence_id: c1
+    - claim: In addition, the total daily dose should not exceed 36 mg
+      label: unsupported
+      evidence_id: null
+  correctness:
+    status: scored
+    score: 1.0
+    key_points:
+    - point: 1
+      label: covered
+    - point: 2
+      label: covered
+    - point: 3
+      label: covered
+    - point: 4
+      label: covered
+  usage:
+    calls: 2
+    tokens_in: 1570
+    tokens_out: 232
+    cost_usd: '0.0021840'
+    cache_hits: 0
+- synthetic_id: syn-04
+  n: 4
+  parent_item_id: gi-039
+  answer_hash: 65ff1d109ce4e22c84ced3572ffd77cd20e4de5aa761975715b08b83af2c2543
+  faithfulness:
+    status: scored
+    score: 1.0
+    claims:
+    - claim: "Sudden cardiac arrest can be caused by problems in the heart\u2019s\
+        \ electrical system that produce arrhythmias"
+      label: supported
+      evidence_id: c3
+    - claim: Sudden cardiac arrest can be caused by diseases or conditions that affect
+        that system
+      label: supported
+      evidence_id: c3
+    - claim: Sudden cardiac arrest can occur after or during recovery from a heart
+        attack
+      label: supported
+      evidence_id: c3
+  correctness:
+    status: scored
+    score: 0.5
+    key_points:
+    - point: 1
+      label: covered
+    - point: 2
+      label: missing
+  usage:
+    calls: 2
+    tokens_in: 1304
+    tokens_out: 144
+    cost_usd: '0.0016192'
+    cache_hits: 0
+- synthetic_id: syn-05
+  n: 5
+  parent_item_id: gi-042
+  answer_hash: 60ead932d26748e00075a3406de0364c1f6a29b215073531ff9b8716af08b56c
+  faithfulness:
+    status: scored
+    score: 1.0
+    claims:
+    - claim: "Answer \"yes\" to two or more of the self\u2011check questions may indicate\
+        \ an alcohol use disorder."
+      label: supported
+      evidence_id: c1
+  correctness:
+    status: scored
+    score: 0.5
+    key_points:
+    - point: 1
+      label: covered
+    - point: 2
+      label: missing
+  usage:
+    calls: 2
+    tokens_in: 1207
+    tokens_out: 75
+    cost_usd: '0.0012656'
+    cache_hits: 0
+- synthetic_id: syn-06
+  n: 6
+  parent_item_id: gi-021
+  answer_hash: b0737f171fc8a0b7ff9711fd8cfb7f79d244fec41e50717f7e29518b760342ad
+  faithfulness:
+    status: scored
+    score: 0.3333333333333333
+    claims:
+    - claim: Lazy eye is another name for amblyopia.
+      label: supported
+      evidence_id: c1
+    - claim: The mean minimum lithium concentration increased 15%.
+      label: unsupported
+      evidence_id: null
+    - claim: The renal clearance decreased by approximately 20%.
+      label: unsupported
+      evidence_id: null
+  correctness:
+    status: scored
+    score: 1.0
+    key_points:
+    - point: 1
+      label: covered
+  usage:
+    calls: 2
+    tokens_in: 1156
+    tokens_out: 108
+    cost_usd: '0.0013568'
+    cache_hits: 0
+- synthetic_id: syn-07
+  n: 7
+  parent_item_id: gi-047
+  answer_hash: 2902741191d41b95bc6b981f234a6fa6007321a1080ccfe2c5a5501dac943ea1
+  faithfulness:
+    status: scored
+    score: 1.0
+    claims:
+    - claim: The lithium carbonate label warns of lithium toxicity (including acute
+        toxicity).
+      label: supported
+      evidence_id: c1
+    - claim: The lithium carbonate label warns of polyuria.
+      label: supported
+      evidence_id: c2
+    - claim: The lithium carbonate label warns of hyponatremia.
+      label: supported
+      evidence_id: c2
+    - claim: The lithium carbonate label warns of chronic kidney disease.
+      label: supported
+      evidence_id: c2
+    - claim: The lithium carbonate label warns of encephalopathic syndrome.
+      label: supported
+      evidence_id: c2
+    - claim: The lithium carbonate label warns of serotonin syndrome.
+      label: supported
+      evidence_id: c2
+    - claim: The lithium carbonate label warns of thyroid disorders.
+      label: supported
+      evidence_id: c2
+    - claim: The lithium carbonate label warns of hypercalcemia.
+      label: supported
+      evidence_id: c2
+    - claim: The lithium carbonate label warns of Brugada syndrome.
+      label: supported
+      evidence_id: c2
+    - claim: The lithium carbonate label warns of pseudotumor cerebri.
+      label: supported
+      evidence_id: c2
+  correctness:
+    status: scored
+    score: 0.0
+    key_points:
+    - point: 1
+      label: missing
+    - point: 2
+      label: missing
+  usage:
+    calls: 2
+    tokens_in: 1633
+    tokens_out: 333
+    cost_usd: '0.0026384'
+    cache_hits: 0
+- synthetic_id: syn-08
+  n: 8
+  parent_item_id: gi-035
+  answer_hash: c602e364879b56056aaaff9a6ab6ac9acbb80b1c7085521434e58dd8b31995ca
+  faithfulness:
+    status: scored
+    score: 1.0
+    claims:
+    - claim: "Infectious mononucleosis is most often caused by the Epstein\u2011Barr\
+        \ virus (EBV)."
+      label: supported
+      evidence_id: c1
+  correctness:
+    status: scored
+    score: 0.5
+    key_points:
+    - point: 1
+      label: covered
+    - point: 2
+      label: missing
+  usage:
+    calls: 2
+    tokens_in: 1235
+    tokens_out: 77
+    cost_usd: '0.0012960'
+    cache_hits: 0
+- synthetic_id: syn-09
+  n: 9
+  parent_item_id: gi-041
+  answer_hash: b9243d40744e812bdbfe0107e784fdbf10f42c03e3e7f34a3e1b0b837ea110fe
+  faithfulness:
+    status: scored
+    score: 0.6666666666666666
+    claims:
+    - claim: Essential tremor is the most common type
+      label: supported
+      evidence_id: c3
+    - claim: "tremor is most common in middle\u2011aged and older adults"
+      label: supported
+      evidence_id: c4
+    - claim: dosage can be increased by 25 to 50 mg/day each subsequent week as tolerated
+      label: unsupported
+      evidence_id: null
+  correctness:
+    status: scored
+    score: 1.0
+    key_points:
+    - point: 1
+      label: covered
+    - point: 2
+      label: covered
+  usage:
+    calls: 2
+    tokens_in: 1619
+    tokens_out: 135
+    cost_usd: '0.0018352'
+    cache_hits: 0
+- synthetic_id: syn-10
+  n: 10
+  parent_item_id: gi-046
+  answer_hash: 131486d7ace004df215022c5a86f78d4aa795274f0be7ec8d2a9484bd98e62e3
+  faithfulness:
+    status: scored
+    score: 1.0
+    claims:
+    - claim: Apixaban is indicated to reduce the risk of stroke and systemic embolism
+        in patients with nonvalvular atrial fibrillation.
+      label: supported
+      evidence_id: c1
+  correctness:
+    status: scored
+    score: 0.5
+    key_points:
+    - point: 1
+      label: covered
+    - point: 2
+      label: missing
+  usage:
+    calls: 2
+    tokens_in: 1271
+    tokens_out: 82
+    cost_usd: '0.0013448'
+    cache_hits: 0
