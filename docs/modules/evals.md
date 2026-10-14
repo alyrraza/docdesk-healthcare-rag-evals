@@ -276,6 +276,19 @@ Rules for a full run (added 2026-10-13, tasks T079a to T079e):
   only one run are named and left out.
 - Reports contain no em or en dash; the docs style hook enforces it.
 
+## CLI (T096, added 2026-10-14)
+`python -m docdesk.evals.cli [--config evals/configs/b0.toml] COMMAND`. Exit code 0 done, 1 refused or
+failed, 2 stopped by the daily token guard (progress is saved, run the same command again later).
+- `check`: loads the config and its hash, compares the stored corpus fingerprint, checks the answer prompt
+  hash, loads both judge prompt files, and loads the verified dev items against the corpus. It runs no
+  pipeline and makes no model call. It prints OK or FAIL per check and does not stop at the first FAIL.
+- `run [--split dev|test] [--allow-test] [--retrieval-only]`: dev split by default. `--retrieval-only` builds
+  no judge and no model client, so it makes no LLM call and can run in CI later. A full run builds the cache,
+  budget guard, pacer and Groq client from `.env` (`GROQ_API_KEY`).
+- `report [RUN_ID] [--out FILE]`: the markdown report of a run, the newest run when no id is given.
+- `compare BASELINE_RUN_ID CANDIDATE_RUN_ID [--out FILE]`: the paired comparison.
+`evals/cli_runtime.py` is the only file that reaches a real model; the CLI tests pass fakes.
+
 ## Statistics
 - Every headline metric has a bootstrap confidence interval (AC-EVL-05). Resample items; if items
   share a source document, resample by document.

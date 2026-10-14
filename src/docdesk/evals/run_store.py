@@ -87,3 +87,13 @@ def results_of(session: Session, run_id: uuid.UUID) -> list[EvalResultRow]:
     """Every result row of a run in item id order, for the report."""
     query = select(EvalResultRow).where(EvalResultRow.run_id == run_id)
     return list(session.execute(query.order_by(EvalResultRow.item_id)).scalars())
+
+
+def latest_run_id(session: Session) -> uuid.UUID:
+    """The newest run, for a report asked without an id."""
+    newest = session.execute(
+        select(EvalRunRow.id).order_by(EvalRunRow.started_at.desc()).limit(1)
+    ).scalar_one_or_none()
+    if newest is None:
+        raise LookupError("there are no eval runs yet")
+    return newest

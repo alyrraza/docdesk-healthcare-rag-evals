@@ -36,11 +36,15 @@ class JudgeKit:
         return {f"{p.name}@{p.version}": p.content_hash for p in prompts}
 
 
-def load_judge_kit(prompts_dir: Path, client: LLMClient, model: str) -> JudgeKit:
-    """Load the pinned judge prompt files from prompts/ and attach the client and model."""
-    return JudgeKit(
-        faithfulness_prompt=load_prompt(prompts_dir / FAITHFULNESS_FILE),
-        correctness_prompt=load_prompt(prompts_dir / CORRECTNESS_FILE),
-        client=client,
-        model=model,
+def load_judge_prompts(prompts_dir: Path) -> tuple[PromptFile, PromptFile]:
+    """Load the two judge prompt files; the check command uses this without any client."""
+    return (
+        load_prompt(prompts_dir / FAITHFULNESS_FILE),
+        load_prompt(prompts_dir / CORRECTNESS_FILE),
     )
+
+
+def load_judge_kit(prompts_dir: Path, client: LLMClient, model: str) -> JudgeKit:
+    """Attach the client and the config's judge model to the pinned judge prompts."""
+    faithfulness, correctness = load_judge_prompts(prompts_dir)
+    return JudgeKit(faithfulness, correctness, client, model)

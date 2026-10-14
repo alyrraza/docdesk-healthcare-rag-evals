@@ -11,10 +11,8 @@ class FingerprintMismatch(RuntimeError):
     """The stored corpus was built differently from what the config assumes."""
 
 
-def check_run_allowed(
-    config: EvalConfig, answer_prompt: PromptFile, stored: CorpusFingerprint | None
-) -> None:
-    """Refuse a run whose numbers would not describe the pinned config, naming what differs."""
+def check_fingerprint(config: EvalConfig, stored: CorpusFingerprint | None) -> None:
+    """Refuse a corpus that was built differently from the config, naming what differs."""
     if stored is None:
         raise FingerprintMismatch(
             "no corpus fingerprint is stored, so the corpus cannot be tied to this config. "
@@ -26,4 +24,11 @@ def check_run_allowed(
             f"the stored corpus differs from {config.id} in: {', '.join(wrong)}. "
             "Re-ingest the corpus with the config's settings, or use a config that matches it."
         )
+
+
+def check_run_allowed(
+    config: EvalConfig, answer_prompt: PromptFile, stored: CorpusFingerprint | None
+) -> None:
+    """Refuse a run whose numbers would not describe the pinned config."""
+    check_fingerprint(config, stored)
     config.check_prompt(answer_prompt)
