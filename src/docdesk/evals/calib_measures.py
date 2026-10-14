@@ -112,10 +112,12 @@ def evaluate(
     outputs: Sequence[JudgedOutput], *, resamples: int = DEFAULT_RESAMPLES, seed: int = DEFAULT_SEED
 ) -> SetResult:
     """Compute every measure; outputs with no judge faithfulness score are listed and left out."""
-    scored = [(i, o) for i, o in enumerate(outputs) if o.judge.faith_score is not None]
+    # One item can give several outputs (B0 and a rerun), so a bootstrap resamples items.
+    item_index = {item: n for n, item in enumerate(sorted({o.item_id for o in outputs}))}
+    scored = [(item_index[o.item_id], o) for o in outputs if o.judge.faith_score is not None]
     faith = [("faithful" if ref_faithful(o) else "not faithful",
               "faithful" if o.judge.faith_score == 1.0 else "not faithful") for _, o in scored]
-    keys = [(i, ref, judge) for i, o in enumerate(outputs)
+    keys = [(item_index[o.item_id], ref, judge) for o in outputs
             for ref, judge in zip(o.ref_keys, o.judge.key_labels, strict=True)]
     key_pairs = [(ref, judge) for _, ref, judge in keys]
     key_groups = [i for i, _, _ in keys]
@@ -124,7 +126,7 @@ def evaluate(
     item = [("correct" if correct(o.ref_keys) else "not correct",
              "correct" if correct(o.judge.key_labels) else "not correct")
             for o in outputs if o.ref_keys]
-    item_groups = [i for i, o in enumerate(outputs) if o.ref_keys]
+    item_groups = [item_index[o.item_id] for o in outputs if o.ref_keys]
     kw = {"resamples": resamples, "seed": seed}
     measures = {
         "faithfulness_item": measure("faithfulness_item", faith, [i for i, _ in scored],

@@ -15,12 +15,19 @@ UNSTABLE_SHARE = 0.9
 
 @dataclass(frozen=True)
 class KappaInterval:
-    """A percentile interval over the resamples that had a kappa, and how many those were."""
+    """A percentile interval over the resamples that had a kappa, and what the rest were.
+
+    A resample where only one side has a single class has kappa 0 (a constant judge agrees no
+    better than chance), so it stays in the interval and is counted in zero_single_class. A
+    resample where both sides are constant has no kappa and is left out (undefined).
+    """
 
     low: float | None
     high: float | None
     valid: int
     resamples: int
+    zero_single_class: int = 0
+    undefined: int = 0
 
 
 def confusion(pairs: Sequence[tuple[str, str]], labels: Sequence[str]) -> list[list[int]]:
@@ -38,16 +45,28 @@ def agreement(table: Sequence[Sequence[int]]) -> float:
     return sum(table[i][i] for i in range(len(table))) / total
 
 
-def kappas(tables: np.ndarray) -> np.ndarray:
-    """Kappa of many tables at once (shape n, k, k); NaN where either side used a single class."""
+def single_sides(tables: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """For each table: whether the reference (rows) and the judge (columns) used one class only."""
+    return (tables.sum(axis=2) > 0).sum(axis=1) < 2, (tables.sum(axis=1) > 0).sum(axis=1) < 2
+
+
+def kappas(tables: np.ndarray, *, one_side_zero: bool = False) -> np.ndarray:
+    """Kappa of many tables at once (shape n, k, k); NaN where a side used a single class.
+
+    With one_side_zero, a table where only one side is constant gets kappa 0, and only a table
+    where both sides are constant stays NaN (used by the bootstrap).
+    """
     total = tables.sum(axis=(1, 2)).astype(float)
     rows, cols = tables.sum(axis=2) / total[:, None], tables.sum(axis=1) / total[:, None]
     observed = np.trace(tables, axis1=1, axis2=2) / total
     chance = (rows * cols).sum(axis=1)
-    single = ((rows > 0).sum(axis=1) < 2) | ((cols > 0).sum(axis=1) < 2)
+    row_single, col_single = single_sides(tables)
     with np.errstate(divide="ignore", invalid="ignore"):
         value = (observed - chance) / (1 - chance)
-    return np.where(single, np.nan, value)
+    if one_side_zero:
+        value = np.where(row_single ^ col_single, 0.0, value)
+        return np.where(row_single & col_single, np.nan, value)
+    return np.where(row_single | col_single, np.nan, value)
 
 
 def cohen_kappa(table: Sequence[Sequence[int]]) -> float | None:
@@ -73,8 +92,8 @@ def kappa_interval(
 ) -> KappaInterval | None:
     """Bootstrap kappa, resampling whole groups (all key points of one output stay together).
 
-    Resamples where one side has a single class have no kappa and are counted out, not forced
-    into a number. None when the estimate itself is undefined.
+    A resample with one constant side counts as kappa 0, one with two constant sides is counted
+    out and reported. None when the estimate itself is undefined.
     """
     if cohen_kappa(confusion(pairs, labels)) is None:
         return None
@@ -84,10 +103,14 @@ def kappa_interval(
     for (reference, judge), group in zip(pairs, groups, strict=True):
         per_group[ids.index(group), index[reference], index[judge]] += 1
     draws = np.random.default_rng(seed).integers(0, len(ids), size=(resamples, len(ids)))
-    values = kappas(per_group[draws].sum(axis=1))
+    drawn = per_group[draws].sum(axis=1)
+    values = kappas(drawn, one_side_zero=True)
+    undefined = int(np.isnan(values).sum())
+    row_single, col_single = single_sides(drawn)
+    zeros = int((row_single ^ col_single).sum())
     values = values[~np.isnan(values)]
     if len(values) == 0:
-        return KappaInterval(None, None, 0, resamples)
+        return KappaInterval(None, None, 0, resamples, 0, undefined)
     tail = (1.0 - confidence) / 2.0
     low, high = np.quantile(values, [tail, 1.0 - tail])
-    return KappaInterval(float(low), float(high), len(values), resamples)
+    return KappaInterval(float(low), float(high), len(values), resamples, zeros, undefined)

@@ -49,7 +49,12 @@ def interval_text(m: Mapping[str, Any]) -> str:
     found = m["interval"]
     if found is None or found["low"] is None:
         return "n/a"
-    return f"{found['low']:.3f} to {found['high']:.3f} ({found['valid']} of {found['resamples']})"
+    extra = ""
+    if found.get("zero_single_class") or found.get("undefined"):
+        extra = (f"; {found.get('zero_single_class', 0)} counted as 0, "
+                 f"{found.get('undefined', 0)} left out")
+    return (f"{found['low']:.3f} to {found['high']:.3f} "
+            f"({found['valid']} of {found['resamples']}{extra})")
 
 
 def note_text(m: Mapping[str, Any]) -> str:
@@ -145,8 +150,11 @@ def top_lines(summary: Mapping[str, Any]) -> list[str]:
         "- Synthetic outputs are a sensitivity check built by code (inserted or removed "
         "sentences). They are not real answers and are never pooled with the natural outputs.",
         f"- Intervals are {boot['confidence'] * 100:.0f} percent percentile bootstrap intervals "
-        f"over whole outputs, {boot['resamples']} resamples, seed {boot['seed']}. A resample "
-        "where one side has a single class has no kappa and is left out of the interval.",
+        "over whole items (all outputs of one item resample together), "
+        f"{boot['resamples']} resamples, seed {boot['seed']}. A resample where one side has a "
+        "single class has kappa 0 and stays in the interval; a resample where both sides "
+        "have a single class has no kappa and is left out. Both counts are shown next to "
+        "the interval.",
         "- Kappa is reported as undefined when the reference or the judge uses one class only.",
         "- This report gives no pass or fail verdict.", "",
         f"Judge model: {summary['judge']['model']}. Prompts: "
