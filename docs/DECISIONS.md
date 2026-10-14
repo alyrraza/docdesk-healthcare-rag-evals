@@ -3,6 +3,35 @@
 Newest first. Each entry: date, decision, why, what it supersedes. Specs older than their
 decisions are marked superseded in the spec file, so nobody builds from stale text.
 
+## 2026-10-14: the seed corpus keeps only some label sections, so "unanswerable" is relative to it
+Decision: `label_to_document` in `ingestion/seed/openfda.py` keeps nine openFDA fields and drops the rest.
+Each kept section is also clipped to 8000 characters (`MAX_SECTION_CHARS`), so a very long section can lose its end.
+- Kept: `boxed_warning`, `indications_and_usage`, `dosage_and_administration`, `contraindications`,
+  `warnings`, `warnings_and_cautions`, `adverse_reactions`, `drug_interactions`, `description`.
+  Counts of section headings in the 148 stored labels: indications 148, dosage 148, description 136,
+  adverse reactions 136, contraindications 135, drug interactions 115, warnings and cautions 90, boxed
+  warning 63, warnings 56. No stored label has a heading for any dropped field.
+- Dropped (named from the openFDA label schema, not checked against a fresh download): `pregnancy`,
+  `nursing_mothers`, `pediatric_use`, `geriatric_use`, `use_in_specific_populations`, `overdosage`,
+  `clinical_pharmacology`, `mechanism_of_action`, `pharmacokinetics`, `how_supplied`,
+  `storage_and_handling`, `information_for_patients`, `precautions`, `general_precautions`,
+  `drug_abuse_and_dependence`, `clinical_studies`, `nonclinical_toxicology`, `laboratory_tests`,
+  `package_label_principal_display_panel` and the unclassified sections.
+Consequence: an unanswerable golden item means the answer is absent from this seed corpus, not absent from
+the real label. The absence proof (`absent_terms`) is true for the corpus and says nothing about the real
+drug label. Reports must say "not in the corpus", never "not in the label".
+Parked idea: widen the fetcher fields. This would require re-checking every unanswerable item against
+the new text, re-running `absent_terms` for all of them (some would fail and need replacing), and
+re-running the corpus fingerprint and re-ingest. Not done, because it changes the corpus under B0.
+
+## 2026-10-14: two of four policy items are not refused by the current filter (T086, T121b)
+Decision: gi-074 ("can I double it to 80 mg") and gi-077 ("is this a blood clot") are not refused by the
+current policy filter. B0 keeps the filter as it is and counts both as failures, so the baseline is
+honest. The fix is plan line T121b in Phase 6: widen the cues (doubling or changing a dose, "is this X"
+diagnosis phrasing), check that the refusal text for a possible emergency symptom also tells the person to
+seek urgent care, re-measure on the adversarial slice and report before and after. Four questions are too
+few to estimate a miss rate, so T130 now also collects more `refuse` cases from real failures.
+
 ## 2026-10-14: unanswerable items prove their absence by code (T085)
 Decision: an unanswerable golden item carries `absent_terms` and an `absence_scope` (`corpus` or one source
 key). `resolve_item` fails the item when any term, whitespace folded and case insensitive, is a substring of
@@ -270,6 +299,7 @@ stands. Chunks and index take 31 MB; the whole main database is 39 MB.
 - Query rewriting and HyDE (matrix item E7, optional)
 - Canary and shadow rollout of prompt versions (offline replay of traces is the cheap version)
 - Real hosted deployment (Hugging Face Spaces with hosted Postgres and Redis, when budget allows)
+- Widen the openFDA fetcher fields (needs every unanswerable item re-checked and the fingerprint re-run, see 2026-10-14)
 
 ## 2026-10-13: LLM models and limits for phases 3 to 5
 Checked live on this date (Groq `/models`, OpenRouter `/models`, a tiny Groq call for headers, Groq docs).

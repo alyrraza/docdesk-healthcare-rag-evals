@@ -130,7 +130,7 @@ no eval run is safe without them (see "Eval budget and pacing" in `docs/modules/
 - [x] T082 golden items batch 1, single fact, 10 items, hand verified, evidence quotes (10 drafts written and validated, `verified: false` until the owner marks them OK in `docs/golden_review/batch1_single_fact.md` and runs `scripts/golden_review.py --apply`; the owner reviewed it on 2026-10-14: 4 OK, 3 reworded, 3 replaced, re-review sheet `docs/golden_review/batch1_changed.md`)
 - [x] T083 golden items batch 2, single fact, 21 items, evidence quotes (21 drafts, ids gi-014 to gi-034, 13 dev and 8 test, all `verified: false`, awaiting the owner's review in `docs/golden_review/batch2_single_fact.md`)
 - [x] T084 golden items batch 3, multi chunk, 19 items, evidence quotes (19 drafts, ids gi-035 to gi-053, 11 dev and 8 test, all `verified: false`, awaiting the owner's review in `docs/golden_review/batch3_multi_chunk.md`)
-- [x] T085 golden items batch 4, unanswerable, 19 items, empty evidence plus a reason (19 drafts, ids gi-055 to gi-073, 11 dev and 8 test, all `verified: false`, awaiting the owner's review in `docs/golden_review/batch4_unanswerable.md`; absence of every term checked by code)
+- [x] T085 golden items batch 4, unanswerable, 19 items, empty evidence plus a reason (19 items, ids gi-055 to gi-073, 11 dev and 8 test, all verified by the owner on 2026-10-14 in review round 3, sheet `docs/golden_review/batch4_unanswerable.md`; absence of every term checked by code; "unanswerable" means absent from this seed corpus, see the known limitation in `docs/modules/evals.md`)
 - [x] T086 golden items batch 5, adversarial, 6 items (6 drafts, ids gi-074 to gi-079, 4 dev and 2 test, all `verified: false`, awaiting the owner's review in `docs/golden_review/batch5_adversarial.md`; adds `expected_behavior`, `canary` and `fixture_documents` to the schema)
 - [x] T087 `evals/metrics/retrieval.py` recall@k, MRR, hit rate (AC-EVL-02)
 - [x] T088 `evals/stats.py` bootstrap and paired comparison (AC-EVL-05)
@@ -172,6 +172,7 @@ no eval run is safe without them (see "Eval budget and pacing" in `docs/modules/
 ## Phase 6: guardrails, limits, cache, prompts admin, SQL
 - [ ] T120 `guardrails/input.py` length, PII flag, injection heuristics (AC-GRD-02)
 - [ ] T121 policy refusal for diagnosis and dose (AC-GEN-05)
+- [ ] T121b widen the policy cues: doubling or changing a dose, and "is this X" diagnosis phrasing (found by gi-074 and gi-077, see `DECISIONS.md` 2026-10-14). Check that the refusal text for a possible emergency symptom also tells the person to seek urgent care. Re-measure on the adversarial policy slice (gi-074 to gi-077) and report before and after.
 - [ ] T122 injection test on the adversarial slice (AC-GRD-01). Builds the fixture loader and the run for the `injected_instruction` items (gi-078, gi-079). Fixtures are loaded for a dedicated eval user only, so they never appear in normal eval queries and do not change the corpus fingerprint. The check is deterministic: the answer must not contain the item's canary. Until then these items are reported as a separate slice marked "not run, needs T122" and are excluded from the B0 headline metrics.
 - [ ] T123 `ratelimit/token_bucket.py` with Lua (AC-LIM-01), explained to Ali
 - [ ] T124 `ratelimit/budget.py` daily budget (AC-LIM-02)
@@ -180,7 +181,7 @@ no eval run is safe without them (see "Eval budget and pacing" in `docs/modules/
 - [ ] T127 E10 cache wrong-hit measurement, then enable decision
 - [ ] T128 `observability/metrics.py` and `/metrics` (AC-OBS-02)
 - [ ] T129 admin prompt endpoints and activation pointer (AC-PRM-02)
-- [ ] T130 regression slice: add failures from eval runs
+- [ ] T130 regression slice: add failures from eval runs. Also add more `refuse` cases from real failures: the four dose and diagnosis items in batch 5 are too few to estimate a miss rate.
 - [ ] T131 `sql/schema_allowlist.py`
 - [ ] T132 `sql/validator.py` and its table of cases (AC-SQL-01, AC-SQL-02), explained to Ali
 - [ ] T133 `sql/executor.py` read-only, limit, timeout (AC-SQL-03)

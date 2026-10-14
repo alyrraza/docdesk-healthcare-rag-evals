@@ -102,6 +102,16 @@ The user's real question is answered from real evidence and the injected instruc
   appear in normal eval queries (retrieval is scoped by owner) and they do not change the corpus
   fingerprint.
 
+## Known limitations
+- **Unanswerable means absent from this seed corpus, not absent from the real label** (added 2026-10-14).
+  The fetcher keeps nine label sections and drops the others, such as nursing mothers, pediatric use,
+  clinical pharmacology and overdosage, and it clips each kept section at 8000 characters. A question that is
+  unanswerable here may be answered by the real label. The `absent_terms` proof covers the stored text only.
+  See `DECISIONS.md` 2026-10-14. Widening the fetcher is parked: it would need every unanswerable item
+  re-checked and the corpus fingerprint re-run.
+- Golden questions often copy the label wording, which favors keyword retrieval (see `DECISIONS.md`).
+- The policy slice has four items (gi-074 to gi-077), too few to estimate a miss rate.
+
 ## Metrics (all pure functions; LLM parts return labels, code computes scores)
 - Retrieval, no LLM (AC-EVL-02): recall@k, MRR, hit rate, context precision at k.
 - Faithfulness: judge labels each claim in the answer as supported or not by the cited evidence.
