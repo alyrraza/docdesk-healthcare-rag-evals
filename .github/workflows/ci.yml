@@ -110,6 +110,11 @@ jobs:
         run: docker compose up -d --build --wait --wait-timeout 300
       - name: Health endpoint answers
         run: curl --fail --silent http://localhost:8000/health
+      - name: Web page answers at the root and serves its stylesheet
+        run: |
+          curl --fail --silent http://localhost:8000/ --output page.html
+          grep -q 'DocDesk' page.html
+          curl --fail --silent http://localhost:8000/static/style.css > /dev/null
       - name: Seed the 20 document fixture corpus (no model call)
         run: docker compose exec -T api python scripts/demo_seed.py
       - name: Retrieval smoke, the known rubella document must be in the top results

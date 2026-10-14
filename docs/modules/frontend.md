@@ -2,6 +2,13 @@
 
 Created 2026-10-13. Criteria: AC-FE-01 to 03. Small on purpose: the backend and the evals are the project.
 
+## Built so far: the single page UI (2026-10-15)
+A plain HTML, CSS and JavaScript page is served by the API itself from `src/docdesk/web/static/`.
+No npm, no build step, no outside requests (a test greps for URLs and for `innerHTML`). It covers a sign in and register panel,
+a question box with three examples, an outcome badge (Answered, Abstained, Refused), numbered citations that open the source text,
+a collapsible retrieval panel fed by `POST /retrieve`, and a plain message when generation is unavailable (503). The React plan
+above (upload panel, dashboard) is still open in `docs/PLAN.md`.
+
 ## Stack
 React, TypeScript (strict), Vite. Plain CSS modules. One small chart library chosen at task T146.
 

@@ -26,7 +26,7 @@ Security-sensitive: after writing, explain each function line by line to Ali.
 
 ## api
 - `app.py`: `create_app()` wires routers, error handler, CORS (explicit origins), metrics route.
-- `public.py`: `PUBLIC_ROUTES` allowlist (`/health`, `/auth/register`, `/auth/login`, `/metrics` if protected otherwise).
+- `public.py`: `PUBLIC_ROUTES` allowlist (`/health`, `/`, `/static/{name}`, `/auth/register`, `/auth/login`, `/metrics` if protected otherwise).
 - `routers/`: `auth.py`, `documents.py`, `query.py`, `prompts_admin.py`, `traces.py`, `health.py`. One file each.
 - `schemas/`: request and response models, one file per router.
 - Routers are thin: validate, call one service function, shape the response.
@@ -37,9 +37,11 @@ Security-sensitive: after writing, explain each function line by line to Ali.
 | POST `/auth/register` | public | create user (AC-AUTH-01) |
 | POST `/auth/login` | public | return JWT (AC-AUTH-02) |
 | GET `/health` | public | liveness |
+| GET `/` and `/static/{name}` | public | the web page and its six fixed files, see `docdesk/web/` |
 | POST `/documents` | user | upload, returns 202 (AC-ING-01) |
 | GET `/documents` and `/documents/{id}` | user | list and status |
-| POST `/query` | user | ask a question |
+| POST `/query` | user | ask a question; `data` has answer, disclaimer, abstained, abstain_reason, citations |
+| POST `/retrieve` | user | the ranked chunks with title and score, no model call (used by the web page) |
 | GET `/traces` and `/traces/{id}` | user (own), admin (all) | trace inspection |
 | GET `/admin/prompts`, POST `/admin/prompts/{name}/activate` | admin | prompt versions and pointer (AC-PRM-02) |
 | GET `/admin/eval/runs` | admin | eval dashboard data |
