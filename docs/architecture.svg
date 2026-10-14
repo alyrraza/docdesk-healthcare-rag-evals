@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="t d">
+<title id="t">DocDesk v2 architecture</title>
+<desc id="d">Ingest, query and evaluation flows of DocDesk v2, including the refuse and abstain paths.</desc>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#24292f"/></marker></defs>
+<style>text{font-family:Segoe UI,Helvetica,Arial,sans-serif;fill:#24292f}.lane{font-size:15px;font-weight:700}.t1{font-size:14px;font-weight:600}.t2{font-size:12px;fill:#57606a}.lab{font-size:12px;fill:#57606a}.title{font-size:20px;font-weight:700}</style>
+<rect width="1200" height="800" fill="#ffffff"/>
+<text x="20" y="28" class="title">DocDesk v2: ingest, query and evaluation</text>
+<rect x="20" y="44" width="1160" height="128" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="36" y="68" class="lane">1. Ingest (once per document)</text>
+<rect x="40" y="82" width="230" height="70" rx="8" fill="#ffffff" stroke="#57606a" stroke-width="1.5"/>
+<text x="155.0" y="113.0" text-anchor="middle" class="t1">Upload or seed corpus</text>
+<text x="155.0" y="131.0" text-anchor="middle" class="t2">PDF, text, MedlinePlus, DailyMed</text>
+<rect x="330" y="82" width="230" height="70" rx="8" fill="#ffffff" stroke="#57606a" stroke-width="1.5"/>
+<text x="445.0" y="113.0" text-anchor="middle" class="t1">Parse and chunk</text>
+<text x="445.0" y="131.0" text-anchor="middle" class="t2">recursive, 200 tokens, overlap 40</text>
+<rect x="620" y="82" width="230" height="70" rx="8" fill="#ffffff" stroke="#57606a" stroke-width="1.5"/>
+<text x="735.0" y="113.0" text-anchor="middle" class="t1">Embed</text>
+<text x="735.0" y="131.0" text-anchor="middle" class="t2">ONNX MiniLM, pinned revision</text>
+<rect x="910" y="82" width="250" height="70" rx="8" fill="#ddf4ff" stroke="#0969da" stroke-width="1.5"/>
+<text x="1035.0" y="113.0" text-anchor="middle" class="t1">Postgres</text>
+<text x="1035.0" y="131.0" text-anchor="middle" class="t2">pgvector vectors + full text search</text>
+<polyline points="270,117 328,117" fill="none" stroke="#24292f" stroke-width="1.6" marker-end="url(#ah)"/>
+<polyline points="560,117 618,117" fill="none" stroke="#24292f" stroke-width="1.6" marker-end="url(#ah)"/>
+<polyline points="850,117 908,117" fill="none" stroke="#24292f" stroke-width="1.6" marker-end="url(#ah)"/>
+<rect x="20" y="190" width="1160" height="340" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="36" y="214" class="lane">2. Query (every question)</text>
+<rect x="40" y="290" width="170" height="70" rx="8" fill="#ffffff" stroke="#57606a" stroke-width="1.5"/>
+<text x="125.0" y="321.0" text-anchor="middle" class="t1">Question</text>
+<text x="125.0" y="339.0" text-anchor="middle" class="t2">from the user</text>
+<rect x="260" y="290" width="240" height="70" rx="8" fill="#ffffff" stroke="#57606a" stroke-width="1.5"/>
+<text x="380.0" y="321.0" text-anchor="middle" class="t1">Input checks</text>
+<text x="380.0" y="339.0" text-anchor="middle" class="t2">length, injection cues, policy</text>
+<rect x="560" y="290" width="250" height="70" rx="8" fill="#ffffff" stroke="#57606a" stroke-width="1.5"/>
+<text x="685.0" y="321.0" text-anchor="middle" class="t1">Retrieve</text>
+<text x="685.0" y="339.0" text-anchor="middle" class="t2">dense search, top 5 (hybrid tested)</text>
+<rect x="870" y="290" width="290" height="70" rx="8" fill="#ffffff" stroke="#57606a" stroke-width="1.5"/>
+<text x="1015.0" y="312.0" text-anchor="middle" class="t1">Pack context</text>
+<text x="1015.0" y="330.0" text-anchor="middle" class="t2">token budget, cap per document,</text>
+<text x="1015.0" y="348.0" text-anchor="middle" class="t2">untrusted data delimiters</text>
+<rect x="260" y="214" width="240" height="50" rx="8" fill="#fff8c5" stroke="#9a6700" stroke-width="1.5"/>
+<text x="380.0" y="235.0" text-anchor="middle" class="t1">Refuse</text>
+<text x="380.0" y="253.0" text-anchor="middle" class="t2">fixed text, no model call</text>
+<polyline points="210,325 258,325" fill="none" stroke="#24292f" stroke-width="1.6" marker-end="url(#ah)"/>
+<polyline points="500,325 558,325" fill="none" stroke="#24292f" stroke-width="1.6" marker-end="url(#ah)"/>
+<polyline points="810,325 868,325" fill="none" stroke="#24292f" stroke-width="1.6" marker-end="url(#ah)"/>
+<polyline points="380,288 380,266" fill="none" stroke="#24292f" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="392" y="280" class="lab">diagnosis or dose request</text>
+<polyline points="1075,152 1075,252 700,252 700,288" fill="none" stroke="#24292f" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ah)"/>
+<text x="900" y="246" class="lab">search chunks</text>
+<rect x="870" y="400" width="290" height="70" rx="8" fill="#ffffff" stroke="#57606a" stroke-width="1.5"/>
+<text x="1015.0" y="431.0" text-anchor="middle" class="t1">Generate</text>
+<text x="1015.0" y="449.0" text-anchor="middle" class="t2">Groq, JSON with citations</text>
+<rect x="560" y="400" width="250" height="70" rx="8" fill="#ffffff" stroke="#57606a" stroke-width="1.5"/>
+<text x="685.0" y="431.0" text-anchor="middle" class="t1">Validate</text>
+<text x="685.0" y="449.0" text-anchor="middle" class="t2">schema, citation membership</text>
+<rect x="270" y="366" width="240" height="58" rx="8" fill="#dafbe1" stroke="#1a7f37" stroke-width="1.5"/>
+<text x="390.0" y="391.0" text-anchor="middle" class="t1">Answer with citations</text>
+<text x="390.0" y="409.0" text-anchor="middle" class="t2">plus fixed disclaimer</text>
+<rect x="270" y="446" width="240" height="58" rx="8" fill="#fff8c5" stroke="#9a6700" stroke-width="1.5"/>
+<text x="390.0" y="471.0" text-anchor="middle" class="t1">Abstain</text>
+<text x="390.0" y="489.0" text-anchor="middle" class="t2">no evidence, model says so</text>
+<polyline points="1015,360 1015,398" fill="none" stroke="#24292f" stroke-width="1.6" marker-end="url(#ah)"/>
+<polyline points="868,435 812,435" fill="none" stroke="#24292f" stroke-width="1.6" marker-end="url(#ah)"/>
+<polyline points="558,425 512,398" fill="none" stroke="#24292f" stroke-width="1.6" marker-end="url(#ah)"/>
+<polyline points="558,445 512,474" fill="none" stroke="#24292f" stroke-width="1.6" marker-end="url(#ah)"/>
+<rect x="20" y="548" width="1160" height="232" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="36" y="572" class="lane">3. Evaluation harness (offline)</text>
+<rect x="40" y="620" width="150" height="80" rx="8" fill="#ffffff" stroke="#57606a" stroke-width="1.5"/>
+<text x="115.0" y="656.0" text-anchor="middle" class="t1">Golden set</text>
+<text x="115.0" y="674.0" text-anchor="middle" class="t2">dev and test</text>
+<rect x="230" y="620" width="170" height="80" rx="8" fill="#ffffff" stroke="#57606a" stroke-width="1.5"/>
+<text x="315.0" y="656.0" text-anchor="middle" class="t1">Runner</text>
+<text x="315.0" y="674.0" text-anchor="middle" class="t2">one run, resumable</text>
+<rect x="440" y="620" width="150" height="80" rx="8" fill="#ddf4ff" stroke="#0969da" stroke-width="1.5"/>
+<text x="515.0" y="647.0" text-anchor="middle" class="t1">LLM cache</text>
+<text x="515.0" y="665.0" text-anchor="middle" class="t2">same request,</text>
+<text x="515.0" y="683.0" text-anchor="middle" class="t2">same answer</text>
+<rect x="630" y="620" width="150" height="80" rx="8" fill="#fff8c5" stroke="#9a6700" stroke-width="1.5"/>
+<text x="705.0" y="656.0" text-anchor="middle" class="t1">Budget guard</text>
+<text x="705.0" y="674.0" text-anchor="middle" class="t2">daily token cap</text>
+<rect x="820" y="620" width="170" height="80" rx="8" fill="#ffffff" stroke="#57606a" stroke-width="1.5"/>
+<text x="905.0" y="647.0" text-anchor="middle" class="t1">Judges</text>
+<text x="905.0" y="665.0" text-anchor="middle" class="t2">faithfulness,</text>
+<text x="905.0" y="683.0" text-anchor="middle" class="t2">correctness</text>
+<rect x="1030" y="620" width="130" height="80" rx="8" fill="#dafbe1" stroke="#1a7f37" stroke-width="1.5"/>
+<text x="1095.0" y="656.0" text-anchor="middle" class="t1">Report</text>
+<text x="1095.0" y="674.0" text-anchor="middle" class="t2">paired interval</text>
+<polyline points="190,660 228,660" fill="none" stroke="#24292f" stroke-width="1.6" marker-end="url(#ah)"/>
+<polyline points="400,660 438,660" fill="none" stroke="#24292f" stroke-width="1.6" marker-end="url(#ah)"/>
+<polyline points="590,660 628,660" fill="none" stroke="#24292f" stroke-width="1.6" marker-end="url(#ah)"/>
+<polyline points="780,660 818,660" fill="none" stroke="#24292f" stroke-width="1.6" marker-end="url(#ah)"/>
+<polyline points="990,660 1028,660" fill="none" stroke="#24292f" stroke-width="1.6" marker-end="url(#ah)"/>
+<polyline points="315,618 315,538 110,538 110,362" fill="none" stroke="#24292f" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ah)"/>
+<text x="330" y="566" class="lab">Runner drives the same query pipeline</text>
+<text x="40" y="742" class="lab">Results are stored per run. A gap whose interval holds zero is reported as no clear difference.</text>
+<text x="40" y="764" class="lab">Judge labels are Claude drafts, the author review is pending.</text>
+</svg>

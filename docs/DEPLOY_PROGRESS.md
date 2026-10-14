@@ -23,7 +23,7 @@ CI job image-build -> F12 gate proof -> readme_results.py -> README + architectu
 - [x] Step 2 container files, demo path (make_env, demo_seed, demo_retrieve, Dockerfile, compose)
 - [x] Step 3 no Docker on this laptop, verification moved to CI (Step 4)
 - [ ] Step 4 CI job image-build, push to ghcr on main
-- [ ] Step 5 F12 gate proof and test
+- [x] Step 5 F12 gate proof (scratch Neon databases, exit 1 then exit 0) and test
 - [ ] Step 6 README, readme_results.py, architecture diagram, LICENSE
 - [ ] Step 7 secret scan, GO_PUBLIC_CHECKLIST.md
 - [ ] Step 8 targeted tests, b0_regression, push, CI, notes
