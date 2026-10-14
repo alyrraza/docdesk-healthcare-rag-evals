@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 
 from docdesk.core import clock
 from docdesk.db.models.evals import EvalResultRow, EvalRunRow
+from docdesk.evals.identity import RunIdentityMismatch, differing_keys
 
 
 def open_run(
@@ -20,8 +21,12 @@ def open_run(
     split: str,
     git_sha: str,
     label: str | None = None,
+    identity: dict[str, Any] | None = None,
 ) -> EvalRunRow:
-    """Continue the newest unfinished run of the same setup, or start a new one.
+    """Continue the unfinished run with the same identity, or start a new one.
+
+    A run stored without an identity (legacy) is never continued. An unfinished run of the same
+    config whose pins differ is refused, not skipped, so a changed judge cannot mix into it.
 
     A retrieval only run has no prompt bundle (None), so it never continues a full run.
     The label is stored only on a new run; a continued run keeps the label it started with.
@@ -40,11 +45,19 @@ def open_run(
             EvalRunRow.finished_at.is_(None),
         )
         .order_by(EvalRunRow.started_at.desc())
-        .limit(1)
     )
-    found = session.execute(unfinished).scalar_one_or_none()
-    if found is not None:
-        return found
+    wanted = identity or {}
+    for candidate in session.execute(unfinished).scalars():
+        if candidate.identity is None:
+            continue
+        wrong = differing_keys(candidate.identity, wanted)
+        if not wrong:
+            return candidate
+        if wrong == ["items"]:
+            continue  # another item set is another run, never a continuation
+        raise RunIdentityMismatch(
+            f"unfinished run {candidate.id} was started with other {', '.join(wrong)}"
+        )
     run = EvalRunRow(
         config_id=config_id,
         prompt_bundle_id=bundle_id,
@@ -52,6 +65,7 @@ def open_run(
         started_at=clock.utc_now(),
         git_sha=git_sha,
         label=label,
+        identity=identity,
     )
     session.add(run)
     session.flush()
@@ -59,9 +73,19 @@ def open_run(
 
 
 def written_item_ids(session: Session, run_id: uuid.UUID) -> set[str]:
-    """Items that already have a result row; a rerun skips exactly these."""
-    rows = session.execute(select(EvalResultRow.item_id).where(EvalResultRow.run_id == run_id))
-    return set(rows.scalars())
+    """Items with a finished result row; a rerun skips exactly these and retries not scored ones."""
+    query = select(EvalResultRow.item_id, EvalResultRow.metrics)
+    rows = session.execute(query.where(EvalResultRow.run_id == run_id))
+    return {item for item, metrics in rows if metrics.get("status") != "not_scored"}
+
+
+def parse_failed_items(metrics_by_item: dict[str, dict[str, Any]]) -> dict[str, list[str]]:
+    """Why: a resumed run must report earlier parse failures too, so they come from stored rows."""
+    def failed(judge: str) -> list[str]:
+        status = f"{judge}_status"
+        return sorted(i for i, m in metrics_by_item.items() if m.get(status) == "parse_failed")
+
+    return {judge: failed(judge) for judge in ("faithfulness", "correctness")}
 
 
 def add_result(
@@ -72,9 +96,10 @@ def add_result(
     failure_label: str | None,
     trace: dict[str, Any],
     usage: list[dict[str, Any]] | None = None,
+    latency: dict[str, Any] | None = None,
 ) -> None:
-    """Write one item's row at once, so an interruption never loses a finished item."""
-    session.add(
+    """Write one item's row at once; a retry replaces the earlier not scored row of that item."""
+    session.merge(
         EvalResultRow(
             run_id=run_id,
             item_id=item_id,
@@ -82,6 +107,7 @@ def add_result(
             failure_label=failure_label,
             trace=trace,
             usage=usage,
+            latency=latency,
         )
     )
     session.flush()

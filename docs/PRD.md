@@ -97,6 +97,7 @@ advice, multi-turn conversation memory, real-time streaming answers.
 - AC-EVL-05: THE report SHALL show a bootstrap confidence interval for every headline metric.
 - AC-EVL-06: WHEN a gated metric regresses beyond tolerance against the stored baseline THE CI job SHALL fail.
 - AC-EVL-07: THE calibration report SHALL show raw agreement, Cohen's kappa and a bootstrap interval for each judge.
+- AC-EVL-08: THE runner SHALL tie every run to its config, prompts, judge model and item set, and SHALL refuse to start or resume a run whose pins differ.
 
 ## Frontend
 - AC-FE-01: THE user SHALL be able to register, log in and log out.

@@ -10,6 +10,7 @@ from docdesk.evals.report_data import (
     MetricCell,
     Report,
 )
+from docdesk.evals.report_latency import latency_lines
 from docdesk.evals.report_sections_md import (
     headline_lines,
     outcome_lines,
@@ -32,6 +33,9 @@ def format_cell(cell: MetricCell, category_n: int) -> str:
     if cell.interval is None:
         return "n/a"
     i = cell.interval
+    if i.low == i.high:
+        text = f"{i.estimate:.2f} (all values equal)"
+        return text if cell.n == category_n else f"{text} (n={cell.n})"
     text = f"{i.estimate:.2f} [{i.low:.2f}, {i.high:.2f}]"
     return text if cell.n == category_n else f"{text} (n={cell.n})"
 
@@ -48,6 +52,19 @@ def counts_section(title: str, counts: dict[str, int], empty: str) -> list[str]:
     ordered = sorted(counts.items(), key=lambda pair: (-pair[1], pair[0]))
     rows = [[name, str(count)] for name, count in ordered]
     return [f"## {title}", "", *table(["label", "items"], rows), ""]
+
+
+def not_scored_lines(report: Report) -> list[str]:
+    """Items lost to a provider error, shown apart from the pass rate and from every n."""
+    if not report.not_scored:
+        return []
+    items = [f"- {item_id}: {reason}" for item_id, reason in report.not_scored]
+    return [
+        "## Not scored (provider error)", "",
+        f"{len(report.not_scored)} items had no answer because the model call failed. They are "
+        "left out of every rate and every n. Run the same command again to retry them.", "",
+        *items, "",
+    ]
 
 
 def report_markdown(report: Report) -> str:
@@ -72,6 +89,14 @@ def report_markdown(report: Report) -> str:
             ["wrong refusal", str(a.wrong_refusal)], ["missed refusal", str(a.missed_refusal)],
             ["system errors", str(a.errors)],
         ]), "",
+        "Abstention precision is the share of right abstains among abstains on items that are not "
+        "refusal items. Abstention recall is the share of abstain items that abstained. The "
+        "interval resamples items.", "",
+        *table(["rate", "items", "value"], [
+            [name, str(c.n), format_cell(c, c.n)]
+            for name, c in (("abstention precision", report.abstain_rates["abstain_precision"]),
+                            ("abstention recall", report.abstain_rates["abstain_recall"]))
+        ]), "",
         *counts_section("Failure labels", report.failure_labels, "No failed items."),
     ]
     failures = {f"{judge}: {kind}": n for judge, kinds in report.judge_failures.items()
@@ -83,7 +108,9 @@ def report_markdown(report: Report) -> str:
         f"cost {report.cost_usd} USD, model calls {report.llm_calls}, "
         f"cache hits {report.cache_hits}. Runs stored before T098b count judge cache hits only.",
         "",
-        *usage_lines(report), *stage_lines(report), *outcome_lines(report), *worst_lines(report),
+        *usage_lines(report), *latency_lines(report.run.records), *stage_lines(report),
+        *outcome_lines(report), *worst_lines(report),
+        *not_scored_lines(report),
         "## Not run", "",
     ]
     if report.not_run:
@@ -105,6 +132,10 @@ def compare_markdown(result: Comparison) -> str:
                      f"[{p.low:+.3f}, {p.high:+.3f}]", p.verdict])
     lines = [
         f"# Comparison, candidate {result.candidate_id} against baseline {result.baseline_id}", "",
+        *[f"WARNING: {w}." for w in result.warnings],
+        *([""] if result.warnings else []),
+        *[f"Note: {n}." for n in result.notes],
+        *([""] if result.notes else []),
         f"Paired on {result.shared} shared items. Difference is candidate minus baseline, "
         f"95 percent bootstrap interval, {RESAMPLES} resamples, seed {SEED}.", "",
         *table(["metric", "items", "difference", "interval", "verdict"], rows), "",

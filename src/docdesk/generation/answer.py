@@ -35,14 +35,30 @@ class Attempt:
     llm_error: LLMError | None = None
 
 
-def to_request(rendered: RenderedPrompt, prompt: PromptFile, model: str) -> LLMRequest:
-    """Combine the rendered text with the sampling settings stored in the prompt file."""
+def to_request(
+    rendered: RenderedPrompt,
+    prompt: PromptFile,
+    model: str,
+    *,
+    temperature: float | None = None,
+    max_output_tokens: int | None = None,
+) -> LLMRequest:
+    """Combine the rendered text with the sampling settings of the prompt file.
+
+    An eval config can override the two settings; None keeps what the prompt file says.
+    """
     return LLMRequest(
         system=rendered.system,
         user=rendered.user,
         model=model,
-        temperature=float(prompt.params.get("temperature", 0)),
-        max_output_tokens=int(prompt.params.get("max_output_tokens", 600)),
+        temperature=float(
+            prompt.params.get("temperature", 0) if temperature is None else temperature
+        ),
+        max_output_tokens=int(
+            prompt.params.get("max_output_tokens", 600)
+            if max_output_tokens is None
+            else max_output_tokens
+        ),
     )
 
 
@@ -82,6 +98,8 @@ def generate_answer(
     model: str,
     abstain_policy: AbstainPolicy,
     max_per_document: int = 2,
+    temperature: float | None = None,
+    max_output_tokens: int | None = None,
 ) -> AnswerResult:
     """Answer from the retrieved chunks, or abstain; never raises for a model problem."""
     reason = abstain_reason(retrieval, abstain_policy)
@@ -97,12 +115,14 @@ def generate_answer(
 
     variables = {"evidence": evidence.evidence_text, "question": question}
     started = time.perf_counter()
-    first = try_once(llm, to_request(render(prompt, variables), prompt, model), evidence)
+    sampling = {"temperature": temperature, "max_output_tokens": max_output_tokens}
+    request = to_request(render(prompt, variables), prompt, model, **sampling)
+    first = try_once(llm, request, evidence)
     attempts = [first]
     if first.error is not None:
         assert first.llm is not None
         retry = repair_prompt(prompt, variables, first.llm.text, first.error)
-        attempts.append(try_once(llm, to_request(retry, prompt, model), evidence))
+        attempts.append(try_once(llm, to_request(retry, prompt, model, **sampling), evidence))
         result.retry_used = True
     result.stage_ms["generate"] = (time.perf_counter() - started) * 1000.0
     account(result, attempts)

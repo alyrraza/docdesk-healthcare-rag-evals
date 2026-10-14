@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import time
 import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -20,6 +21,7 @@ from docdesk.evals.golden.loader import (
     gold_sets,
     load_golden,
 )
+from docdesk.evals.identity import build_identity
 from docdesk.evals.judges.kit import JudgeKit
 from docdesk.evals.pipeline import Pipeline
 from docdesk.evals.preflight import check_run_allowed
@@ -31,6 +33,8 @@ log = logging.getLogger(__name__)
 
 NOT_RUN_FIXTURE = "not run, needs T122"
 NOT_RUN_ROUTE = "not run, needs the router and SQL branch"
+# error_code values that mean the provider call failed, not that the system answered badly.
+PROVIDER_ERRORS = ("llm_timeout", "llm_rate_limited", "llm_error")
 
 
 @dataclass(frozen=True)
@@ -58,6 +62,7 @@ class RunSummary:
     ran: int = 0
     skipped_done: int = 0
     not_run: int = 0
+    not_scored: int = 0
     finished: bool = False
     parse_failures: dict[str, list[str]] = field(default_factory=dict)
 
@@ -94,7 +99,7 @@ def run_bundle_id(config: EvalConfig, prompt: PromptFile) -> str:
         prompt.version,
         prompt.content_hash,
         config.values["models"]["generator"],
-        prompt.params,
+        {**prompt.params, **config.generation_params()},
         prompt.schema,
         config.retrieval_config().config_id,
     )
@@ -117,7 +122,7 @@ def run_eval(
         raise SplitLockedError("the test split is for final reports only, pass allow_test=True")
     if kit is None and not options.retrieval_only:
         raise ValueError("a full run needs the judges; pass kit or use retrieval_only")
-    check_run_allowed(config, answer_prompt, FingerprintRepository(session).read())
+    check_run_allowed(config, answer_prompt, FingerprintRepository(session).read(), kit)
     loaded = load_golden(golden_dir, options.split, corpus, allow_test=options.allow_test)
     items = sorted(select_items(loaded, options.items), key=lambda resolved: resolved.item.id)
     bundle = None if options.retrieval_only else run_bundle_id(config, answer_prompt)
@@ -128,6 +133,7 @@ def run_eval(
         split=options.split,
         git_sha=options.git_sha,
         label=options.label,
+        identity=build_identity(config, kit, [r.item.id for r in items]),
     )
     done = run_store.written_item_ids(session, run.id)
     summary = RunSummary(run.id, total=len(items))
@@ -147,24 +153,35 @@ def run_eval(
             run_store.add_result(session, run.id, item_id, metrics, None, meta)
             summary.not_run += 1
         else:
+            started = time.perf_counter()
             output = pipeline.run(resolved.item.question, retrieval_only=options.retrieval_only)
+            if output.error_code in PROVIDER_ERRORS:
+                metrics = {"status": "not_scored", "reason": output.error_code,
+                           "type": resolved.item.type}
+                run_store.add_result(session, run.id, item_id, metrics, None, meta)
+                summary.not_scored += 1
+                if options.commit:
+                    session.commit()
+                continue
             score = score_item(resolved, gold_sets(resolved, corpus), output, kit, top_k)
             trace = {**meta, **score.trace}
             label = score.failure_label
+            total_ms = (time.perf_counter() - started) * 1000.0
             run_store.add_result(
-                session, run.id, item_id, score.metrics, label, trace, score.usage
+                session, run.id, item_id, score.metrics, label, trace, score.usage,
+                {**score.latency, "total_ms": total_ms},
             )
             summary.ran += 1
         if options.commit:
             session.commit()
-    run_store.finish_run(session, run)
+    complete = run_store.written_item_ids(session, run.id)
+    summary.finished = all(r.item.id in complete for r in items)
+    if summary.finished:
+        run_store.finish_run(session, run)
     if options.commit:
         session.commit()
-    summary.finished = True
     if kit is not None:
-        summary.parse_failures = {
-            "faithfulness": kit.faithfulness_parser.failures,
-            "correctness": kit.correctness_parser.failures,
-        }
+        stored = {r.item_id: r.metrics for r in run_store.results_of(session, run.id)}
+        summary.parse_failures = run_store.parse_failed_items(stored)
     log.info("run %s: %s", run.id, summary)
     return summary

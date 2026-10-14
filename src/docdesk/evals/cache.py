@@ -10,11 +10,12 @@ from dataclasses import replace
 from decimal import Decimal
 from pathlib import Path
 
+from docdesk.evals.paths import LLM_CACHE_DIR
 from docdesk.llm.client import LLMClient, LLMRequest, LLMResult
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_CACHE_DIR = Path(".cache/llm")
+DEFAULT_CACHE_DIR = LLM_CACHE_DIR
 
 
 def cache_key(request: LLMRequest) -> str:

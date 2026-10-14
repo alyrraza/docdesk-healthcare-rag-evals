@@ -65,6 +65,7 @@ class LivePipeline:
             outcome=None,
             candidate_ids=[str(c.chunk_id) for c in wide.chunks],
             retrieved_ids=[str(c.chunk_id) for c in top.chunks],
+            timings_ms={"retrieval": wide.timings_ms.get("total", 0.0)},
         )
         if retrieval_only:
             return output
@@ -86,6 +87,8 @@ class LivePipeline:
             model=values["models"]["generator"],
             abstain_policy=AbstainPolicy({}, default=values["abstain"]["threshold"]),
             max_per_document=values["packer"]["max_per_document"],
+            temperature=values["models"]["temperature"],
+            max_output_tokens=values["models"]["max_output_tokens"],
         )
         used = {chunk_id: n for n, chunk_id in enumerate(result.used_ids, start=1)}
         packed_chunks = sorted(
@@ -100,8 +103,10 @@ class LivePipeline:
             format_item(f"c{n}", chunk) for n, chunk in enumerate(packed_chunks, start=1)
         )
         output.abstain_reason = result.output.abstain_reason
+        output.error_code = result.error_code
         output.tokens_in, output.tokens_out = result.tokens_in, result.tokens_out
         output.cost_usd, output.llm_calls = result.cost_usd, result.llm_calls
         output.calls = list(result.calls)
+        output.timings_ms["generation"] = result.stage_ms.get("generate", 0.0)
         output.cache_hits = sum(1 for call in result.calls if call.cache_hit)
         return output

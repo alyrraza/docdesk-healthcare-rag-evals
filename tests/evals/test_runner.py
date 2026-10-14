@@ -25,6 +25,7 @@ pytestmark = pytest.mark.integration
 
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = load_eval_config(ROOT / "evals" / "configs" / "b0.toml")
+JUDGE_MODEL = CONFIG.values["models"]["judge"]
 PROMPT = load_prompt(ROOT / "prompts" / "answer" / "answer.v1.md")
 FAITH_OK = json.dumps({"claims": [{"claim": "c", "label": "supported", "evidence_id": "c1"}]})
 CORRECT_OK = json.dumps({"key_points": [{"point": 1, "label": "covered"}]})
@@ -39,7 +40,7 @@ def session(db_session: Session) -> Session:
 
 def go(session: Session, tmp_path: Path, pipeline, client, options: RunOptions = OPTIONS,
        prompt=PROMPT):
-    kit = None if options.retrieval_only else load_judge_kit(ROOT / "prompts", client, "judge-x")
+    kit = None if options.retrieval_only else load_judge_kit(ROOT / "prompts", client, JUDGE_MODEL)
     summary = run_eval(
         config=CONFIG, answer_prompt=prompt, session=session, corpus=FakeGoldenCorpus(),
         golden_dir=write_golden(tmp_path / "golden"), pipeline=pipeline, kit=kit, options=options,
@@ -64,7 +65,7 @@ def test_ac_evl_03_runner_01_end_to_end_with_fake_pipeline_and_judges(session, t
     assert stored["gi-002"].metrics["outcome"] == "abstained" and stored["gi-002"].metrics["passed"]
     assert stored["gi-003"].metrics["outcome"] == "refused" and stored["gi-003"].metrics["passed"]
     assert len(client.requests) == 2  # abstain and refuse items cost no judge call
-    assert all(request.model == "judge-x" for request in client.requests)
+    assert all(request.model == JUDGE_MODEL for request in client.requests)
     run = session.get(EvalRunRow, summary.run_id)
     assert run.finished_at is not None and run.config_id == "b0" and run.prompt_bundle_id
 

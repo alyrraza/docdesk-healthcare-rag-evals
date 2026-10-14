@@ -28,6 +28,7 @@ from fakes.llm import FakeLLMClient
 
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = load_eval_config(ROOT / "evals" / "configs" / "b0.toml")
+JUDGE_MODEL = CONFIG.values["models"]["judge"]
 PROMPT = load_prompt(ROOT / "prompts" / "answer" / "answer.v1.md")
 FAITH_OK = json.dumps({"claims": [{"claim": "c", "label": "supported", "evidence_id": "c1"}]})
 CORRECT_OK = json.dumps({"key_points": [{"point": 1, "label": "covered"}]})
@@ -62,7 +63,7 @@ def test_ac_evl_04_usage_11_runner_stores_one_usage_entry_per_call(
     pipeline = FakePipeline()
     call = CallUsage("gen-m", 100, 20, Decimal("0.5"), False)
     pipeline.outputs[good_answer_question()].calls = [call]
-    kit = load_judge_kit(ROOT / "prompts", HitClient([FAITH_OK, CORRECT_OK]), "judge-x")
+    kit = load_judge_kit(ROOT / "prompts", HitClient([FAITH_OK, CORRECT_OK]), JUDGE_MODEL)
     summary = run_eval(
         config=CONFIG, answer_prompt=PROMPT, session=db_session, corpus=FakeGoldenCorpus(),
         golden_dir=write_golden(tmp_path / "golden"), pipeline=pipeline, kit=kit,
@@ -74,8 +75,8 @@ def test_ac_evl_04_usage_11_runner_stores_one_usage_entry_per_call(
     by_item = {row.item_id: row for row in rows}
     calls = by_item["gi-001"].usage
     assert [(c["role"], c["model"], c["cache_hit"]) for c in calls] == [
-        ("generator", "gen-m", False), ("faithfulness", "judge-x", True),
-        ("correctness", "judge-x", True)]
+        ("generator", "gen-m", False), ("faithfulness", JUDGE_MODEL, True),
+        ("correctness", JUDGE_MODEL, True)]
     assert calls[0]["tokens_in"] == 100 and calls[0]["cost_usd"] == "0.5"
     assert by_item["gi-003"].usage == []  # a refusal made no model call
     assert by_item["gi-004"].usage is None  # not run: nothing was measured
@@ -132,7 +133,7 @@ def test_ac_evl_04_usage_15_stored_usage_is_loaded_back_into_the_run_data(
     db_session: Session, tmp_path: Path
 ) -> None:
     FingerprintRepository(db_session).write(CONFIG.corpus_fingerprint())
-    kit = load_judge_kit(ROOT / "prompts", FakeLLMClient([FAITH_OK, CORRECT_OK]), "judge-x")
+    kit = load_judge_kit(ROOT / "prompts", FakeLLMClient([FAITH_OK, CORRECT_OK]), JUDGE_MODEL)
     summary = run_eval(
         config=CONFIG, answer_prompt=PROMPT, session=db_session, corpus=FakeGoldenCorpus(),
         golden_dir=write_golden(tmp_path / "golden"), pipeline=FakePipeline(), kit=kit,

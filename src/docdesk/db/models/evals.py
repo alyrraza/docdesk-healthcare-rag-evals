@@ -26,6 +26,8 @@ class EvalRunRow(Base):
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     git_sha: Mapped[str] = mapped_column(String(40), nullable=False)
     label: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    # Config hash, judge model and prompt hashes, corpus fingerprint; None for a legacy run.
+    identity: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
 
 
 class EvalResultRow(Base):
@@ -42,3 +44,5 @@ class EvalResultRow(Base):
     trace: Mapped[dict] = mapped_column(JSONB, nullable=False)
     # One entry per model call of this item (T098b); None when nothing was measured.
     usage: Mapped[list | None] = mapped_column(JSONB, nullable=True)
+    # Stage timings and a cache flag of this item (F4); None before migration 0017.
+    latency: Mapped[dict | None] = mapped_column(JSONB, nullable=True)

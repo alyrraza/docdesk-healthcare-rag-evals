@@ -26,7 +26,9 @@ from docdesk.evals.cli_check import answer_prompt_for, check_all
 from docdesk.evals.config import EvalConfig, PromptPinMismatch, load_eval_config
 from docdesk.evals.golden.corpus import GoldenCorpus
 from docdesk.evals.golden.loader import SplitLockedError
+from docdesk.evals.identity import JudgePinMismatch, RunIdentityMismatch
 from docdesk.evals.judges.kit import JudgeKit
+from docdesk.evals.paths import DEFAULT_CONFIG, GOLDEN_DIR, PROMPTS_DIR
 from docdesk.evals.pipeline import Pipeline
 from docdesk.evals.preflight import FingerprintMismatch
 from docdesk.evals.report import compare_markdown, report_markdown
@@ -36,7 +38,14 @@ from docdesk.evals.run_store import latest_run_id
 from docdesk.evals.runner import RunOptions, UnknownItemsError, run_eval
 from docdesk.prompts.loader import PromptFile
 
-REFUSALS = (SplitLockedError, FingerprintMismatch, PromptPinMismatch, UnknownItemsError)
+REFUSALS = (
+    SplitLockedError,
+    FingerprintMismatch,
+    PromptPinMismatch,
+    UnknownItemsError,
+    JudgePinMismatch,
+    RunIdentityMismatch,
+)
 
 
 @dataclass
@@ -47,8 +56,8 @@ class Runtime:
     corpus_for: Callable[[Session], GoldenCorpus]
     pipeline_for: Callable[[Session, EvalConfig, PromptFile, bool], Pipeline]
     judge_kit_for: Callable[[EvalConfig], JudgeKit]
-    golden_dir: Path = Path("evals/golden")
-    prompts_dir: Path = Path("prompts")
+    golden_dir: Path = GOLDEN_DIR
+    prompts_dir: Path = PROMPTS_DIR
     git_sha: str = "unknown"
     commit: bool = True
     # Where the cache entries are read back for the tokens per model table of the report.
@@ -63,7 +72,7 @@ def item_ids(text: str) -> tuple[str, ...]:
 def build_parser() -> argparse.ArgumentParser:
     """The four commands and their options."""
     parser = argparse.ArgumentParser(prog="docdesk.evals.cli", description=__doc__.splitlines()[0])
-    parser.add_argument("--config", type=Path, default=Path("evals/configs/b0.toml"))
+    parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("check", help="validate config, fingerprint, prompts, golden set")
     run = commands.add_parser("run", help="run the verified items of one split")
@@ -119,7 +128,8 @@ def cmd_run(rt: Runtime, args: argparse.Namespace) -> int:
             return 1
     print(
         f"run {summary.run_id}: ran {summary.ran}, skipped (already done) {summary.skipped_done}, "
-        f"not run {summary.not_run}, of {summary.total} verified {args.split} items"
+        f"not run {summary.not_run}, not scored (provider error) {summary.not_scored}, "
+        f"of {summary.total} verified {args.split} items"
     )
     for judge, failures in summary.parse_failures.items():
         print(f"judge {judge}: {len(failures)} parse failures")

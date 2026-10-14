@@ -15,11 +15,14 @@ import time
 import uuid
 from pathlib import Path
 
-from docdesk.api.query_deps import build_counter, build_encoder, build_llm
+from docdesk.api.query_deps import build_counter, build_encoder
 from docdesk.core.config import get_settings
 from docdesk.core.ids import new_trace_id
 from docdesk.db.repositories.users import UserRepository
 from docdesk.db.session import default_session_factory
+from docdesk.evals.cli_runtime import llm_stack_for
+from docdesk.evals.config import load_eval_config
+from docdesk.evals.paths import DEFAULT_CONFIG
 from docdesk.prompts.registry import NoActivePromptError, activate, get_active, sync_prompts
 from docdesk.query.service import answer_question
 
@@ -36,7 +39,7 @@ QUESTIONS = [
     "What dose of famotidine should I take for my stomach pain?",
 ]
 PAUSE_SECONDS = 20  # the free tier allows 8000 tokens per minute per model
-OUT = Path(".cache/smoke/smoke_llm.json")
+OUT = Path(".cache/smoke/smoke_llm.json")  # not a result, so the working folder is fine
 
 
 def main() -> None:
@@ -44,7 +47,11 @@ def main() -> None:
     settings = get_settings()
     if settings.groq_api_key is None or not settings.groq_api_key.get_secret_value():
         raise SystemExit("GROQ_API_KEY is missing in .env, the smoke test is blocked")
-    llm = build_llm(settings.groq_api_key.get_secret_value())
+    # The same cache, budget guard and pacer as an eval run, so smoke spend is counted too.
+    config = load_eval_config(DEFAULT_CONFIG)
+    if settings.generator_model != config.values["models"]["generator"]:
+        raise SystemExit("generator_model differs from the config, the guard would miss it")
+    llm = llm_stack_for(config)
     encoder, counter = build_encoder(settings.model_dir), build_counter(settings.model_dir)
     results = []
     with default_session_factory()() as session:

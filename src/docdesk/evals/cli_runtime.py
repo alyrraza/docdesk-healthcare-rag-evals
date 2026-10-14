@@ -20,16 +20,13 @@ from docdesk.evals.config import EvalConfig
 from docdesk.evals.golden.corpus import DatabaseCorpus, GoldenCorpus
 from docdesk.evals.judges.kit import JudgeKit, load_judge_kit
 from docdesk.evals.live_pipeline import LivePipeline
+from docdesk.evals.paths import LEDGER_PATH, PROMPTS_DIR
 from docdesk.evals.pipeline import Pipeline
 from docdesk.evals.stack import build_llm_stack
 from docdesk.ingestion.filestore import LocalFileStore
 from docdesk.llm.client import LLMClient
-from docdesk.llm.pacer import GROQ_FREE_LIMITS, Pacer
+from docdesk.llm.pacer import Pacer
 from docdesk.prompts.loader import PromptFile
-
-LEDGER_PATH = Path(".cache/ledger.json")
-# Groq free tier, per model per day (evals.md, measured 2026-10-13). The guard stops at 85 percent.
-GROQ_DAILY_TOKENS = 200_000
 
 
 def git_sha() -> str:
@@ -56,8 +53,9 @@ def new_stack(config: EvalConfig) -> LLMClient:
     if key is None or not key.get_secret_value():
         raise SystemExit("GROQ_API_KEY is missing in .env, a full run cannot call a model")
     models = {config.values["models"]["generator"], config.values["models"]["judge"]}
-    ledger = TokenLedger(LEDGER_PATH, {model: GROQ_DAILY_TOKENS for model in models})
-    pacer = Pacer({model: GROQ_FREE_LIMITS for model in models})
+    limits = {model: config.model_limits(model) for model in models}
+    ledger = TokenLedger(LEDGER_PATH, {model: daily for model, (daily, _) in limits.items()})
+    pacer = Pacer({model: per_minute for model, (_, per_minute) in limits.items()})
     return build_llm_stack(build_llm(key.get_secret_value()), ledger=ledger, pacer=pacer)
 
 
@@ -80,7 +78,7 @@ def pipeline_for(
 
 def judge_kit_for(config: EvalConfig) -> JudgeKit:
     """Judges read their model id from the pinned config."""
-    return load_judge_kit(Path("prompts"), llm_stack_for(config), config.values["models"]["judge"])
+    return load_judge_kit(PROMPTS_DIR, llm_stack_for(config), config.values["models"]["judge"])
 
 
 def corpus_for(session: Session) -> GoldenCorpus:

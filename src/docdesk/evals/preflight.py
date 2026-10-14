@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from docdesk.db.repositories.fingerprint import CorpusFingerprint, differences
 from docdesk.evals.config import EvalConfig
+from docdesk.evals.identity import check_judge_pins
+from docdesk.evals.judges.kit import JudgeKit
 from docdesk.prompts.loader import PromptFile
 
 
@@ -27,8 +29,13 @@ def check_fingerprint(config: EvalConfig, stored: CorpusFingerprint | None) -> N
 
 
 def check_run_allowed(
-    config: EvalConfig, answer_prompt: PromptFile, stored: CorpusFingerprint | None
+    config: EvalConfig,
+    answer_prompt: PromptFile,
+    stored: CorpusFingerprint | None,
+    kit: JudgeKit | None = None,
 ) -> None:
     """Refuse a run whose numbers would not describe the pinned config."""
     check_fingerprint(config, stored)
     config.check_prompt(answer_prompt)
+    if kit is not None:
+        check_judge_pins(config, kit)

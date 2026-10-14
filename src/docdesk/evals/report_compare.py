@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
+from docdesk.evals.identity import identity_warnings
 from docdesk.evals.report_data import RESAMPLES, SEED, ResultRecord, RunData, value_of
 from docdesk.evals.stats import PairedResult, paired_comparison
 
@@ -29,6 +30,10 @@ class Comparison:
     only_baseline: list[str]
     only_candidate: list[str]
     rows: list[ComparisonRow]
+    # Why the two runs may not be comparable (split, mode, judge, corpus); shown above the table.
+    warnings: list[str] = field(default_factory=list)
+    # Facts that are not differences, such as a legacy identity read from row traces.
+    notes: list[str] = field(default_factory=list)
 
 
 def compare_runs(baseline: RunData, candidate: RunData) -> Comparison:
@@ -52,7 +57,15 @@ def compare_runs(baseline: RunData, candidate: RunData) -> Comparison:
             n_resamples=RESAMPLES, seed=SEED,
         )
         rows.append(ComparisonRow(metric, len(both), paired))
+    warnings = identity_warnings(baseline.identity, candidate.identity)
+    if baseline.split != candidate.split:
+        warnings.insert(0, f"split differs: {baseline.split} against {candidate.split}")
+    if baseline.mode != candidate.mode:
+        warnings.insert(0, f"mode differs: {baseline.mode} against {candidate.mode}")
+    notes = [f"run {data.run_id} has a legacy identity, read from its row traces"
+             for data in (baseline, candidate) if (data.identity or {}).get("legacy")]
     return Comparison(
         baseline.run_id, candidate.run_id, len(shared),
         sorted(base.keys() - cand.keys()), sorted(cand.keys() - base.keys()), rows,
+        warnings, notes,
     )

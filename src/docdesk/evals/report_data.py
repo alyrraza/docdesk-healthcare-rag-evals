@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 
 from docdesk.db.models.evals import EvalRunRow
 from docdesk.evals import run_store
+from docdesk.evals.identity import legacy_identity
 from docdesk.evals.metrics.abstention import AbstentionCounts, count_cells
 from docdesk.evals.report_usage import ModelUsage, usage_from_records
 from docdesk.evals.stats import (
@@ -31,6 +32,7 @@ METRICS = (
     "pass_rate", "recall", "hit", "mrr", "context_precision",
     "citation_precision", "citation_recall", "faithfulness", "correctness",
 )
+ABSTAIN_RATES = ("abstain_precision", "abstain_recall")
 # Judge statuses that are not failures. Anything else (parse_failed or an error name) is counted.
 JUDGE_OK = (None, "scored", "no_claims", "skipped", "decided_by_code")
 
@@ -46,6 +48,8 @@ class ResultRecord:
     trace: dict[str, Any] = field(default_factory=dict)
     # Per call token entries of this run (T098b); None for rows stored before that existed.
     usage: list[dict[str, Any]] | None = None
+    # Stage timings and a cache flag (F4); None for rows stored before they were recorded.
+    latency: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -57,6 +61,8 @@ class RunData:
     split: str
     mode: str
     records: list[ResultRecord]
+    # Config hash, judge pins, item set; None when nothing is known about the run.
+    identity: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -86,12 +92,16 @@ class Report:
     failure_labels: dict[str, int]
     judge_failures: dict[str, dict[str, int]]
     abstention: AbstentionCounts
+    # Abstention precision and recall as per item rates with an interval (None cell: no items).
+    abstain_rates: dict[str, MetricCell] = field(default_factory=dict)
     tokens_in: int = 0
     tokens_out: int = 0
     cost_usd: Decimal = Decimal("0")
     cache_hits: int = 0
     llm_calls: int = 0
     not_run: list[tuple[str, str]] = field(default_factory=list)
+    # Items whose generator call failed at the provider: not scored, not in any n.
+    not_scored: list[tuple[str, str]] = field(default_factory=list)
     total_ok: int = 0
     # None when the run was stored before per call usage existed (never guessed).
     model_usage: list[ModelUsage] | None = None
@@ -99,10 +109,23 @@ class Report:
 
 def value_of(record: ResultRecord, metric: str) -> float | None:
     """One metric of one item; pass_rate turns the passed flag into 1.0 or 0.0."""
+    if metric in ABSTAIN_RATES:
+        return abstain_value(record, metric)
     if metric == "pass_rate":
         passed = record.metrics.get("passed")
         return None if passed is None else float(passed)
     return record.metrics.get(metric)
+
+
+def abstain_value(record: ResultRecord, metric: str) -> float | None:
+    """1 or 0 for one item, None when the item is outside the rate's denominator."""
+    behavior, outcome = record.metrics.get("behavior"), record.metrics.get("outcome")
+    if metric == "abstain_recall":
+        return float(outcome == "abstained") if behavior == "abstain" else None
+    # precision: every abstain on an item that is not a refusal item; right when abstain expected
+    if outcome == "abstained" and behavior != "refuse":
+        return float(behavior == "abstain")
+    return None
 
 
 def cell(records: list[ResultRecord], metric: str) -> MetricCell:
@@ -146,6 +169,7 @@ def build_report(run: RunData) -> Report:
         failure_labels=dict(Counter(r.failure_label for r in ran if r.failure_label)),
         judge_failures=judge_failure_counts(ran),
         abstention=count_cells(pairs),
+        abstain_rates={m: cell(ran, m) for m in ABSTAIN_RATES},
         tokens_in=sum(r.metrics.get("tokens_in", 0) for r in ran),
         tokens_out=sum(r.metrics.get("tokens_out", 0) for r in ran),
         cost_usd=sum((Decimal(r.metrics.get("cost_usd", "0")) for r in ran), Decimal("0")),
@@ -153,6 +177,8 @@ def build_report(run: RunData) -> Report:
         llm_calls=sum(r.metrics.get("llm_calls", 0) for r in ran),
         not_run=[(r.item_id, r.metrics["reason"]) for r in run.records
                  if r.metrics.get("status") == "not_run"],
+        not_scored=[(r.item_id, r.metrics["reason"]) for r in run.records
+                    if r.metrics.get("status") == "not_scored"],
         total_ok=len(ran),
         model_usage=usage_from_records(run.records),
     )
@@ -163,7 +189,8 @@ def load_run_data(session: Session, run_id: uuid.UUID) -> RunData:
     run = session.get(EvalRunRow, run_id)
     if run is None:
         raise LookupError(f"no eval run with id {run_id}")
-    records = [ResultRecord(r.item_id, r.metrics, r.failure_label, r.trace, r.usage)
+    records = [ResultRecord(r.item_id, r.metrics, r.failure_label, r.trace, r.usage, r.latency)
                for r in run_store.results_of(session, run_id)]
     mode = next((r.metrics["mode"] for r in records if "mode" in r.metrics), "full")
-    return RunData(str(run.id), run.config_id, run.split, mode, records)
+    identity = run.identity or (legacy_identity(records) if records else None)
+    return RunData(str(run.id), run.config_id, run.split, mode, records, identity)
