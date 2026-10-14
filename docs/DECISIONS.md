@@ -538,3 +538,35 @@ Choices made while building the eval runner that the task text did not fix.
   means no claims; `--apply` and writing refuse to overwrite an existing sheet or labels.yaml (`--force` for the
   sheet only); dev runs only.
 - The T100 line in PLAN.md now says it joins judge labels and `labels.yaml` on run id, item id and answer hash.
+
+## 2026-10-14: synthetic calibration outputs (T099)
+- Why synthetic: the 30 natural outputs are almost all faithful, so a judge that calls everything supported would still
+  agree with Ali on nearly every one, and kappa on one class is unstable. A few outputs with a known flaw show whether
+  the judge can see a flaw at all. They are a sensitivity check, not a sample of how the system behaves.
+- How built, by code only, with a fixed seed (20261014) and no model call: 5 unsupported insertions and 5 omissions,
+  starting from the 30 natural outputs in `manifest.yaml`. Omission keeps only the first sentence of a multi_chunk answer
+  that has 2 or more sentences and 2 or more key points. Insertion appends one sentence behind the fixed connector
+  "In addition, ". Omissions are chosen first because fewer items qualify. No item is used twice in the whole set, and no
+  source document is used twice for insertions. Exactly 5 of each type qualified.
+- An inserted sentence comes from a chunk of an openFDA drug label of a different drug (a different label title) than
+  every chunk the answerer saw, and not from any chunk in that item's packed context. The drug name must not appear in
+  the question or the answer, or in the sentence itself. The sentence must hold a concrete claim: a dose (a number with
+  mg, mcg, g, ml or percent) or an "every N hours, days, weeks or months" schedule.
+- Sentence filters, added after reading the first builds: it starts with a common word (The, Patients, Doses, Dosage,
+  Treatment, Adults, Children, Pediatric) so it reads after the connector, 30 to 200 characters, ends in a stop, balanced
+  brackets, at most two capitalised words after the first, no word in capitals, no table symbol or dotted abbreviation,
+  no "see", table, figure, this, these, such, above, below, following, trial or study. Text with an em or en dash is never
+  used. Known limit: a sentence can still name a second drug or condition (for example lithium in an unrelated answer).
+- Blind sheet: `docs/calibration/sheet_synthetic.md` (git ignored) uses the same renderer and fields as the natural sheet
+  and shows the parent's question, packed context and key points. It never shows the type, the source document, a hash or
+  a judge field. Order is the seeded shuffle of the manifest, so manifest number n is the sheet number. The same judge
+  leak word list is tested against both sheets. Known tells that cannot be removed: the heading shows the parent item id,
+  so Ali may recognise a question from the natural sheet, and an insertion ends with the fixed connector.
+- Labels: `--apply --synthetic` writes `evals/calibration/labels_synthetic.yaml` (with the synthetic id) and never
+  overwrites it. The natural sheet still writes `labels.yaml`. The perturbation type exists only in the manifest.
+- Reported separately: natural and synthetic agreement are never pooled into one number. The synthetic outputs are
+  built to contain flaws, so pooling would mix a measured rate with a designed one and inflate kappa. The natural set
+  says how the judge does on the real mix, the synthetic set says whether it can detect a known flaw. The T100 report
+  states that natural faithfulness labels are almost all one class and kappa is unstable there.
+- Parent item ids repeat in the natural manifest (the same item from B0 and from calib_cap4). Items are never reused
+  inside the synthetic set, but a synthetic output may share an item with a natural one.
