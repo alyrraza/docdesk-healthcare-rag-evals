@@ -786,3 +786,10 @@ strict pass on answerable dev items. Every config tried is in `evals/results/pha
   this entry. The original one item rule (2026-10-14) is superseded for the FINAL choice by the first amendment.
 - **Consequence.** `evals/configs/final.toml` is a copy of `final_simple.toml` (only the id and a comment differ, a test
   proves it). `final_vs_b0.md` reports FINAL_SIMPLE against B0 and lists FINAL_FULL and top_k 8 as not completed.
+
+## 2026-10-15: FINAL frozen
+- FINAL is `evals/configs/final.toml`, committed at git 5dfffb2. It equals `final_simple.toml` except the id and one comment
+  (a test proves it): E5 per document cap 4 alone, everything else as B0.
+- Dev result: 19 of 30 strict pass against 15 for B0, paired interval [+0.033, +0.267]. `evals/results/final_vs_b0.md` reports
+  FINAL_SIMPLE against B0 and lists FINAL_FULL and top_k 8 as not completed.
+- From this commit no judge file, prompt file or FINAL config may change before the test split runs.
