@@ -3,6 +3,19 @@
 Newest first. Each entry: date, decision, why, what it supersedes. Specs older than their
 decisions are marked superseded in the spec file, so nobody builds from stale text.
 
+## 2026-10-14: label questions reuse the label's wording (owner review rounds 1 and 2)
+Decision: the golden questions about drug labels often repeat the wording of the label sentence that
+answers them, because the label is the only place that states the fact ("indicated for", "supplied as",
+"contraindicated in"). Keyword and hybrid retrieval therefore benefit more than they would with patient
+phrasing, and B0 numbers (dense) understate what E3 will show for keyword search. Read E3 with that in mind.
+- Parked idea (not built): a paraphrase subset written in patient language, to measure retrieval
+  when the question does not copy the source.
+- README limitation to write when the baseline is published: the golden questions are close to the
+  source wording, so lexical overlap helps.
+Round 2 rules from the same review: a question must not say "boxed warning" unless the quote does; a
+question about a list must be answerable from the quote (a list that continues past the quote is
+reported in `docs/golden_review/list_check.md`, local only); a quote that is not complete gets another fact.
+
 ## 2026-10-14: duplicate evidence, alt_sources and the lessons from the batch 1 review
 Decision: the golden loader now reports, for every evidence quote, each other corpus document whose
 cleaned text (whitespace folded) also holds it. An item with such a duplicate must either name its

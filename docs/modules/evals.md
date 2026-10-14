@@ -65,6 +65,9 @@ golden item never stores one. It points at evidence in the documents instead.
   (meaning preserved) are reported separately.
 - Answer correctness: judge labels each gold fact present or absent, plus a contradiction flag.
   Score = present / total.
+  Rubric for the correctness judge (T091, decided 2026-10-14): extra information that is supported by
+  the evidence is not an error. Only a missing key point or a contradiction of a gold fact counts against
+  the answer.
 - Citation accuracy: share of citations whose chunk supports the claim it is attached to.
 - Abstention: precision and recall on the unanswerable and adversarial items.
 - Structured: execution accuracy (the result set equals the gold result), router accuracy.
