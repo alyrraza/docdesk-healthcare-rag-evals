@@ -570,3 +570,16 @@ Choices made while building the eval runner that the task text did not fix.
   states that natural faithfulness labels are almost all one class and kappa is unstable there.
 - Parent item ids repeat in the natural manifest (the same item from B0 and from calib_cap4). Items are never reused
   inside the synthetic set, but a synthetic output may share an item with a natural one.
+
+## 2026-10-14: calibration labels are Claude drafts until Ali reviews them
+- The author asked for drafted labels to save time. Claude drafted `labels.yaml` and `labels_synthetic.yaml` in the
+  planning chat from the blind sheets. Ali has not reviewed them item by item.
+- Provenance in both files: `labeled_by: claude`, `labeled_on: 2026-10-14`, `provenance: drafted by claude on
+  2026-10-14, review by ali pending`, `reviewed_by: pending`. The apply script writes this with `--draft`, where `--by`
+  names the reviewer. The earlier value `labeled_by: ali` overstated it. Only these header lines were changed, no label.
+- 8 borderline items are marked for Ali's review: outputs 8, 16, 20, 22, 25, 27 in `sheet.md` and outputs 7, 8 in
+  `sheet_synthetic.md`.
+- Until the review is done, no document may call the labels hand labeled or human reviewed. The T100 report states in
+  one plain sentence at the top that the agreement numbers measure the judge against Claude drafted labels.
+- When Ali finishes the review, `reviewed_by` becomes `ali`, changed labels keep the draft value in the git history,
+  and T100 is re-run.

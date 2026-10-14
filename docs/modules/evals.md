@@ -333,6 +333,8 @@ failed, 2 stopped by the daily token guard (progress is saved, run the same comm
   score or pass flag, and a test seeds every judge field and checks none reaches the text.
 - **Fields per output**: `key N` covered, missing or contradicted; `unsupported claims` (list or none); `contradicted`
   yes or no. `--apply` refuses a sheet with any blank field or other value and lists all problems at once.
+- The current label files are Claude drafts (`reviewed_by: pending`), not hand labels, see DECISIONS.md.
+  `--apply --draft --by ali` writes that stamp.
 - T100 will compare the judge labels with `labels.yaml`. It is not built yet.
 
 ## Gates (AC-EVL-06)
