@@ -695,3 +695,46 @@ Decided by the owner after the T102a analysis (`evals/results/abstain_threshold_
 - **How to apply.** When a test depends on configuration, set what it needs explicitly and remove the rest. Before
   trusting a config test, run it once with the CI variables set and once with none. Other test files that build
   `Settings` were run with the CI variables and pass.
+
+## 2026-10-14: Phase 5 step 1, the phase 4 review fixes (unattended run)
+Source: `docs/reviews/phase4_review.md`, verdict "safe after listed fixes". The labels used by the judges are
+Claude drafts with the owner's review pending; nothing here calls them hand labels.
+- **F6, run identity.** `eval_runs.identity` (migration 0016) stores the config hash, judge model, judge prompt hashes,
+  corpus fingerprint, generator sampling settings and the declared item set. The runner refuses a judge prompt or judge
+  model that differs from the pins (`DEFAULT_JUDGE_PINS` in `evals/config.py`, or a `[judge_prompts]` table) before any
+  write. B0 and `b0.toml` are untouched. **How the existing runs are treated.** They have no stored identity, so they are
+  legacy runs: their identity is read from the config hash, judge model and judge prompt hashes in each row trace. The
+  B0 dev run and the calib_cap4 run both show the judge model `qwen/qwen3.8-27b` and the same two v2 judge prompt hashes
+  that are now pinned, so they are comparable on the judge. They have no corpus fingerprint, so a comparison cannot
+  check it and says so. Reports and comparisons print "legacy identity". A legacy run is never continued.
+- **F2, item set.** The declared item set is part of the identity. A resume needs an exact match; `--items` starts its
+  own run; a run is finished only when every declared item has a finished row.
+- **F3, config keys.** `KNOWN_KEYS` lists what a config may hold; unknown keys fail at load. `rerank.enabled = true`
+  fails at load because no reranker exists. `models.temperature` and `models.max_output_tokens` reach the generator
+  calls and the run identity. Judges keep the settings of their own prompt files. **Ambiguity taken:** the review says
+  "wire or reject"; rerank is rejected, because the cross encoder would need a model download and an export path
+  that the dependency list does not have (see the Phase 5 plan).
+- **F1, one pass rule.** `evals/passing.py`. A judge parse failure or error is now `judge_failure`, not a pass.
+  **Re-score of B0 from the stored rows (no model call): 0 rows changed.** Strict pass stays 15 of 30, overall
+  passed stays 27 of 44, because the B0 run had no judge failure and no answered item without a score. The same holds
+  for the calib_cap4 run (19 of 30 strict). The corrected B0 numbers equal the old ones and are the baseline of record.
+- **F7, regenerated files.** `b0_dev_report.md` and `b0_dev_summary.json` are produced by `cli report --out --json-out`.
+  The per model token table of the old report is gone (B0 predates per call usage: "not available"). The old summary
+  json held ledger fields (`ledger_tokens`, `guard_left`) from a scratch script; they depend on the time of day and are
+  not recreated. `cli verify-report` fails when a committed file differs from what the code regenerates.
+- **F4, latency.** Migration 0017 adds `eval_results.latency`. B0 retrieval only latency, measured on 2026-10-14 from this
+  laptop against the hosted database (run 532b63f3, 44 items): p50 844 ms, p95 5436 ms. These include the network round
+  trip, so they are not a target (T103 stays open, see the earlier entry). Old runs show "not recorded".
+- **F5, kappa.** Resamples with one constant side count as kappa 0, only two constant sides are left out, counts are
+  shown, resampling is by item. Regenerating `judge_calibration.md` needs the stored runs and was not done in this
+  step; the committed numbers still carry the old interval method and must not be quoted.
+- **F13.** A provider error is stored as `not_scored` and retried on the next run. **F14.** Ledger and cache are anchored to the
+  project root, `smoke_llm.py` uses the guarded stack, limits come from the optional `[limits]` table (default: the Groq
+  free tier numbers). **F9, F18, F21, F19, F17, F8:** done as described in `PHASE5_PROGRESS.md`; E1 and E2 are out of scope
+  because a re-ingest changes chunk ids (see `docs/modules/evals.md`).
+- **History note.** Commits are grouped by file where findings edit the same runner files, so one commit covers F6, F2, F3,
+  F13, F4, F14, F18, F21 and the comparison warnings. A first attempt at one commit per finding by hunk staging produced
+  intermediate commits that did not parse; that history was discarded before anything was pushed (branch
+  `backup-phase5-step1` holds it locally).
+- **B0 regression.** `scripts/b0_regression.py` rebuilds the B0 dev retrieval summary and compares it with the committed
+  json. Result after the Step 1 changes: ok, no number moved.
