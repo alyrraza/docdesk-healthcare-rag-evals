@@ -321,6 +321,20 @@ failed, 2 stopped by the daily token guard (progress is saved, run the same comm
 6. There is no universal kappa threshold. Acceptance is set from the owner's own agreement between two labeling passes on different days.
 7. The judge model differs from the generator model. Re-run calibration when either changes.
 
+### Calibration tooling (T099, added 2026-10-14)
+`scripts/calibration_sheet.py` with `evals/calib_sample.py`, `calib_sheet.py` and `calib_labels.py`.
+- **Pool**: answered outputs (not abstain, refuse or error) of the given dev runs; the same item with the same
+  answer text counts once, the first run listed wins. **Sample**: up to 40, fixed seed, single_fact and multi_chunk in
+  proportion, every answered unanswerable or adversarial output included. A smaller pool is taken whole and the
+  shortfall is written in the manifest.
+- **Files**: `evals/calibration/manifest.yaml` (run id, item id, answer hash per sheet number, committed),
+  `docs/calibration/sheet.md` (git ignored), `evals/calibration/labels.yaml` (labeled_by, labeled_on, committed).
+- **Blind**: the sheet shows question, answer, packed context and key points. It has no input path for a judge label,
+  score or pass flag, and a test seeds every judge field and checks none reaches the text.
+- **Fields per output**: `key N` covered, missing or contradicted; `unsupported claims` (list or none); `contradicted`
+  yes or no. `--apply` refuses a sheet with any blank field or other value and lists all problems at once.
+- T100 will compare the judge labels with `labels.yaml`. It is not built yet.
+
 ## Gates (AC-EVL-06)
 - PR gate (CI): retrieval-only metrics on the dev split. Fails if recall@k or MRR drops more than the tolerance against the stored baseline.
 - Full gate (manual or nightly): schema validity at least 99 percent, zero critical failures on the adversarial and policy slices, zero access leaks, faithfulness and correctness within tolerance of baseline, tokens per query within about 20 percent.

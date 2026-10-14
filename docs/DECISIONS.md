@@ -516,3 +516,25 @@ Choices made while building the eval runner that the task text did not fix.
   written. `--label` is stored in a new nullable column `eval_runs.label` (migration 0014, applied to the dev database).
 - The B0 dev report was regenerated with the CLI report command from the stored rows and the cache. Every number in
   `b0_dev_summary.json` was reproduced. `b0_dev_summary.json` itself was not edited.
+
+## 2026-10-14: T098b per run tokens, calibration variant and tooling
+- Per call usage is stored in `eval_results.usage` (JSONB, migration 0015, applied to the dev database). Rows from
+  before it have NULL and the report says the per run numbers are not available. The B0 dev run is such a run: its
+  per model split cannot be attributed exactly from the cache, so none was guessed. This also closes the parked
+  generator cache hit flag: `AnswerResult.calls` and `PipelineOutput.calls` carry it.
+- `usage_from_cache` and its tests were removed, because summing the cache folder was the bug. Two existing tests
+  (CLI report and the per model section) were rewritten for the new meaning, in the same commit as the change.
+- `calib_cap4.toml` is a calibration variant of b0 with `max_per_document = 4`. It is not a baseline and no experiment
+  number is taken from it. Run label `calib-cap4`.
+- Result of that run: 24 answered, 19 abstained, 1 refused. All 11 unanswerable items abstained,
+  so no answered unanswerable or adversarial output exists. The pool after dropping repeats (same item and same answer
+  text) is 30, so the manifest has 30 outputs and a shortfall of 10, not 40. Padding was not done.
+- Sampling: seed 20261014, size 40, single_fact and multi_chunk in proportion to their pools (largest remainder),
+  unanswerable and adversarial always all in. When two runs give the same answer text for an item, the first run
+  listed (B0) is kept. Sheet order is a seeded shuffle, so the run of an output cannot be guessed from its position.
+- Sheet details not in the instructions: chunks are shown as c1, c2 in packed order with the document title; all
+  model and source text is blockquoted so it cannot look like a heading; em and en dashes in source text are replaced
+  by a hyphen so `check_docs_style.py` passes; unsupported claims may be a same line value or `- ` bullets, `none`
+  means no claims; `--apply` and writing refuse to overwrite an existing sheet or labels.yaml (`--force` for the
+  sheet only); dev runs only.
+- The T100 line in PLAN.md now says it joins judge labels and `labels.yaml` on run id, item id and answer hash.
