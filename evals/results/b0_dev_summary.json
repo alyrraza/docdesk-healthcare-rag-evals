@@ -1,0 +1,55 @@
+{
+  "answerable_labels": {
+    "context_distraction": 1,
+    "context_overflow": 5,
+    "incorrect": 1,
+    "ranking_miss": 5,
+    "retrieval_miss": 2,
+    "unfaithful": 1
+  },
+  "answerable_pass_strict": 15,
+  "answerable_ran": 30,
+  "config": "b0",
+  "items_not_run": [
+    "gi-079"
+  ],
+  "items_ran": 44,
+  "items_total": 45,
+  "judge_parse_failures": {
+    "correctness": 0,
+    "faithfulness": 0
+  },
+  "models": {
+    "openai/gpt-oss-120b": {
+      "calls": 43,
+      "cost_usd": "0.01242390",
+      "guard_left": 117444,
+      "ledger_tokens": 52556,
+      "tokens_in": 42466,
+      "tokens_out": 10090
+    },
+    "qwen/qwen3.8-27b": {
+      "calls": 40,
+      "cost_usd": "0.0295552",
+      "guard_left": 144164,
+      "ledger_tokens": 25836,
+      "tokens_in": 23059,
+      "tokens_out": 2777
+    }
+  },
+  "run_id": "dfaad803-c59e-466c-8e2e-609471d82cee",
+  "split": "dev",
+  "stage_split": {
+    "generation": 3,
+    "packing": 5,
+    "pass": 15,
+    "retrieval": 7
+  },
+  "worst_five": [
+    "gi-039",
+    "gi-047",
+    "gi-017",
+    "gi-032",
+    "gi-044"
+  ]
+}
