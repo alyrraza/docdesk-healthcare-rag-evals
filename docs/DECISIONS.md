@@ -482,3 +482,21 @@ Choices made while building the eval runner that the task text did not fix.
 - The judge tests use AC-EVL-07 because the PRD has no judge criterion. Propose to the owner a PRD criterion for
   judge labels and for counting parse failures. The PRD is not edited here.
 
+## 2026-10-14: T098 B0 full run on dev
+- Dev has 45 verified items, not 60. 44 ran, gi-079 is not run (needs T122). Run id and numbers are in
+  `evals/results/b0_dev_report.md` and `b0_dev_summary.json`.
+- The CLI has no flag to pick items and no run label, so the 3 item smoke run was a scratch script outside the
+  repo. It used the same stack (cache, budget guard, pacer, client), the same pinned config and the same pipeline
+  and judge code, wrote no database rows, and its calls were cached, so the full run reused them for free.
+- The extra report sections (pass rate with faithfulness and correctness both 1.0, retrieval versus packing versus
+  generation split, tokens and cost per model, five worst items) were built by a scratch script from the stored rows
+  and the cache entries. They are not in `report.py`. Parked: move them into the report code with tests.
+- Stage split for answerable items: retrieval is retrieval_miss and ranking_miss (gold not in the top 5), packing is
+  context_overflow, generation is every other label.
+- Parked: the Groq adapter drops the response headers (remaining tokens, reset times) and the reasoning token count
+  (`completion_tokens_details`), so neither is captured. Capturing them needs a change in `llm/providers/groq.py`
+  and `LLMResult`. The completion token count of gpt-oss includes reasoning tokens, and max output 600 was never
+  reached (largest generator output 480 tokens, all 43 generator calls and 40 judge calls ended with finish_reason stop).
+- Parked: the generator cache hits are still not counted in the report (see the T090 to T096 note), so the report's
+  cache hit count is lower than the real one.
+
