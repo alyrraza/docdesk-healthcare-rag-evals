@@ -84,3 +84,13 @@ def test_ac_evl_03_live_04_a_model_failure_is_an_error_outcome(
     pipeline, _ = build(db_session, corpus, FakeLLMClient([ProviderError("boom")]))
     out = pipeline.run("What about famotidine?", retrieval_only=False)
     assert out.outcome == "error"
+
+
+def test_ac_evl_06_live_04_retrieval_only_never_calls_a_client_that_raises_when_called(
+    db_session: Session, corpus: Corpus
+) -> None:
+    client = FakeLLMClient([])  # any call raises AssertionError
+    pipeline, chunks = build(db_session, corpus, client)
+    out = pipeline.run("What about famotidine?", retrieval_only=True)
+    assert out.retrieved_ids[0] == str(chunks[0].id)
+    assert client.requests == [] and out.llm_calls == 0
