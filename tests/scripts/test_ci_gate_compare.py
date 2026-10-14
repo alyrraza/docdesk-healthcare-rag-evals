@@ -13,7 +13,9 @@ from ci_gate_compare import (  # noqa: E402
     baseline_record,
     check_gate,
     config_mismatch,
+    corrupt_baseline,
     gate_numbers,
+    gate_problems,
 )
 
 BASELINE = {"recall@5": 0.9, "mrr": 0.8}
@@ -82,3 +84,32 @@ def test_ac_evl_06_baseline_for_another_config_is_refused() -> None:
     assert config_mismatch(record, "b0", "abc123") is None
     assert "b1" in (config_mismatch(record, "b1", "abc123") or "")
     assert "hash" in (config_mismatch(record, "b0", "zzz") or "")
+
+
+def stored_record() -> dict:
+    """A small synthetic stored baseline, shaped like evals/ci/expected.json."""
+    return baseline_record(summary(0.9, 0.8), "b0", "abc123")
+
+
+def test_ac_evl_06_f12_real_baseline_passes_end_to_end() -> None:
+    current = baseline_record(summary(0.9, 0.8), "b0", "abc123")
+    assert gate_problems(current, stored_record(), "b0", "abc123") == []
+
+
+def test_ac_evl_06_f12_corrupted_baseline_fails_with_a_clear_message() -> None:
+    current = baseline_record(summary(0.9, 0.8), "b0", "abc123")
+    problems = gate_problems(current, corrupt_baseline(stored_record()), "b0", "abc123")
+    assert len(problems) == 2
+    assert all("below the stored" in problem and "tolerance" in problem for problem in problems)
+
+
+def test_ac_evl_06_f12_corruption_makes_a_copy_and_leaves_the_original_alone() -> None:
+    original = stored_record()
+    corrupt_baseline(original)
+    assert original["numbers"] == BASELINE
+
+
+def test_ac_evl_06_f12_a_wrong_config_hash_fails_before_any_number_is_compared() -> None:
+    current = baseline_record(summary(0.9, 0.8), "b0", "abc123")
+    problems = gate_problems(current, stored_record(), "b0", "other")
+    assert problems and "hash" in problems[0]

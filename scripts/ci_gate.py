@@ -3,6 +3,10 @@
 Usage (project root, OPENBLAS_NUM_THREADS=1, a migrated and EMPTY database in DATABASE_URL):
     python scripts/ci_gate.py                    compare with evals/ci/expected.json
     python scripts/ci_gate.py --write-baseline   store the current numbers (a deliberate decision)
+    python scripts/ci_gate.py --baseline FILE    compare with another file (the F12 failure proof)
+This is a smoke test for retrieval pipeline regressions of one config (b0). It is not a quality
+drift detector: it cannot see a changed prompt, a changed corpus or a slow decline inside the
+tolerance.
 It loads the small corpus in evals/ci/corpus, retrieves the golden subset in evals/ci/golden with
 the pinned B0 retrieval settings, and builds the numbers with scripts/b0_summary.py. Wiring over
 real services, so no automated test; the decision rule is tested in ci_gate_compare.
@@ -21,7 +25,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from b0_rows import collect_rows
 from b0_summary import summarize
-from ci_gate_compare import baseline_record, check_gate, config_mismatch, gate_numbers
+from ci_gate_compare import baseline_record, gate_numbers, gate_problems
 from docdesk.core.config import get_settings
 from docdesk.db.models.documents import DocumentRow
 from docdesk.db.repositories.users import UserRepository
@@ -62,7 +66,7 @@ def load_fixture(
         raise SystemExit(f"fixture ingest failed: {summary.failed}")
 
 
-def main(write_baseline: bool) -> int:
+def main(write_baseline: bool, baseline: Path = EXPECTED) -> int:
     """Build the numbers on the fixture corpus, then store them or compare them."""
     config = load_eval_config(CONFIG)
     settings, model_dir = get_settings(), Path(get_settings().model_dir)
@@ -81,9 +85,8 @@ def main(write_baseline: bool) -> int:
         EXPECTED.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8", newline="\n")
         print(f"wrote {EXPECTED.relative_to(ROOT)}")
         return 0
-    stored = json.loads(EXPECTED.read_text(encoding="utf-8"))
-    problems = [m] if (m := config_mismatch(stored, config.id, config.content_hash)) else []
-    problems += check_gate(record["numbers"], stored["numbers"])
+    stored = json.loads(baseline.read_text(encoding="utf-8"))
+    problems = gate_problems(record, stored, config.id, config.content_hash)
     for problem in problems:
         print(f"GATE FAIL {problem}")
     print("gate failed" if problems else "gate passed")
@@ -93,4 +96,6 @@ def main(write_baseline: bool) -> int:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--write-baseline", action="store_true")
-    sys.exit(main(parser.parse_args().write_baseline))
+    parser.add_argument("--baseline", type=Path, default=EXPECTED, help="compare with this file")
+    args = parser.parse_args()
+    sys.exit(main(args.write_baseline, args.baseline))

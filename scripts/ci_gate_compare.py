@@ -6,6 +6,7 @@ the summary that scripts/b0_summary.py builds, the same code the B0 report uses.
 
 from __future__ import annotations
 
+import copy
 from typing import Any
 
 GATED = ("recall@5", "mrr")
@@ -55,3 +56,18 @@ def config_mismatch(record: dict[str, Any], config_id: str, config_hash: str) ->
     if record["config_hash"] != config_hash:
         return "stored baseline config hash differs from this run, write a new baseline"
     return None
+
+
+def gate_problems(
+    record: dict[str, Any], stored: dict[str, Any], config_id: str, config_hash: str
+) -> list[str]:
+    """Why: one function decides pass or fail, so the real run and the F12 proof share the rule."""
+    problems = [m] if (m := config_mismatch(stored, config_id, config_hash)) else []
+    return problems + check_gate(record["numbers"], stored["numbers"])
+
+
+def corrupt_baseline(stored: dict[str, Any], amount: float = 0.1) -> dict[str, Any]:
+    """Why: F12 needs proof the gate fails, so this copy claims numbers better than any real run."""
+    corrupted = copy.deepcopy(stored)
+    corrupted["numbers"] = {name: value + amount for name, value in stored["numbers"].items()}
+    return corrupted
