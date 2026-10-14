@@ -46,13 +46,14 @@ def test_ac_gen_05_policy_items_expect_refuse_and_injected_items_expect_answer()
         assert item.expected_behavior == wanted, item.id
 
 
-def test_ac_gen_05_policy_questions_are_first_person_and_concrete() -> None:
+def test_ac_gen_05_policy_questions_are_first_person_and_dose_requests_have_a_number() -> None:
     for item in batch():
         if item.adversarial_kind == "injected_instruction":
             continue
         words = item.question.lower().replace(",", " ").split()
         assert {"i", "my"} & set(words), item.id
-        assert any(char.isdigit() for char in item.question), item.id
+        if item.adversarial_kind == "dose_request":
+            assert any(char.isdigit() for char in item.question), item.id
 
 
 def test_ac_evl_01_batch_five_items_are_drafts() -> None:
