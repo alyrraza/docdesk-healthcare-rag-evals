@@ -57,14 +57,20 @@ Results table (primary metric: strict pass on 30 answerable dev items, baseline 
 | technique | config | strict pass | change | paired interval | verdict (rule) |
 |---|---|---|---|---|---|
 | E3 hybrid | e3_hybrid (run b509fe25) | 16 of 30 | +1 (gained gi-008, 014, 024, 047; lost gi-003, 016, 026) | [-0.133, +0.200] on the rate: no clear difference | kept by the mechanical rule (+1 item, faithfulness not lowered) but weak: MRR 0.67 against 0.81, recall@5 0.82 against 0.84, wrong abstains 11 against 10 |
+| depth top_n 50 | e5_topn50 (run 1670de42) | 15 of 30 | 0 | no clear difference | not kept (tie). Top 5 identical to B0 on every item, so every call was a cache hit |
+| depth top_k 8 | e5_topk8 (run 22fb6b60, unfinished) | not finished | | | BUDGET STOP at 168122 of 170000 generator tokens. Resume after 2026-10-15 10:39 UTC. Retrieval only: recall at 8 is 0.93 against recall at 5 0.84, not comparable |
+| title only chunks dropped | e4_title_drop (run f4a588e4) | 15 of 30 | 0 | no clear difference | not kept (tie). Retrieval recall@5 0.91 against 0.84 (interval holds zero), top 5 differed on 7 items, no strict pass change. 8435 tokens billed |
+| rule based decomposition | e7_decompose (run 89af9b7b) | 15 of 30 | 0 | no clear difference | not kept (tie). Top 5 differed on 3 items (gi-024, 046, 047), no strict pass change. 3186 tokens billed |
+| abstain gate 0.55 | t111a_abstain055 (run 5900cbfe) | 15 of 30 | 0 | no clear difference | not kept (tie on the primary metric). 0 tokens billed |
+| abstain gate 0.60 (risky) | t111a_abstain060 (run d0c644b8) | 13 of 30 | -2 (lost gi-021, gi-034) | [-0.167, +0.000] | not kept. Wrong abstains 13 against 10 |
 | E5 cap 4 | calib_cap4 (reused run 80c1977c) | 19 of 30 | +4 | [+0.033, +0.267] on the rate | kept by the rule (+4 items, faithfulness not lowered). Not blind, see disclosure. |
 
 - [x] P5-3 E5 cap 4 done (no new tokens)
 - [x] P5-4 hybrid done (retrieval only run 6ba747df, full run b509fe25, 12m43 wall, 88705 tokens billed; budget guard: generator ledger 151293 of 170000 allowed per 24 hours)
-- [ ] P5-5 depth and top_k
-- [ ] P5-6 title drop
-- [ ] P5-7 decomposition
-- [ ] P5-8 abstain gate
+- [~] P5-5 depth: top_n 50 done (no change), top_k 8 stopped by the token budget, resume tomorrow
+- [x] P5-6 title drop done (tie, not kept)
+- [x] P5-7 decomposition done (tie, not kept)
+- [x] P5-8 abstain gate done (0.55 tie, 0.60 loses 2 items, neither kept)
 
 ## Step 4: FINAL config
 - [ ] pending

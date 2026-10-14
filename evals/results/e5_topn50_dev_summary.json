@@ -1,0 +1,64 @@
+{
+  "answerable_labels": {
+    "context_distraction": 1,
+    "context_overflow": 5,
+    "incorrect": 1,
+    "ranking_miss": 6,
+    "retrieval_miss": 1,
+    "unfaithful": 1
+  },
+  "answerable_pass_strict": 15,
+  "answerable_ran": 30,
+  "config": "e5_topn50",
+  "identity_legacy": false,
+  "items_not_run": [
+    "gi-079"
+  ],
+  "items_not_scored": [],
+  "items_ran": 44,
+  "judge_failures": {
+    "correctness": {},
+    "faithfulness": {}
+  },
+  "latency_ms": {
+    "judge_ms": {
+      "n": 1,
+      "p50": 0.0,
+      "p95": 0.0
+    },
+    "retrieval_ms": {
+      "n": 43,
+      "p50": 1040.9,
+      "p95": 1500.9
+    },
+    "total_ms": {
+      "n": 1,
+      "p50": 0.1,
+      "p95": 0.1
+    }
+  },
+  "mode": "full",
+  "overall_passed": 27,
+  "run_id": "1670de42-a434-4e9f-91c3-43539b167a4d",
+  "split": "dev",
+  "stage_split": {
+    "generation": 3,
+    "packing": 5,
+    "pass": 15,
+    "retrieval": 7
+  },
+  "tokens_by_model": {
+    "openai/gpt-oss-120b": {
+      "cached_calls": 43,
+      "calls": 43,
+      "tokens_billed": 0,
+      "tokens_saved": 52556
+    },
+    "qwen/qwen3.8-27b": {
+      "cached_calls": 40,
+      "calls": 40,
+      "tokens_billed": 0,
+      "tokens_saved": 25836
+    }
+  }
+}
