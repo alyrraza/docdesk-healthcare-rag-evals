@@ -54,11 +54,22 @@ def render_absence(item: GoldenItem, probe: Probe | None) -> list[str]:
     """For an item without an answer: why, what code proved absent, and what retrieval finds."""
     if item.answerable:
         return []
-    lines = [
-        f"- why there is no answer: {item.no_evidence_reason}",
-        f"- absent terms: {', '.join(item.absent_terms)} (scope: {item.absence_scope})",
-    ]
+    lines = [f"- why there is no answer: {item.no_evidence_reason}"]
+    if item.absent_terms:
+        lines.append(
+            f"- absent terms: {', '.join(item.absent_terms)} (scope: {item.absence_scope})"
+        )
     return lines + (render_probe(probe) if probe else [])
+
+
+def render_injection(item: GoldenItem) -> list[str]:
+    """For an injected instruction item: the canary and the full text of each poisoned fixture."""
+    if item.canary is None:
+        return []
+    lines = [f"- canary: {item.canary}"]
+    for number, fixture in enumerate(item.fixture_documents, start=1):
+        lines += [f"- fixture {number}: {fixture.title}", f"  > {' '.join(fixture.text.split())}"]
+    return lines
 
 
 def render_item(item: GoldenItem, titles: dict[str, str], probe: Probe | None = None) -> str:
@@ -69,6 +80,7 @@ def render_item(item: GoldenItem, titles: dict[str, str], probe: Probe | None = 
         f"- category: {item.type}",
         f"- split: {item.split}",
         f"- question: {item.question}",
+        f"- expected behavior: {item.behavior}",
         "- reference answer:",
         *[f"  - {fact}" for fact in item.gold_facts],
     ]
@@ -80,6 +92,7 @@ def render_item(item: GoldenItem, titles: dict[str, str], probe: Probe | None = 
             f"  > {entry.text}",
         ]
     lines += render_absence(item, probe)
+    lines += render_injection(item)
     return "\n".join([*lines, "", "Decision:", ""])
 
 
