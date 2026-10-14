@@ -75,3 +75,11 @@ def test_ac_obs_03_tech_06_a_percentile_over_fewer_than_five_items_is_not_shown(
     few = run("cand", [timed(item(f"gi-{n:03d}")) for n in range(1, 4)])
     assert compare_technique("t", base(), few)["p95_total_ms"]["candidate"] == (
         "too few non cached items")
+
+
+def test_ac_evl_05_tech_09_not_completed_configs_are_listed() -> None:
+    result = compare_technique("t", base(), base())
+    result["not_completed"] = ["final_full: budget spent"]
+    text = technique_markdown(result)
+    assert "## Not completed" in text and "final_full: budget spent" in text
+    assert "Not completed" not in technique_markdown(compare_technique("t", base(), base()))

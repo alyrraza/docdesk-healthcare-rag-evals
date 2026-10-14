@@ -29,6 +29,8 @@ def add_tool_parsers(commands: argparse._SubParsersAction) -> None:  # type: ign
     vs.add_argument("baseline")
     vs.add_argument("candidate")
     vs.add_argument("--out", type=Path, required=True, help="markdown file; json goes beside it")
+    vs.add_argument("--not-completed", action="append", default=[],
+                    help="a config that never finished, listed in the report (repeatable)")
     verify = commands.add_parser("verify-report", help="fail when a report file is stale")
     verify.add_argument("run_id")
     verify.add_argument("--report", type=Path, required=True)
@@ -46,6 +48,8 @@ def cmd_technique(rt: Runtime, args: argparse.Namespace) -> int:
         baseline = load_run_data(session, uuid.UUID(args.baseline))
         candidate = load_run_data(session, uuid.UUID(args.candidate))
     result = compare_technique(args.name, baseline, candidate)
+    if args.not_completed:
+        result["not_completed"] = list(args.not_completed)
     args.out.write_text(technique_markdown(result), encoding="utf-8")
     args.out.with_suffix(".json").write_text(technique_json(result), encoding="utf-8")
     print(f"wrote {args.out} and {args.out.with_suffix('.json')}")

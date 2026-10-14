@@ -156,6 +156,8 @@ def technique_markdown(result: dict[str, Any]) -> str:
     ]
     for c in result["categories"]:
         lines += [f"## {c['name']}", "", *table(HEADER, [cell(r) for r in c["rows"]]), ""]
+    if result.get("not_completed"):
+        lines += ["## Not completed", "", *[f"- {n}" for n in result["not_completed"]], ""]
     return "\n".join(lines)
 
 
