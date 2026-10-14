@@ -793,3 +793,21 @@ strict pass on answerable dev items. Every config tried is in `evals/results/pha
 - Dev result: 19 of 30 strict pass against 15 for B0, paired interval [+0.033, +0.267]. `evals/results/final_vs_b0.md` reports
   FINAL_SIMPLE against B0 and lists FINAL_FULL and top_k 8 as not completed.
 - From this commit no judge file, prompt file or FINAL config may change before the test split runs.
+
+## 2026-10-15: Groq key pool for the eval runs
+- **What.** Two Groq accounts of Ali's were used. Keys are `GROQ_API_KEY` (slot 1) and `GROQ_API_KEY_2` (slot 2) in the ignored
+  `.env`. Neither is ever printed, logged or written to another file. Logs and reports show only the slot number.
+- **Why.** The free tier allows 200000 tokens per model per day per account. Slot 1 had spent 168122 of its 170000 guard on
+  openai/gpt-oss-120b, which stopped top_k 8 and blocked the test split.
+- **How it works** (`src/docdesk/evals/key_pool.py`). The pool is the real client under the pacer, so the order is cache,
+  budget guard, pacer, pool, one Groq client per key. The cache stays outermost, so a hit never reaches the pool.
+  The pool keeps its own wall clock ledger (`.cache/pool_ledger.json`) of tokens per model per slot, same 24 hour window and
+  same 170000 guard per model per slot (85 percent of 200000). Slot 1 is seeded from the old ledger once, so its 168122 count.
+  A call goes to the first slot with room. A slot is skipped when its ledger is at the guard, or when Groq answers a daily
+  limit 429 (`RateLimitedError.daily`, never retried). When no slot has room the pool raises the normal `BudgetStop`.
+- **Identity does not change.** The request, model, temperature, prompts and parameters are the same for every slot, so cache
+  keys and run identities are unchanged. Tests pin a cache key and the config hashes of b0, calib_cap4 and final_simple.
+- **Budget guard.** The guard limit of a model is the sum of the slot limits (400000 for two slots, guard 340000). The pacer
+  stays one per model, which is stricter than the per key per minute limit, so it is safe and simple.
+- **Reporting.** Each stored call usage carries its slot. The run usage report adds a table of billed tokens per model per slot
+  when any call went through the pool.
