@@ -6,9 +6,19 @@ from pathlib import Path
 
 import pytest
 
-from docdesk.prompts.loader import PromptError, load_all, load_prompt, parse_prompt
+from docdesk.prompts.loader import PromptError, load_prompt, parse_prompt
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def file_name_problem(path: Path, prompt) -> str | None:
+    """Say how a file name disagrees with its front matter, or None when they agree."""
+    name, _, suffix = path.stem.rpartition(".v")
+    if name != prompt.name:
+        return f"file name says name {name!r}, front matter says {prompt.name!r}"
+    if suffix != prompt.version.split(".")[0]:
+        return f"file name says v{suffix}, front matter version is {prompt.version}"
+    return None
 
 SAMPLE = """---
 name: demo
@@ -90,7 +100,19 @@ def test_ac_prm_01_the_shipped_answer_prompt_loads() -> None:
 
 
 def test_ac_prm_01_every_shipped_prompt_loads_and_file_names_match_front_matter() -> None:
-    prompts = load_all(ROOT / "prompts")
+    paths = sorted((ROOT / "prompts").glob("*/*.md"))
+    prompts = [load_prompt(path) for path in paths]
     assert {p.name for p in prompts} >= {"answer", "router", "text2sql"}
-    for prompt in prompts:
-        assert prompt.version.startswith("1.")
+    for path, prompt in zip(paths, prompts, strict=True):
+        assert file_name_problem(path, prompt) is None, path.name
+
+
+def test_ac_prm_01_a_v2_file_with_version_1_front_matter_is_rejected(tmp_path: Path) -> None:
+    path = tmp_path / "demo" / "demo.v2.md"
+    path.parent.mkdir()
+    path.write_text(SAMPLE, encoding="utf-8")  # SAMPLE is demo, version 1.2.0
+    problem = file_name_problem(path, load_prompt(path))
+    assert problem is not None and "v2" in problem
+    other = tmp_path / "demo" / "other.v1.md"
+    other.write_text(SAMPLE, encoding="utf-8")
+    assert "name" in file_name_problem(other, load_prompt(other))
