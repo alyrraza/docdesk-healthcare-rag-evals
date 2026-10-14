@@ -13,11 +13,18 @@ CONNECTOR = "In addition, "
 # letter is lowercased. A sentence about a named drug or one that starts with "It" would not.
 STARTERS = ("The", "Patients", "Doses", "Dosage", "Treatment", "Adults", "Children", "Pediatric")
 SENTENCE_END = re.compile(r"(?<=[.!?])\s+(?=[A-Z\"“\[(])")
-# A concrete claim here is a number with a unit: a dose, a schedule, a percentage or a count.
+# A concrete claim here is a dose (a number with a mass, volume or percent unit) or a schedule
+# ("every 3 months"). Bare ages and durations are left out: they read oddly out of context.
 CONCRETE = re.compile(
-    r"\b\d+(?:\.\d+)?\s*(?:mg|mcg|g|ml|%|percent|hours?|days?|weeks?|months?|years?)\b",
+    r"\b\d+(?:\.\d+)?\s*(?:mg|mcg|g|ml|%)(?![a-z])"
+    r"|\bevery\s+\d+\s+(?:hours?|days?|weeks?|months?)\b",
     re.IGNORECASE)
-CROSS_REFERENCE = re.compile(r"\(see|\bsee\b|\[|\btable\b|\bfigure\b", re.IGNORECASE)
+# A sentence that points at something outside itself does not read as a standalone claim.
+CROSS_REFERENCE = re.compile(
+    r"\(see|\bsee\b|\[|\btable\b|\bfigure\b|\b(?:this|these|those|such|above|below|following)\b"
+    r"|\b(?:trials?|stud(?:y|ies))\b", re.IGNORECASE)
+# A heading run into the text shows as a word in capitals, which is case sensitive on purpose.
+HEADING_WORD = re.compile(r"\b[A-Z]{4,}\b")
 MIN_LENGTH, MAX_LENGTH = 30, 200
 
 
@@ -42,7 +49,9 @@ def insertion_sentences(chunk_text: str, drug: str) -> list[str]:
             continue
         if not sentence.startswith(STARTERS) or not CONCRETE.search(sentence):
             continue
-        if CROSS_REFERENCE.search(sentence) or drug.lower() in sentence.lower():
+        if CROSS_REFERENCE.search(sentence) or HEADING_WORD.search(sentence):
+            continue
+        if drug.lower() in sentence.lower():
             continue
         found.append(sentence)
     return found

@@ -46,3 +46,15 @@ def test_ac_evl_07_calib_44_only_concrete_self_contained_sentences_are_candidate
     found = insertion_sentences(chunk, drug="metformin")
     assert found == ["The usual adult dose is 5 mg twice daily.",
                      "Patients should be monitored every 3 months."]
+
+
+def test_ac_evl_07_calib_45_headings_and_dangling_references_are_not_candidates() -> None:
+    chunk = (
+        "Dosage and administration 2 DOSAGE AND ADMINISTRATION Recommended dose is 1 mg daily. "
+        "The risk did not vary by age (5 to 100 years) in the trials analyzed. "
+        "The study found that 20 mg was too high. "
+        "Treatment is given for 7 to 14 days in total. "
+        "The usual range is 2 to 6 mg/day in divided doses."
+    )
+    assert insertion_sentences(chunk, drug="metformin") == [
+        "The usual range is 2 to 6 mg/day in divided doses."]
