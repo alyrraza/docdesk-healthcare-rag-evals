@@ -49,8 +49,8 @@ Plan (tests first for each step):
 5. CI: one extra `GET /` step in `build-smoke`. Dockerfile already copies `src`, so the static files are in the image; a test pins that.
 6. Screenshots with headless Edge against a scratch database, at most 6 generator calls. README, modules docs, notes.
 
-- [ ] Step A /retrieve route
-- [ ] Step B web package and static files
-- [ ] Step C CI smoke step and image check
-- [ ] Step D screenshots
+- [x] Step A /retrieve route
+- [x] Step B web package and static files
+- [x] Step C CI smoke step and image check
+- [x] Step D screenshots (4 generator calls, scratch database dropped)
 - [ ] Step E docs, scans, push

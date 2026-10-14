@@ -80,6 +80,16 @@ To get generated answers, put your own key in `.env` as `GROQ_API_KEY=...` (a fr
 
 CI builds this image and runs the same three commands on every push and pull request (job `build-smoke`, it never pushes). On a push to main, a separate job `image-push` runs only after the tests, the retrieval gate and the smoke all passed, and publishes the image to `ghcr.io/alyrraza/docdesk-healthcare-rag-evals` (tags `latest` and the commit sha). A package published by a workflow can start private, so its visibility is set on the package page (see [docs/GO_PUBLIC_CHECKLIST.md](docs/GO_PUBLIC_CHECKLIST.md)).
 
+## Try it
+
+Open http://localhost:8000/ after docker compose up (and `demo_seed.py`, see above). The page is plain HTML, CSS and JavaScript served by the API itself: no build step, no outside requests. Register once, ask a question, open a numbered citation to read the source text, and open the retrieval panel to see the top chunks and their scores. If no Groq key is configured, the page says so in plain words and still shows the retrieval results.
+
+| Answered, with a citation opened | Abstained, the sources do not cover it | Refused, a personal dose question |
+|---|---|---|
+| ![Answered question with an open citation](docs/img/ui-answered.png) | ![Abstained question](docs/img/ui-abstained.png) | ![Refused question](docs/img/ui-refused.png) |
+
+These screenshots are illustrative, not an evaluation. Each was taken once against a scratch database with the 20 document corpus: one rubella question, one malaria question (malaria is not in the corpus) and one ibuprofen dose question. They say nothing about how often the system behaves this way, the numbers are in the results section. The policy filter gaps listed under limitations still apply: other dose or diagnosis phrasings get through to the model. Nothing here is hosted, it runs on your machine.
+
 ## Run locally
 
 Windows, with everything on drive D: because C: is full on my laptop. The same steps work elsewhere without the cache variables.
@@ -168,7 +178,7 @@ The CI retrieval gate (`scripts/ci_gate.py`) is a smoke test for retrieval pipel
 - **Policy filter gaps.** The input policy check is a list of cues, not a classifier. Two of the four policy questions in the golden set get through it: "can I double it to 80 mg" (a dose change phrased without a dose cue) and "is this a blood clot" (a diagnosis phrased as "is this X"). The fix is planned and will be measured before and after, it is not done. Four questions are too few to estimate a miss rate. Injection checks are heuristics too, and the defence is meant to be the delimiters and the output checks together.
 - **Small corpus.** 298 documents, MedlinePlus topics and DailyMed labels. No other languages, no OCR for scanned PDFs, no images.
 - **Retrieval is the weak spot.** Recall at 5 is about 0.84 on dev. In the dev failure labels, ranking misses and context overflow are the largest groups, with 5 items each.
-- **Not built yet.** The SQL branch and router for structured questions, the semantic cache, the rate limiter and the frontend are planned in [docs/PLAN.md](docs/PLAN.md) and do not exist in the code. The compose stack has no TLS and no metrics.
+- **Not built yet.** The SQL branch and router for structured questions, the semantic cache, the rate limiter and the React frontend with its dashboard are planned in [docs/PLAN.md](docs/PLAN.md) and do not exist in the code. Only the plain single page UI above exists. The compose stack has no TLS and no metrics.
 - **The Docker path is checked in CI, not on my laptop,** which has no Docker. The demo steps without Docker (migrate, seed, retrieve) were run by hand against a scratch database.
 - **Free tier models.** Generation and judging depend on Groq free tier limits, so full runs are paced and capped by the budget guard, and model behaviour can change under me.
 

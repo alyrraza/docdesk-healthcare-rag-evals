@@ -889,3 +889,20 @@ strict pass on answerable dev items. Every config tried is in `evals/results/pha
   were pooled to fit the daily token limit, FINAL_FULL and top_k 8 were not completed, injection items were not run, chunking techniques
   and the reranker were skipped.
 
+## 2026-10-15: plain web interface served by the API (unattended session)
+- **Not in the plan.** `docs/PLAN.md` lists a React frontend (T140 to T147), which is not built. The task asked for a minimal page with no npm
+  and no build step, so I built that and left the T140 to T147 boxes unticked. The module note says what exists.
+- **New route `POST /retrieve`.** `/query` does not return chunks or scores and no retrieval-only route existed. The page needs both, and needs
+  retrieval to work when the Groq key is missing, so I added an authenticated route that runs the same `retrieve()` with the same config and
+  no model call. This is application code beyond static files, so the whole suite is run, not only the b0 regression.
+- **Outcome mapping.** Answered is `abstained=false`. Refused is `abstained=true` with `abstain_reason=unsafe_request`. Any other abstain is Abstained.
+- **Auth unchanged.** The page itself is public (it holds no data) and was added to the allowlist on purpose, `GET /` and `GET /static/{name}`.
+  Register and login happen on the page, the token lives in sessionStorage for the tab. No demo bypass.
+- **Static files without a mount.** A fixed name list in `docdesk/web/routes.py` gives each file its content type (a Windows registry can say
+  text/plain for .js) and makes path tricks impossible. A Content-Security-Policy header allows only the page's own origin.
+- **Screenshots.** Scratch Neon database `docdesk_ui_scratch` (migrated, seeded with `demo_seed.py`, dropped afterwards), headless Edge driven over
+  the DevTools protocol with Node's built in WebSocket (a tool only, no dependency added). Questions: rubella symptoms (answered), malaria
+  treatment (abstained), ibuprofen dose (refused). First candidate worked for each class. Generator calls: 4 of at most 6. Two were the first
+  attempts, two were retakes of the same questions with the retrieval panel closed to keep the PNGs short. Tokens from the trace rows:
+  4 calls, 1390 in each (5560 in), 261 + 220 + 234 + 220 = 935 out, model openai/gpt-oss-120b. The three refused requests made no model call.
+  PNG sizes are 51 KB, 93 KB and 51 KB.
