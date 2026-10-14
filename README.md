@@ -78,7 +78,7 @@ The first result is the MedlinePlus rubella page. The same command with `--expec
 
 To get generated answers, put your own key in `.env` as `GROQ_API_KEY=...` (a free key from console.groq.com), run `docker compose up -d` again, log in with `POST /auth/login` using `ADMIN_EMAIL` and `ADMIN_PASSWORD` from `.env`, and call `POST /query` with the token. Without a key, `POST /query` returns a 503 with the code `llm_not_configured` and a plain message, not a stack trace. API docs are turned off in the production setting that compose uses.
 
-CI builds this image and runs the same three commands on every push. On a push to main it also publishes the image to `ghcr.io/alyrraza/docdesk-healthcare-rag-evals` (tags `latest` and the commit sha). The repository is private for now, so the package is private too until I make it public.
+CI builds this image and runs the same three commands on every push. On a push to main it also publishes the image to `ghcr.io/alyrraza/docdesk-healthcare-rag-evals` (tags `latest` and the commit sha). A package published by a workflow can start private, so its visibility is set on the package page (see [docs/GO_PUBLIC_CHECKLIST.md](docs/GO_PUBLIC_CHECKLIST.md)).
 
 ## Run locally
 

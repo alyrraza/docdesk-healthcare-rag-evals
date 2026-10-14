@@ -231,11 +231,11 @@ Replaces T106 to T115 for this session. Chunking techniques (T106, T107) and the
 - [ ] T145 citation list with source chunk reveal (AC-FE-02)
 - [ ] T146 dashboard: stage latency and cost (AC-FE-03)
 - [ ] T147 dashboard: failure labels and prompt versions
-- [ ] T148 Dockerfile for the API
-- [ ] T149 Dockerfile for the worker
-- [ ] T150 `docker-compose.yml`
-- [ ] T151 CI job that builds both images (AC-DKR-01)
+- [x] T148 Dockerfile for the API (one image for API and worker, `Dockerfile`)
+- [x] T149 Dockerfile for the worker (same image, compose command, see `DECISIONS.md` 2026-10-15)
+- [x] T150 `docker-compose.yml`
+- [x] T151 CI job that builds the image (AC-DKR-01): job `image-build`, compose smoke, ghcr push
 - [ ] T152 final eval run on the held-out test split, commit the numbers
-- [ ] T153 README: architecture, setup, Docker, results, limitations, honest status
+- [x] T153 README: architecture, setup, Docker, results, limitations, honest status
 - [ ] T154 final review in a fresh session against the whole PRD
 - [ ] T155 `PROJECT_NOTES.md` completed, LinkedIn draft after the README is done

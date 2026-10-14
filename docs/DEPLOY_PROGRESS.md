@@ -22,10 +22,10 @@ CI job image-build -> F12 gate proof -> readme_results.py -> README + architectu
 - [x] Step 1 inspect and plan
 - [x] Step 2 container files, demo path (make_env, demo_seed, demo_retrieve, Dockerfile, compose)
 - [x] Step 3 no Docker on this laptop, verification moved to CI (Step 4)
-- [ ] Step 4 CI job image-build, push to ghcr on main
+- [x] Step 4 CI job image-build (first run: build, smoke, push all passed; test job failed on .env.example, fixed)
 - [x] Step 5 F12 gate proof (scratch Neon databases, exit 1 then exit 0) and test
-- [ ] Step 6 README, readme_results.py, architecture diagram, LICENSE
-- [ ] Step 7 secret scan, GO_PUBLIC_CHECKLIST.md
+- [x] Step 6 README, readme_results.py, architecture diagram (svg, rendered with Edge and checked), LICENSE
+- [x] Step 7 secret scan (only hit: repo name in README, false positive), GO_PUBLIC_CHECKLIST.md
 - [ ] Step 8 targeted tests, b0_regression, push, CI, notes
 
 ## Log

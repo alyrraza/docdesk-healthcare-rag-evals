@@ -17,6 +17,7 @@ RUN python -m venv /opt/venv \
     && /opt/venv/bin/pip uninstall -y docdesk
 
 FROM python:3.11.13-slim-bookworm AS runtime
+LABEL org.opencontainers.image.source="https://github.com/alyrraza/docdesk-healthcare-rag-evals"
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PATH=/opt/venv/bin:$PATH \
