@@ -3,6 +3,25 @@
 Newest first. Each entry: date, decision, why, what it supersedes. Specs older than their
 decisions are marked superseded in the spec file, so nobody builds from stale text.
 
+## 2026-10-14: unanswerable items prove their absence by code (T085)
+Decision: an unanswerable golden item carries `absent_terms` and an `absence_scope` (`corpus` or one source
+key). `resolve_item` fails the item when any term, whitespace folded and case insensitive, is a substring of
+the scope text. Batch 4 (gi-055 to gi-073, 11 dev and 8 test, split by `split_for("unanswerable", n)`) has 8
+near misses scoped to their document, 6 absent subjects and 5 out of scope questions scoped to the corpus.
+Rules used while choosing items:
+- A near miss must not be so close that a careful reader would call the fact stated in other words. Four
+  candidates were rejected for that reason (digoxin half-life, daily fluid amount in the dehydration topic,
+  grapefruit juice with the buspirone label, blood pressure onset for doxazosin).
+- No question asks what the user personally should take or whether the user has a condition.
+- Cost questions are avoided: the Synthea tables hold cost columns, so a price question could be answered by
+  the SQL branch and would not be unanswerable.
+- The review sheet (`scripts/golden_review.py FILE --probe`) shows the top 3 chunks of dense and of keyword
+  retrieval under B0 for each such item. It refuses to run when the stored corpus fingerprint differs from b0.
+Why: a gold "no answer" that rests on memory is the same kind of risk as a wrong gold answer.
+Open question, T086 not started: the adversarial slice needs an expected behaviour (answer, abstain or
+refuse) and, for injected instructions, a poisoned document. The schema has neither. See the report of
+2026-10-14 and the owner's choice.
+
 ## 2026-10-14: label questions reuse the label's wording (owner review rounds 1 and 2)
 Decision: the golden questions about drug labels often repeat the wording of the label sentence that
 answers them, because the label is the only place that states the fact ("indicated for", "supplied as",

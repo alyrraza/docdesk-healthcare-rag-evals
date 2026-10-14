@@ -22,6 +22,8 @@ gold_evidence:                   # document items: quotes, never chunk ids (upda
   - source: "seed:openfda:<set id>"
     text: "short verbatim quote, at most 300 characters"
 no_evidence_reason: "..."        # required when gold_evidence is empty (unanswerable items)
+absent_terms: ["..."]            # unanswerable items (added 2026-10-14): terms code proves are absent
+absence_scope: corpus | "seed:<corpus>:<source id>"   # where they must be absent
 gold_sql: "..."                  # structured items
 gold_result: [...]               # structured items
 adversarial_kind: none | injected_instruction | diagnosis_request | dose_request
@@ -56,6 +58,13 @@ golden item never stores one. It points at evidence in the documents instead.
   a quote. The item then names its own document in the question, or lists the others in
   `alt_sources` on that entry, which the resolver counts as gold too. A multi chunk item fails when
   two quotes share a gold chunk. See `DECISIONS.md`.
+- **Absence proof** (added 2026-10-14). An unanswerable item lists `absent_terms` and an
+  `absence_scope`, either `corpus` or one source key. The validator folds whitespace, ignores case and
+  fails the item if any term occurs in the scope, so "the corpus has no answer" is checked by code and not
+  remembered. Terms are chosen so that any passage answering the question would contain at least one of
+  them. A near miss (the document is there, the asked fact is not) uses its document as scope; an absent
+  subject or an out of scope question uses `corpus`. The match is a plain substring, so a term can also
+  fail on a longer word that contains it, which is the safe direction.
 - **Splits.** Loading the `test` split needs an explicit `allow_test=True`.
 
 ## Metrics (all pure functions; LLM parts return labels, code computes scores)
