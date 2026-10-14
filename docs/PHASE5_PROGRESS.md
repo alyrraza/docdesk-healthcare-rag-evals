@@ -73,22 +73,25 @@ Results table (primary metric: strict pass on 30 answerable dev items, baseline 
 - [x] P5-8 abstain gate done (0.55 tie, 0.60 loses 2 items, neither kept)
 
 ## Step 4: FINAL config
-- [ ] pending
+- [ ] waits for e5_topk8 (resume the same command after 2026-10-15 10:39 UTC). Candidates by the rule so far: E5 cap 4 and E3 hybrid.
+  Build `evals/configs/final.toml` from the techniques that pass, run it on dev once, write `evals/results/final_vs_b0.md`, then freeze.
 
 ## Step 5: test split (once)
 - [ ] pending
 
 ## Step 6: phase5_summary.md
-- [ ] pending
+- [~] generator written (`scripts/phase5_summary.py`, test passes), table built with FINAL and top_k 8 marked not finished; rebuild after they finish
 
 ## Step 7: end of session
 - [ ] pending
 
 ## Stopped items
-none yet
+- e5_topk8 full dev run (run 22fb6b60): stopped by the daily token guard, resumable. Command: `python -m docdesk.evals.cli --config evals/configs/e5_topk8.toml run --label e5_topk8` after 2026-10-15 10:39 UTC.
+- Cross encoder reranker, E1, E2: skipped on purpose (see Step 2).
 
 ## Log
 - 2026-10-14: file created, starting Step 1.
 - 2026-10-14: Step 1 code committed (commits 'git log c1f2123..HEAD'). Commits are coarse where findings edit the same runner files (one change set for F6, F2, F3, F13, F4, F14, F18, F21, F6 extra). Targeted DB tests for identity, item set, provider error, latency and the runner passed; unit tests pass.
 - 2026-10-14: the hosted database stopped resolving (DNS error). Pending DB steps: B0 rescore, report regeneration, B0 regression script, retrieval only latency, migrations are already applied to the dev database (0017).
 - Process note: rescore.py and its tests were written together, not test first.
+- 2026-10-15: Step 3 done except top_k 8. Next session: (1) resume e5_topk8, then `report`, `technique e5_topk8 <B0 run> <run>` (note recall at 8); (2) build final.toml, run FINAL on dev, compare, freeze with a DECISIONS entry that has the date and the git hash; (3) only if all preconditions hold, B0 and FINAL on test once each with `--split test --allow-test`; (4) `python scripts/phase5_summary.py`; (5) secret scan and push.

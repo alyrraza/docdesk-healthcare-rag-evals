@@ -738,3 +738,29 @@ Claude drafts with the owner's review pending; nothing here calls them hand labe
   `backup-phase5-step1` holds it locally).
 - **B0 regression.** `scripts/b0_regression.py` rebuilds the B0 dev retrieval summary and compares it with the committed
   json. Result after the Step 1 changes: ok, no number moved.
+
+## 2026-10-15: Phase 5 lite, dev results so far (unattended run)
+Pre-registration is in `docs/PHASE5_PROGRESS.md`, written before any technique run. Baseline of record: B0, 15 of 30
+strict pass on answerable dev items. Every config tried is in `evals/results/phase5_summary.md`.
+- **E5 cap 4 (reused run).** The stored calib_cap4 run has a legacy identity, the same judge pins as B0 and a config that
+  differs from B0 only in `max_per_document` (2 to 4). It was reused after the F1 re-score changed no row. 19 of 30 strict
+  pass, 4 gained, none lost, interval of the rate [+0.033, +0.267]. This result was seen before the pre-registration, so it
+  is not blind. Kept by the rule.
+- **E3 hybrid.** 16 of 30 (4 gained, 3 lost). The pre-registered rule says one item more is enough, so the mechanical
+  verdict is "kept". The paired interval holds zero and MRR fell from 0.81 to 0.67, so it is reported as no clear difference
+  and flagged as weak. The FINAL run measures the combination, which is the real test.
+- **Ties and losses.** top_n 50 (top 5 identical to B0, so all calls were cache hits), title drop (top 5 differed on 7 items,
+  recall@5 0.91 against 0.84 with an interval that holds zero, no strict pass change), rule based decomposition (top 5
+  differed on 3 items, no change), abstain gate 0.55 (no change on answerable items). The 0.60 variant lost 2 answerable
+  items (gi-021, gi-034), as the earlier sweep warned. None is kept.
+- **top_k 8 is unfinished.** The generator ledger reached 168122 of 170000 tokens (85 percent of 200000 in a rolling 24
+  hours), the guard stopped run 22fb6b60 cleanly. The same command resumes it after 2026-10-15 10:39 UTC (finished
+  items are skipped). `recall` of that config is recall at 8 and is not comparable with recall at 5, so its comparison must
+  say so.
+- **Why FINAL waits.** The pre-registered plan builds FINAL from all chosen techniques, and the top_k 8 result is still
+  missing. A FINAL run, the B0 test run and the FINAL test run also need generator tokens that the window does not have today.
+- **Latency numbers.** p95 is computed from non cached items only. Rows stored before a fix held near zero generation and
+  judge times for items that made no model call; percentiles now skip those stages, and say "too few non cached items"
+  under five items. The hybrid p95 of about 47 seconds is mostly pacer waiting on the free tier, so it is not a serving latency.
+- **Cost of the work so far** (tokens billed per run, from per run accounting): hybrid 88705, title drop 8435,
+  decomposition 3186, abstain gates 0, top_n 50 0, cap 4 59375 (earlier session).
