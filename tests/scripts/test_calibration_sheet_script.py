@@ -126,3 +126,16 @@ def test_ac_evl_07_calib_33_original_labels_are_not_overwritten(project: Path) -
     main(["--apply", str(sheet)], project_root=project, source=make_source())
     with pytest.raises(SystemExit, match="already exists"):
         main(["--apply", str(sheet)], project_root=project, source=make_source())
+
+
+def test_ac_evl_07_calib_34_draft_flag_writes_the_honest_provenance(project: Path) -> None:
+    write(project)
+    sheet = project / "docs" / "calibration" / "sheet.md"
+    fill(sheet)
+    assert main(["--apply", str(sheet), "--draft"], project_root=project,
+                source=make_source(), today=date(2026, 10, 14)) == 0
+    labels = yaml.safe_load(
+        (project / "evals" / "calibration" / "labels.yaml").read_text(encoding="utf-8"))
+    assert labels["labeled_by"] == "claude"
+    assert labels["provenance"] == "drafted by claude on 2026-10-14, review by ali pending"
+    assert labels["reviewed_by"] == "pending"

@@ -154,3 +154,22 @@ def test_ac_evl_07_calib_20_labels_yaml_round_trips(entries, tmp_path: Path) -> 
     path = tmp_path / "labels.yaml"
     path.write_text(yaml.safe_dump(labels, sort_keys=False), encoding="utf-8")
     assert yaml.safe_load(path.read_text(encoding="utf-8")) == labels
+
+
+def test_ac_evl_07_calib_21_a_draft_is_stamped_as_drafted_by_claude_review_pending(entries) -> None:
+    filled = fill(render_sheet(entries))
+    labels = apply_sheet(
+        parse_sheet(filled), manifest(entries), by="ali", today=TODAY, draft=True)
+    assert labels["labeled_by"] == "claude" and labels["labeled_on"] == "2026-10-15"
+    assert labels["provenance"] == "drafted by claude on 2026-10-15, review by ali pending"
+    assert labels["reviewed_by"] == "pending"
+
+
+def test_ac_evl_07_calib_22_a_draft_keeps_every_other_check_and_every_label(entries) -> None:
+    filled = fill(render_sheet(entries))
+    plain = apply_sheet(parse_sheet(filled), manifest(entries), by="ali", today=TODAY)
+    draft = apply_sheet(parse_sheet(filled), manifest(entries), by="ali", today=TODAY, draft=True)
+    assert draft["labels"] == plain["labels"]
+    with pytest.raises(LabelError, match="not complete"):
+        apply_sheet(parse_sheet(render_sheet(entries)), manifest(entries),
+                    by="ali", today=TODAY, draft=True)

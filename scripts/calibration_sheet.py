@@ -127,7 +127,8 @@ def natural_view(synthetic_manifest: dict) -> dict:
 
 
 def apply_filled(
-    sheet_file: Path, by: str, root: Path, today: date, synthetic: bool = False
+    sheet_file: Path, by: str, root: Path, today: date, synthetic: bool = False,
+    draft: bool = False,
 ) -> int:
     """Validate the filled sheet against its manifest and write the labels; keep old labels."""
     labels_path = root / (LABELS_SYNTHETIC if synthetic else LABELS)
@@ -139,7 +140,7 @@ def apply_filled(
         manifest = natural_view(manifest)
     try:
         labels = apply_sheet(parse_sheet(sheet_file.read_text(encoding="utf-8")),
-                             manifest, by=by, today=today)
+                             manifest, by=by, today=today, draft=draft)
     except LabelError as error:
         raise SystemExit(str(error)) from error
     if synthetic:
@@ -165,10 +166,12 @@ def main(
     parser.add_argument("--apply", type=Path, help="the filled in sheet")
     parser.add_argument("--by", default="ali", help="name stored as labeled_by")
     parser.add_argument("--synthetic", action="store_true", help="apply the synthetic sheet")
+    parser.add_argument("--draft", action="store_true",
+                        help="stamp the labels as drafted by claude, --by is the reviewer")
     args = parser.parse_args(argv)
     day = today or date.today()
     if args.apply:
-        return apply_filled(args.apply, args.by, project_root, day, args.synthetic)
+        return apply_filled(args.apply, args.by, project_root, day, args.synthetic, args.draft)
     if not args.run:
         raise SystemExit("give at least one --run RUN_ID, or --apply SHEET")
     return write_sheet(args, project_root, source or Source(db_runs, db_chunks), day)

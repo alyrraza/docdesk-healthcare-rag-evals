@@ -94,9 +94,13 @@ def problems_of(number: int, entry: dict[str, Any], filled: FilledOutput | None)
 
 
 def apply_sheet(
-    parsed: dict[int, FilledOutput], manifest: dict[str, Any], *, by: str, today: date
+    parsed: dict[int, FilledOutput], manifest: dict[str, Any], *, by: str, today: date,
+    draft: bool = False,
 ) -> dict[str, Any]:
-    """Validate every output of the manifest against the sheet and build the labels document."""
+    """Validate every output of the manifest against the sheet and build the labels document.
+
+    With draft, `by` is the reviewer and the stamp says Claude drafted the labels.
+    """
     wanted = {entry["n"]: entry for entry in manifest["outputs"]}
     problems = [p for n, entry in wanted.items() for p in problems_of(n, entry, parsed.get(n))]
     problems += [f"output {n}: in the sheet but not in the manifest"
@@ -114,4 +118,13 @@ def apply_sheet(
             "unsupported_claims": [c for c in filled.claims if c.lower() != "none"],
             "contradicted": filled.contradicted.lower() == "yes",
         })
-    return {"labeled_by": by, "labeled_on": today.isoformat(), "labels": labels}
+    return {**provenance_of(by, today, draft), "labels": labels}
+
+
+def provenance_of(by: str, today: date, draft: bool) -> dict[str, str]:
+    """Why: a draft must never read as hand labeled before the owner has reviewed it."""
+    if not draft:
+        return {"labeled_by": by, "labeled_on": today.isoformat()}
+    return {"labeled_by": "claude", "labeled_on": today.isoformat(),
+            "provenance": f"drafted by claude on {today.isoformat()}, review by {by} pending",
+            "reviewed_by": "pending"}
