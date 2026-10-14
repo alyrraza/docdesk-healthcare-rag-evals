@@ -19,6 +19,8 @@ dependencies = [
     "onnxruntime>=1.17,<2",
     "numpy>=1.26,<3",
     "PyYAML>=6,<7",
+    "celery>=5.3,<6",
+    "redis>=5,<7",
 ]
 
 [project.optional-dependencies]
