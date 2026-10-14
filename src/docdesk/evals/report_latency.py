@@ -15,6 +15,10 @@ if TYPE_CHECKING:  # report_data imports this file, so the import is for type ch
 STAGES = ("retrieval_ms", "generation_ms", "judge_ms", "total_ms")
 # Retrieval never goes through the LLM cache, so its time is real even when a model call was cached.
 ALWAYS_REAL = ("retrieval_ms",)
+# A model call never takes under a millisecond. Rows stored before the fix below hold a near zero
+# time for an item that made no generator or judge call, and those must not pull p50 down.
+MIN_CALL_MS = 1.0
+MODEL_STAGES = ("generation_ms", "judge_ms")
 
 
 @dataclass(frozen=True)
@@ -37,7 +41,9 @@ def latency_stats(records: list[ResultRecord]) -> dict[str, Percentiles]:
         real = [
             lat[stage]
             for lat in stored
-            if lat.get(stage) is not None and (stage in ALWAYS_REAL or not lat.get("cache_hit"))
+            if lat.get(stage) is not None
+            and (stage in ALWAYS_REAL or not lat.get("cache_hit"))
+            and (stage not in MODEL_STAGES or lat[stage] >= MIN_CALL_MS)
         ]
         if real:
             p50, p95 = np.percentile(real, [50, 95])

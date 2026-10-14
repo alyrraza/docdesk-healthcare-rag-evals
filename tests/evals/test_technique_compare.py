@@ -65,3 +65,13 @@ def test_ac_evl_05_tech_05_legacy_tokens_and_latency_say_not_recorded() -> None:
     result = compare_technique("t", base(), base())
     assert result["tokens_billed"] == {"baseline": None, "candidate": None}
     assert result["p95_total_ms"] == {"baseline": None, "candidate": None}
+
+
+def test_ac_obs_03_tech_06_a_percentile_over_fewer_than_five_items_is_not_shown() -> None:
+    def timed(record: ResultRecord) -> ResultRecord:
+        latency = {"retrieval_ms": 500.0, "total_ms": 900.0, "cache_hit": False}
+        return ResultRecord(record.item_id, record.metrics, record.failure_label, latency=latency)
+
+    few = run("cand", [timed(item(f"gi-{n:03d}")) for n in range(1, 4)])
+    assert compare_technique("t", base(), few)["p95_total_ms"]["candidate"] == (
+        "too few non cached items")

@@ -132,6 +132,7 @@ class LivePipeline:
         output.tokens_in, output.tokens_out = result.tokens_in, result.tokens_out
         output.cost_usd, output.llm_calls = result.cost_usd, result.llm_calls
         output.calls = list(result.calls)
-        output.timings_ms["generation"] = result.stage_ms.get("generate", 0.0)
+        if result.llm_calls:  # no model call (abstained before the model) means no generation time
+            output.timings_ms["generation"] = result.stage_ms.get("generate", 0.0)
         output.cache_hits = sum(1 for call in result.calls if call.cache_hit)
         return output

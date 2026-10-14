@@ -133,7 +133,7 @@ def score_item(
     latency = {
         "retrieval_ms": out.timings_ms.get("retrieval"),
         "generation_ms": out.timings_ms.get("generation"),
-        "judge_ms": judge_ms if kit is not None and out.outcome is not None else None,
+        "judge_ms": judge_ms if any(e["role"] != "generator" for e in entries) else None,
         "cache_hit": any(e["cache_hit"] for e in entries),
     }
     return ItemScore(metrics, label, trace, entries, latency)

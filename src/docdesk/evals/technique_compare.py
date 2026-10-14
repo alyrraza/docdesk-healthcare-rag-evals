@@ -60,10 +60,18 @@ def billed_tokens(data: RunData) -> int | None:
     return None if usage is None else sum(u.tokens_billed for u in usage)
 
 
-def p95_total(data: RunData) -> float | None:
-    """The 95th percentile of total item time over non cached items; None if not recorded."""
+MIN_LATENCY_ITEMS = 5
+
+
+def p95_total(data: RunData) -> float | str | None:
+    """The 95th percentile of total item time over non cached items; None if not recorded.
+
+    With fewer than five non cached items a percentile says nothing, so the text says that.
+    """
     stat = latency_stats(data.records).get("total_ms")
-    return None if stat is None else stat.p95
+    if stat is None:
+        return None
+    return stat.p95 if stat.n >= MIN_LATENCY_ITEMS else "too few non cached items"
 
 
 def compare_technique(name: str, baseline: RunData, candidate: RunData) -> dict[str, Any]:
@@ -151,6 +159,8 @@ def technique_markdown(result: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def fmt(value: float | int | None) -> str:
+def fmt(value: float | int | str | None) -> str:
     """A number, or the plain words for a value that was never recorded."""
+    if isinstance(value, str):
+        return value
     return "not recorded" if value is None else f"{value:.0f}"

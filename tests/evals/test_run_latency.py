@@ -79,3 +79,13 @@ def test_ac_obs_03_latency_04_run_eval_stores_timings_and_a_cache_flag(
     loaded = next(r for r in load_run_data(db_session, summary.run_id).records
                   if r.item_id == "gi-001")
     assert loaded.latency == row.latency
+
+
+def test_ac_obs_03_latency_05_stages_that_made_no_model_call_do_not_count_as_zero() -> None:
+    """Rows stored before the fix hold near zero generation and judge times for abstained items."""
+    real = timed("gi-001", 400.0)
+    no_call = timed("gi-002", 5.0)
+    no_call.latency.update(generation_ms=0.0, judge_ms=0.004)
+    stats = latency_stats([real, no_call])
+    assert stats["generation_ms"].n == 1 and stats["judge_ms"].n == 1
+    assert stats["total_ms"].n == 2  # the item still took 5 ms in total, which is real
