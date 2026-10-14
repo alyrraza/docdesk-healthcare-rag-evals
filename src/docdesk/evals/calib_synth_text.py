@@ -25,6 +25,8 @@ CROSS_REFERENCE = re.compile(
     r"|\b(?:trials?|stud(?:y|ies))\b", re.IGNORECASE)
 # A heading run into the text shows as a word in capitals, which is case sensitive on purpose.
 HEADING_WORD = re.compile(r"\b[A-Z]{4,}\b")
+# Table symbols and dotted abbreviations such as b.i.d. mean the text came from a table.
+TABLE_TEXT = re.compile(r"[<>=±]|\b[a-z]\.[a-z]\.")
 MIN_LENGTH, MAX_LENGTH = 30, 200
 
 
@@ -48,6 +50,8 @@ def insertion_sentences(chunk_text: str, drug: str) -> list[str]:
         if not MIN_LENGTH <= len(sentence) <= MAX_LENGTH:
             continue
         if not sentence.startswith(STARTERS) or not CONCRETE.search(sentence):
+            continue
+        if not sentence.endswith((".", "!", "?")) or TABLE_TEXT.search(sentence):
             continue
         if CROSS_REFERENCE.search(sentence) or HEADING_WORD.search(sentence):
             continue

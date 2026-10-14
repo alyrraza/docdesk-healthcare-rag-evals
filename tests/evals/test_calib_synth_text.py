@@ -58,3 +58,13 @@ def test_ac_evl_07_calib_45_headings_and_dangling_references_are_not_candidates(
     )
     assert insertion_sentences(chunk, drug="metformin") == [
         "The usual range is 2 to 6 mg/day in divided doses."]
+
+
+def test_ac_evl_07_calib_46_fragments_and_table_text_are_not_candidates() -> None:
+    glued = "The tablets hold 4.5 mg of base. structural formula"            # heading glued on
+    no_stop = "The older adults will need 100 mg b.i.d.(twice daily)"       # no final stop
+    symbol = "The dose for ages 1 Month to < 6 Months is 14 mg/kg daily."   # table symbol
+    fine = "The adult dose is 5 mg twice daily."
+    for text in (glued, no_stop, symbol):
+        assert insertion_sentences(text, drug="metformin") == []
+    assert insertion_sentences(fine, drug="metformin") == [fine]
