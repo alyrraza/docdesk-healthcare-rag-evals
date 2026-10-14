@@ -23,6 +23,7 @@ from sqlalchemy.orm import Session
 from docdesk.evals.budget import BudgetStop
 from docdesk.evals.cache import DEFAULT_CACHE_DIR
 from docdesk.evals.cli_check import answer_prompt_for, check_all
+from docdesk.evals.cli_tools import add_tool_parsers, cmd_rescore, cmd_verify_report
 from docdesk.evals.config import EvalConfig, PromptPinMismatch, load_eval_config
 from docdesk.evals.golden.corpus import GoldenCorpus
 from docdesk.evals.golden.loader import SplitLockedError
@@ -34,6 +35,7 @@ from docdesk.evals.preflight import FingerprintMismatch
 from docdesk.evals.report import compare_markdown, report_markdown
 from docdesk.evals.report_compare import compare_runs
 from docdesk.evals.report_data import build_report, load_run_data
+from docdesk.evals.report_summary import summary_json
 from docdesk.evals.run_store import latest_run_id
 from docdesk.evals.runner import RunOptions, UnknownItemsError, run_eval
 from docdesk.prompts.loader import PromptFile
@@ -84,10 +86,12 @@ def build_parser() -> argparse.ArgumentParser:
     report = commands.add_parser("report", help="print the report of a run (default: the newest)")
     report.add_argument("run_id", nargs="?")
     report.add_argument("--out", type=Path)
+    report.add_argument("--json-out", type=Path, help="also write the summary json")
     compare = commands.add_parser("compare", help="paired comparison of two runs")
     compare.add_argument("baseline")
     compare.add_argument("candidate")
     compare.add_argument("--out", type=Path)
+    add_tool_parsers(commands)
     return parser
 
 
@@ -151,6 +155,8 @@ def cmd_report(rt: Runtime, args: argparse.Namespace) -> int:
         run_id = uuid.UUID(args.run_id) if args.run_id else latest_run_id(session)
         report = build_report(load_run_data(session, run_id))
         write_or_print(report_markdown(report), args.out)
+        if args.json_out is not None:
+            write_or_print(summary_json(report), args.json_out)
     return 0
 
 
@@ -176,7 +182,8 @@ def main(argv: Sequence[str] | None = None, runtime: Runtime | None = None) -> i
                 args.config, session, runtime.corpus_for(session),
                 runtime.golden_dir, runtime.prompts_dir,
             )
-    commands = {"run": cmd_run, "report": cmd_report, "compare": cmd_compare}
+    commands = {"run": cmd_run, "report": cmd_report, "compare": cmd_compare,
+                "rescore": cmd_rescore, "verify-report": cmd_verify_report}
     return commands[args.command](runtime, args)
 
 
