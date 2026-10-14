@@ -81,3 +81,11 @@ def test_unknown_split_is_rejected(db_session: Session) -> None:
     db_session.add(run)
     with pytest.raises(IntegrityError):
         db_session.flush()
+
+
+def test_a_run_can_carry_an_optional_label(db_session: Session) -> None:
+    plain, named = make_run(), make_run()
+    named.label = "smoke 3 items"
+    db_session.add_all([plain, named])
+    db_session.flush()
+    assert plain.label is None and named.label == "smoke 3 items"

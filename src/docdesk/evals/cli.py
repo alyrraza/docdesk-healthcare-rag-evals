@@ -3,6 +3,7 @@
 python -m docdesk.evals.cli check
 python -m docdesk.evals.cli run --retrieval-only        # no model call at all, safe for CI
 python -m docdesk.evals.cli run                         # dev split, generator and judges
+python -m docdesk.evals.cli run --items gi-001,gi-002 --label "smoke"   # a few verified items
 python -m docdesk.evals.cli report [RUN_ID] [--out FILE]
 python -m docdesk.evals.cli compare BASELINE_RUN_ID CANDIDATE_RUN_ID
 Exit codes: 0 done, 1 refused or failed, 2 stopped by the daily token guard (progress is saved).
@@ -33,10 +34,10 @@ from docdesk.evals.report_compare import compare_runs
 from docdesk.evals.report_data import build_report, load_run_data
 from docdesk.evals.report_usage import usage_from_cache
 from docdesk.evals.run_store import latest_run_id
-from docdesk.evals.runner import RunOptions, run_eval
+from docdesk.evals.runner import RunOptions, UnknownItemsError, run_eval
 from docdesk.prompts.loader import PromptFile
 
-REFUSALS = (SplitLockedError, FingerprintMismatch, PromptPinMismatch)
+REFUSALS = (SplitLockedError, FingerprintMismatch, PromptPinMismatch, UnknownItemsError)
 
 
 @dataclass
@@ -55,6 +56,11 @@ class Runtime:
     cache_dir: Path = DEFAULT_CACHE_DIR
 
 
+def item_ids(text: str) -> tuple[str, ...]:
+    """Why: --items takes a comma separated list; blanks are dropped so a trailing comma is fine."""
+    return tuple(part.strip() for part in text.split(",") if part.strip())
+
+
 def build_parser() -> argparse.ArgumentParser:
     """The four commands and their options."""
     parser = argparse.ArgumentParser(prog="docdesk.evals.cli", description=__doc__.splitlines()[0])
@@ -65,6 +71,8 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--split", choices=("dev", "test"), default="dev")
     run.add_argument("--allow-test", action="store_true", help="needed for the test split")
     run.add_argument("--retrieval-only", action="store_true", help="no model calls at all")
+    run.add_argument("--items", type=item_ids, help="only these verified item ids, id1,id2")
+    run.add_argument("--label", help="a name stored on the run, for example a smoke run")
     report = commands.add_parser("report", help="print the report of a run (default: the newest)")
     report.add_argument("run_id", nargs="?")
     report.add_argument("--out", type=Path)
@@ -83,6 +91,8 @@ def cmd_run(rt: Runtime, args: argparse.Namespace) -> int:
         split=args.split,
         allow_test=args.allow_test,
         retrieval_only=args.retrieval_only,
+        items=args.items,
+        label=args.label,
         git_sha=rt.git_sha,
         commit=rt.commit,
     )

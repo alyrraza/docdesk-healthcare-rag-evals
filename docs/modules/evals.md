@@ -285,7 +285,11 @@ failed, 2 stopped by the daily token guard (progress is saved, run the same comm
 - `run [--split dev|test] [--allow-test] [--retrieval-only]`: dev split by default. `--retrieval-only` builds
   no judge and no model client, so it makes no LLM call and can run in CI later. A full run builds the cache,
   budget guard, pacer and Groq client from `.env` (`GROQ_API_KEY`).
-- `report [RUN_ID] [--out FILE]`: the markdown report of a run, the newest run when no id is given.
+  `--items id1,id2` runs only those ids; every id must be a verified item of the chosen split, otherwise the run
+  is refused before any row is written. It does not unlock the test split. `--label NAME` is stored on the run
+  (added 2026-10-14, T098a).
+- `report [RUN_ID] [--out FILE]`: the markdown report of a run, the newest run when no id is given. It reads
+  stored rows and the cache folder only, so it makes no provider call.
 - `compare BASELINE_RUN_ID CANDIDATE_RUN_ID [--out FILE]`: the paired comparison.
 `evals/cli_runtime.py` is the only file that reaches a real model; the CLI tests pass fakes.
 

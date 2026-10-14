@@ -11,7 +11,7 @@ import pytest
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from docdesk.db.models.evals import EvalRunRow
+from docdesk.db.models.evals import EvalResultRow, EvalRunRow
 from docdesk.db.repositories.fingerprint import FingerprintRepository
 from docdesk.evals.budget import BudgetStop
 from docdesk.evals.cli import Runtime, main
@@ -154,3 +154,41 @@ def test_ac_evl_04_cli_report_reads_tokens_per_model_from_the_runtime_cache_fold
     capsys.readouterr()
     assert cli(runtime, "report") == 0
     assert "| cache-model | 1 | 10 | 2 | 0.500000 |" in capsys.readouterr().out
+
+
+def test_ac_evl_06_cli_08_items_flag_runs_only_the_named_verified_items(setup, capsys) -> None:
+    session, runtime, calls = setup
+    assert cli(runtime, "run", "--items", "gi-002,gi-001") == 0
+    assert "ran 2" in capsys.readouterr().out
+    assert sorted(calls.pipeline.questions) == sorted([
+        "How should famotidine be taken according to the label?",
+        "What is the half-life of famotidine?",
+    ])
+    stored = session.execute(select(EvalResultRow.item_id)).scalars()
+    assert sorted(stored) == ["gi-001", "gi-002"]
+
+
+def test_ac_evl_06_cli_09_items_flag_refuses_ids_outside_the_chosen_split(setup, capsys) -> None:
+    _, runtime, calls = setup
+    # gi-005 is an unverified draft, gi-006 is a test item, gi-404 does not exist.
+    assert cli(runtime, "run", "--items", "gi-001,gi-005,gi-006,gi-404") == 1
+    out = capsys.readouterr().out
+    assert "refused" in out and "gi-005" in out and "gi-006" in out and "gi-404" in out
+    assert calls.pipeline.questions == []
+
+
+def test_ac_evl_06_cli_10_items_flag_does_not_unlock_the_test_split(setup, capsys) -> None:
+    _, runtime, calls = setup
+    assert cli(runtime, "run", "--split", "test", "--items", "gi-006") == 1
+    assert "allow-test" in capsys.readouterr().out and calls.pipeline.questions == []
+    assert cli(runtime, "run", "--split", "test", "--allow-test", "--items", "gi-006") == 0
+    assert len(calls.pipeline.questions) == 1
+
+
+def test_ac_evl_06_cli_11_label_is_stored_on_the_run(setup) -> None:
+    session, runtime, _ = setup
+    assert cli(runtime, "run", "--retrieval-only", "--label", "smoke 3 items") == 0
+    assert session.execute(select(EvalRunRow.label)).scalar_one() == "smoke 3 items"
+    assert cli(runtime, "run", "--retrieval-only") == 0
+    labels = sorted(str(x) for x in session.execute(select(EvalRunRow.label)).scalars())
+    assert labels == ["None", "smoke 3 items"]

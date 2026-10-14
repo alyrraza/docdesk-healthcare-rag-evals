@@ -13,11 +13,18 @@ from docdesk.db.models.evals import EvalResultRow, EvalRunRow
 
 
 def open_run(
-    session: Session, *, config_id: str, bundle_id: str | None, split: str, git_sha: str
+    session: Session,
+    *,
+    config_id: str,
+    bundle_id: str | None,
+    split: str,
+    git_sha: str,
+    label: str | None = None,
 ) -> EvalRunRow:
     """Continue the newest unfinished run of the same setup, or start a new one.
 
     A retrieval only run has no prompt bundle (None), so it never continues a full run.
+    The label is stored only on a new run; a continued run keeps the label it started with.
     """
     same_bundle = (
         EvalRunRow.prompt_bundle_id.is_(None)
@@ -44,6 +51,7 @@ def open_run(
         split=split,
         started_at=clock.utc_now(),
         git_sha=git_sha,
+        label=label,
     )
     session.add(run)
     session.flush()
