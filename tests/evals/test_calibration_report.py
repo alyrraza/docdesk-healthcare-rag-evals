@@ -99,3 +99,13 @@ def test_ac_evl_07_report_08_the_detection_counts_are_listed() -> None:
     detection = summary()["sets"]["synthetic"]["variants"]["all"]["detection"]
     assert (detection["tp"], detection["fn"]) == (1, 1) and detection["recall"] == 0.5
     assert "recall" in render_markdown(summary()).lower()
+
+
+def test_ac_evl_07_report_09_dashes_inside_label_text_are_shown_as_hyphens() -> None:
+    risky = out("natural", 11, ["covered"], ["missing"])
+    risky = JudgedOutput(**{**risky.__dict__, "key_points": ["dose \u2014 twice \u2013 daily"]})
+    meta = {"model": "judge-x", "prompts": {}}
+    text = render_markdown(build_summary([risky], synthetic(), PENDING, PENDING, meta,
+                                         resamples=50, seed=0))
+    assert "dose - twice - daily" in text
+    assert "\u2014" not in text and "\u2013" not in text

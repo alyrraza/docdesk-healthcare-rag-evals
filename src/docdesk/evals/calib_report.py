@@ -5,6 +5,8 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from typing import Any
 
+from docdesk.evals.calib_sheet import plain
+
 TITLES = {
     "faithfulness_item": "Faithfulness, item level",
     "key_point_3class": "Key points, three classes",
@@ -22,7 +24,18 @@ def number(value: float | None) -> str:
 
 def cell(text: object) -> str:
     """Keep a table cell on one line and keep a pipe inside it from splitting the row."""
-    return " ".join(str(text).split()).replace("|", "/")
+    return plain(" ".join(str(text).split())).replace("|", "/")
+
+
+def plain_tree(value: Any) -> Any:
+    """Why: the style check bans em and en dashes, and label text is copied from models."""
+    if isinstance(value, str):
+        return plain(value)
+    if isinstance(value, dict):
+        return {key: plain_tree(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [plain_tree(item) for item in value]
+    return value
 
 
 def table(header: Sequence[str], rows: Sequence[Sequence[object]]) -> list[str]:
