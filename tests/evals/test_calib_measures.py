@@ -83,9 +83,11 @@ def test_ac_evl_07_measures_06_every_disagreement_is_listed_with_its_facts() -> 
     assert not key.borderline
     faith = by_level[("D", "faithfulness item")]
     assert (faith.reference, faith.judge) == ("faithful", "not faithful") and faith.borderline
-    assert "fine claim" in faith.text and "unsupported" in faith.text
+    assert faith.text == ("reference: unsupported claims none, contradicted no; "
+                          "judge: score 0.5, flagged claims fine claim (unsupported)")
     missed = by_level[("C", "faithfulness item")]
-    assert "bad dose" in missed.text
+    assert missed.text == ('reference: unsupported claims "bad dose", contradicted no; '
+                           "judge: score 1.0, flagged claims none")
     assert ("A", "correctness item") in by_level
     assert ("E", "faithfulness item") not in by_level  # no judge score, so excluded
     assert len(found) == 4

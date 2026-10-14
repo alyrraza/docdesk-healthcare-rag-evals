@@ -156,10 +156,12 @@ def faithfulness_disagreement(o: JudgedOutput) -> list[Disagreement]:
     score = o.judge.faith_score
     if score is None or ref_faithful(o) == (score == 1.0):
         return []
-    flagged = [f"{claim} ({label})" for claim, label in o.judge.claims
-               if label != "supported"] or ["none"]
-    text = (f"reference: unsupported {o.ref_claims or 'none'}, contradicted "
-            f"{'yes' if o.ref_contradicted else 'no'}; judge: score {score}, flagged {flagged}")
+    flagged = "; ".join(f"{claim} ({label})" for claim, label in o.judge.claims
+                        if label != "supported") or "none"
+    listed = "; ".join(f'"{claim}"' for claim in o.ref_claims) or "none"
+    text = (f"reference: unsupported claims {listed}, contradicted "
+            f"{'yes' if o.ref_contradicted else 'no'}; judge: score {score}, "
+            f"flagged claims {flagged}")
     return [make(o, "faithfulness item", "faithful" if ref_faithful(o) else "not faithful",
                  "faithful" if score == 1.0 else "not faithful", text)]
 

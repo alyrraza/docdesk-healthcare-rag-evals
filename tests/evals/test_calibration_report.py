@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 
 from docdesk.evals.calib_join import JudgedOutput, JudgeSide
-from docdesk.evals.calib_report import render_markdown
+from docdesk.evals.calib_report import fraction, render_markdown
 from docdesk.evals.calibration import Provenance, build_summary
 
 DRAFT = "drafted by claude on 2026-10-14, review by ali pending"
@@ -109,3 +109,13 @@ def test_ac_evl_07_report_09_dashes_inside_label_text_are_shown_as_hyphens() -> 
                                          resamples=50, seed=0))
     assert "dose - twice - daily" in text
     assert "\u2014" not in text and "\u2013" not in text
+
+
+def test_ac_evl_07_report_10_counts_are_worded_plainly_and_zero_denominators_explained() -> None:
+    assert fraction(1, 2, 0.5) == "1 of 2 (0.500)"
+    assert fraction(0, 0, None) == "n/a (no such outputs)"
+    text = render_markdown(summary())
+    natural_part, synthetic_part = text.split("### Disagreements")[1:]
+    assert "Number of disagreements: 3." in natural_part
+    assert "Number of disagreements: 1." in synthetic_part
+    assert "disagreements." not in text.replace("Number of disagreements:", "")

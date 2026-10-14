@@ -81,7 +81,7 @@ def matrices(measures: Mapping[str, Any]) -> list[str]:
 
 def fraction(count: int, total: int, value: float | None) -> str:
     """Counts first, so a tiny denominator is visible next to the ratio."""
-    return f"{count} of {total} ({number(value)})" if total else "n/a, no such outputs"
+    return f"{count} of {total} ({number(value)})" if total else "n/a (no such outputs)"
 
 
 def detection_lines(found: Mapping[str, Any]) -> list[str]:
@@ -89,10 +89,10 @@ def detection_lines(found: Mapping[str, Any]) -> list[str]:
     tp, fn, fp = found["tp"], found["fn"], found["fp"]
     return ["", "Bad output detection (reference lists an unsupported claim or a contradiction):",
             "",
-            f"- recall: {fraction(tp, tp + fn, found['recall'])}, outputs the judge flagged among "
-            "the ones the reference flags",
-            f"- precision: {fraction(tp, tp + fp, found['precision'])}, outputs the reference "
-            "also flags among the ones the judge flagged"]
+            f"- recall: {fraction(tp, tp + fn, found['recall'])}. Of the outputs the reference "
+            "flags, how many the judge flagged.",
+            f"- precision: {fraction(tp, tp + fp, found['precision'])}. Of the outputs the judge "
+            "flagged, how many the reference also flags."]
 
 
 def variant_lines(name: str, found: Mapping[str, Any]) -> list[str]:
@@ -108,7 +108,9 @@ def variant_lines(name: str, found: Mapping[str, Any]) -> list[str]:
 
 def disagreement_lines(found: Sequence[Mapping[str, Any]]) -> list[str]:
     """Every disagreement as a row of facts."""
-    lines = ["### Disagreements", "", f"{len(found)} disagreements.", ""]
+    lines = ["### Disagreements", "", f"Number of disagreements: {len(found)}.", ""]
+    if not found:
+        return lines
     rows = [(d["output_id"], d["level"], d["reference"], d["judge"], d["text"],
              "yes" if d["borderline"] else "no") for d in found]
     header = ["Output", "Level", "Reference", "Judge", "Text", "Borderline"]
