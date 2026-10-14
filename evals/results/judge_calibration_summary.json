@@ -1,0 +1,614 @@
+{
+  "provenance": "These labels were drafted by Claude and have not been reviewed by Ali, so the agreement numbers below measure the judge against Claude drafted labels, not against human labels.",
+  "labels": {
+    "natural": {
+      "labeled_by": "claude",
+      "labeled_on": "2026-10-14",
+      "provenance": "drafted by claude on 2026-10-14, review by ali pending",
+      "reviewed_by": "pending"
+    },
+    "synthetic": {
+      "labeled_by": "claude",
+      "labeled_on": "2026-10-14",
+      "provenance": "drafted by claude on 2026-10-14, review by ali pending",
+      "reviewed_by": "pending"
+    }
+  },
+  "judge": {
+    "model": "qwen/qwen3.8-27b",
+    "prompts": {
+      "judge_faithfulness@2.0.0": "23b3fee6a584bfdc1ef6ef13cb8418907b3eaec1a2a6b417c956ceefc71534fc",
+      "judge_correctness@2.0.0": "a49dd90ae421f479f7f2a58554064e302f7879b6ff75c0963f8232a7a9c2d631"
+    }
+  },
+  "bootstrap": {
+    "resamples": 2000,
+    "seed": 0,
+    "confidence": 0.95
+  },
+  "sets": {
+    "natural": {
+      "n_outputs": 30,
+      "borderline_numbers": [
+        8,
+        16,
+        20,
+        22,
+        25,
+        27
+      ],
+      "reference_faithful": 28,
+      "variants": {
+        "all": {
+          "n_outputs": 30,
+          "measures": {
+            "faithfulness_item": {
+              "name": "faithfulness_item",
+              "labels": [
+                "not faithful",
+                "faithful"
+              ],
+              "n": 30,
+              "table": [
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  28
+                ]
+              ],
+              "agreement": 0.9666666666666667,
+              "kappa": 0.6511627906976744,
+              "kappa_text": "0.651",
+              "interval": {
+                "low": 0.36619718309859134,
+                "high": 1.0,
+                "valid": 1257,
+                "resamples": 2000
+              },
+              "majority_share": 0.9666666666666667,
+              "unstable": true
+            },
+            "key_point_3class": {
+              "name": "key_point_3class",
+              "labels": [
+                "covered",
+                "missing",
+                "contradicted"
+              ],
+              "n": 58,
+              "table": [
+                [
+                  49,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  9,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "agreement": 1.0,
+              "kappa": 1.0,
+              "kappa_text": "1.000",
+              "interval": {
+                "low": 1.0,
+                "high": 1.0,
+                "valid": 1997,
+                "resamples": 2000
+              },
+              "majority_share": 0.8448275862068966,
+              "unstable": false
+            },
+            "key_point_binary": {
+              "name": "key_point_binary",
+              "labels": [
+                "not covered",
+                "covered"
+              ],
+              "n": 58,
+              "table": [
+                [
+                  9,
+                  0
+                ],
+                [
+                  0,
+                  49
+                ]
+              ],
+              "agreement": 1.0,
+              "kappa": 1.0,
+              "kappa_text": "1.000",
+              "interval": {
+                "low": 1.0,
+                "high": 1.0,
+                "valid": 1997,
+                "resamples": 2000
+              },
+              "majority_share": 0.8448275862068966,
+              "unstable": false
+            },
+            "correct_item": {
+              "name": "correct_item",
+              "labels": [
+                "not correct",
+                "correct"
+              ],
+              "n": 30,
+              "table": [
+                [
+                  6,
+                  0
+                ],
+                [
+                  0,
+                  24
+                ]
+              ],
+              "agreement": 1.0,
+              "kappa": 1.0,
+              "kappa_text": "1.000",
+              "interval": {
+                "low": 1.0,
+                "high": 1.0,
+                "valid": 1997,
+                "resamples": 2000
+              },
+              "majority_share": 0.8,
+              "unstable": false
+            }
+          },
+          "detection": {
+            "tp": 1,
+            "fn": 1,
+            "fp": 0,
+            "tn": 28,
+            "recall": 0.5,
+            "precision": 1.0
+          },
+          "excluded_no_faithfulness_score": []
+        },
+        "without_borderline": {
+          "n_outputs": 24,
+          "measures": {
+            "faithfulness_item": {
+              "name": "faithfulness_item",
+              "labels": [
+                "not faithful",
+                "faithful"
+              ],
+              "n": 24,
+              "table": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  24
+                ]
+              ],
+              "agreement": 1.0,
+              "kappa": null,
+              "kappa_text": "undefined, single class",
+              "interval": null,
+              "majority_share": 1.0,
+              "unstable": true
+            },
+            "key_point_3class": {
+              "name": "key_point_3class",
+              "labels": [
+                "covered",
+                "missing",
+                "contradicted"
+              ],
+              "n": 46,
+              "table": [
+                [
+                  45,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "agreement": 1.0,
+              "kappa": 1.0,
+              "kappa_text": "1.000",
+              "interval": {
+                "low": 1.0,
+                "high": 1.0,
+                "valid": 1295,
+                "resamples": 2000
+              },
+              "majority_share": 0.9782608695652174,
+              "unstable": true
+            },
+            "key_point_binary": {
+              "name": "key_point_binary",
+              "labels": [
+                "not covered",
+                "covered"
+              ],
+              "n": 46,
+              "table": [
+                [
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  45
+                ]
+              ],
+              "agreement": 1.0,
+              "kappa": 1.0,
+              "kappa_text": "1.000",
+              "interval": {
+                "low": 1.0,
+                "high": 1.0,
+                "valid": 1295,
+                "resamples": 2000
+              },
+              "majority_share": 0.9782608695652174,
+              "unstable": true
+            },
+            "correct_item": {
+              "name": "correct_item",
+              "labels": [
+                "not correct",
+                "correct"
+              ],
+              "n": 24,
+              "table": [
+                [
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  23
+                ]
+              ],
+              "agreement": 1.0,
+              "kappa": 1.0,
+              "kappa_text": "1.000",
+              "interval": {
+                "low": 1.0,
+                "high": 1.0,
+                "valid": 1295,
+                "resamples": 2000
+              },
+              "majority_share": 0.9583333333333334,
+              "unstable": true
+            }
+          },
+          "detection": {
+            "tp": 0,
+            "fn": 0,
+            "fp": 0,
+            "tn": 24,
+            "recall": null,
+            "precision": null
+          },
+          "excluded_no_faithfulness_score": []
+        }
+      },
+      "disagreements": [
+        {
+          "set_name": "natural",
+          "output_id": "8",
+          "level": "faithfulness item",
+          "reference": "not faithful",
+          "judge": "faithful",
+          "text": "reference: unsupported claims \"the synthetic hormone medicines are glucocorticoids\", contradicted no; judge: score 1.0, flagged claims none",
+          "borderline": true
+        }
+      ]
+    },
+    "synthetic": {
+      "n_outputs": 10,
+      "borderline_numbers": [
+        7,
+        8
+      ],
+      "reference_faithful": 5,
+      "variants": {
+        "all": {
+          "n_outputs": 10,
+          "measures": {
+            "faithfulness_item": {
+              "name": "faithfulness_item",
+              "labels": [
+                "not faithful",
+                "faithful"
+              ],
+              "n": 10,
+              "table": [
+                [
+                  5,
+                  0
+                ],
+                [
+                  0,
+                  5
+                ]
+              ],
+              "agreement": 1.0,
+              "kappa": 1.0,
+              "kappa_text": "1.000",
+              "interval": {
+                "low": 1.0,
+                "high": 1.0,
+                "valid": 1998,
+                "resamples": 2000
+              },
+              "majority_share": 0.5,
+              "unstable": false
+            },
+            "key_point_3class": {
+              "name": "key_point_3class",
+              "labels": [
+                "covered",
+                "missing",
+                "contradicted"
+              ],
+              "n": 21,
+              "table": [
+                [
+                  15,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  6,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "agreement": 1.0,
+              "kappa": 1.0,
+              "kappa_text": "1.000",
+              "interval": {
+                "low": 1.0,
+                "high": 1.0,
+                "valid": 1999,
+                "resamples": 2000
+              },
+              "majority_share": 0.7142857142857143,
+              "unstable": false
+            },
+            "key_point_binary": {
+              "name": "key_point_binary",
+              "labels": [
+                "not covered",
+                "covered"
+              ],
+              "n": 21,
+              "table": [
+                [
+                  6,
+                  0
+                ],
+                [
+                  0,
+                  15
+                ]
+              ],
+              "agreement": 1.0,
+              "kappa": 1.0,
+              "kappa_text": "1.000",
+              "interval": {
+                "low": 1.0,
+                "high": 1.0,
+                "valid": 1999,
+                "resamples": 2000
+              },
+              "majority_share": 0.7142857142857143,
+              "unstable": false
+            },
+            "correct_item": {
+              "name": "correct_item",
+              "labels": [
+                "not correct",
+                "correct"
+              ],
+              "n": 10,
+              "table": [
+                [
+                  5,
+                  0
+                ],
+                [
+                  0,
+                  5
+                ]
+              ],
+              "agreement": 1.0,
+              "kappa": 1.0,
+              "kappa_text": "1.000",
+              "interval": {
+                "low": 1.0,
+                "high": 1.0,
+                "valid": 1998,
+                "resamples": 2000
+              },
+              "majority_share": 0.5,
+              "unstable": false
+            }
+          },
+          "detection": {
+            "tp": 5,
+            "fn": 0,
+            "fp": 0,
+            "tn": 5,
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "excluded_no_faithfulness_score": []
+        },
+        "without_borderline": {
+          "n_outputs": 8,
+          "measures": {
+            "faithfulness_item": {
+              "name": "faithfulness_item",
+              "labels": [
+                "not faithful",
+                "faithful"
+              ],
+              "n": 8,
+              "table": [
+                [
+                  5,
+                  0
+                ],
+                [
+                  0,
+                  3
+                ]
+              ],
+              "agreement": 1.0,
+              "kappa": 1.0,
+              "kappa_text": "1.000",
+              "interval": {
+                "low": 1.0,
+                "high": 1.0,
+                "valid": 1948,
+                "resamples": 2000
+              },
+              "majority_share": 0.625,
+              "unstable": false
+            },
+            "key_point_3class": {
+              "name": "key_point_3class",
+              "labels": [
+                "covered",
+                "missing",
+                "contradicted"
+              ],
+              "n": 17,
+              "table": [
+                [
+                  14,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  3,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "agreement": 1.0,
+              "kappa": 1.0,
+              "kappa_text": "1.000",
+              "interval": {
+                "low": 1.0,
+                "high": 1.0,
+                "valid": 1949,
+                "resamples": 2000
+              },
+              "majority_share": 0.8235294117647058,
+              "unstable": false
+            },
+            "key_point_binary": {
+              "name": "key_point_binary",
+              "labels": [
+                "not covered",
+                "covered"
+              ],
+              "n": 17,
+              "table": [
+                [
+                  3,
+                  0
+                ],
+                [
+                  0,
+                  14
+                ]
+              ],
+              "agreement": 1.0,
+              "kappa": 1.0,
+              "kappa_text": "1.000",
+              "interval": {
+                "low": 1.0,
+                "high": 1.0,
+                "valid": 1949,
+                "resamples": 2000
+              },
+              "majority_share": 0.8235294117647058,
+              "unstable": false
+            },
+            "correct_item": {
+              "name": "correct_item",
+              "labels": [
+                "not correct",
+                "correct"
+              ],
+              "n": 8,
+              "table": [
+                [
+                  3,
+                  0
+                ],
+                [
+                  0,
+                  5
+                ]
+              ],
+              "agreement": 1.0,
+              "kappa": 1.0,
+              "kappa_text": "1.000",
+              "interval": {
+                "low": 1.0,
+                "high": 1.0,
+                "valid": 1948,
+                "resamples": 2000
+              },
+              "majority_share": 0.625,
+              "unstable": false
+            }
+          },
+          "detection": {
+            "tp": 5,
+            "fn": 0,
+            "fp": 0,
+            "tn": 3,
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "excluded_no_faithfulness_score": []
+        }
+      },
+      "disagreements": []
+    }
+  }
+}
