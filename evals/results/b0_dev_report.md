@@ -4,6 +4,10 @@ Config b0, split dev, mode full. Items run: 44. Items not run: 1.
 
 Intervals are 95 percent bootstrap intervals of the mean, 2000 resamples, seed 0. Items that share a source document are resampled together. A cell shows n when some items had no value for it.
 
+Headline: 15 of 30 answerable items pass strictly (faithfulness 1.0 and correctness 1.0), rate 0.50 [0.33, 0.70]. The overall pass rate is 0.61 [0.48, 0.75] over 44 items.
+
+Unanswerable items pass by abstaining, so they raise the overall pass rate. The headline leaves them out.
+
 ## Results per category
 
 | category | items | pass rate | recall@k | hit | MRR | context precision | citation precision | citation recall | faithfulness | correctness |
@@ -44,11 +48,16 @@ No judge parse failures or errors.
 
 ## Tokens and cost
 
-Tokens in 65525, tokens out 12867, cost 0.04197910 USD, model calls 83, cache hits 2.
+Tokens in 65525, tokens out 12867, cost 0.04197910 USD, model calls 83, cache hits 2. Cache hits count the judge calls only, because the generator cache hits are not recorded yet.
 
-## Pass rate on answerable items
+## Tokens and cost per model
 
-Pass means faithfulness 1.0 and correctness 1.0. 15 of 30 answerable items pass (0.50). The category tables above use the harness pass flag, which also counts a correct abstain or refusal as a pass.
+Counted from every entry in the cache folder, since a cache entry has no run id. Cost is the list price equivalent, not what was billed.
+
+| model | calls | tokens in | tokens out | cost USD |
+|---|---|---|---|---|
+| openai/gpt-oss-120b | 43 | 42466 | 10090 | 0.012424 |
+| qwen/qwen3.8-27b | 40 | 23059 | 2777 | 0.029555 |
 
 ## Where answerable items fail
 
@@ -56,32 +65,38 @@ Answerable items that ran: 30. A failed item has one primary label.
 
 | stage | items | labels |
 |---|---|---|
-| retrieval (gold not in top 5) | 7 | retrieval_miss 2, ranking_miss 5 |
-| packing (gold in top 5, dropped before the prompt) | 5 | context_overflow 5 |
-| generation (gold in the prompt) | 3 | incorrect 1, context_distraction 1, unfaithful 1 |
-| pass | 15 | |
+| retrieval (gold not in top k) | 7 | ranking_miss 5, retrieval_miss 2 |
+| packing (gold in top k, dropped before the prompt) | 5 | context_overflow 5 |
+| generation (gold in the prompt) | 3 | context_distraction 1, incorrect 1, unfaithful 1 |
+| pass | 15 |  |
 
 Retrieval and packing together are the stages before the model: 12 of 30.
 
-## Tokens and cost per model
+## Failure label by outcome
 
-Counted from the cache entries written by the real calls of this session (smoke items included, because the full run reused them). The ledger column is the guard's count for the last 24 hours.
+An answerable item that abstained is a wrong abstain, listed under its first label.
 
-| model | calls | tokens in | tokens out | cost USD | ledger tokens | guard left |
-|---|---|---|---|---|---|---|
-| openai/gpt-oss-120b | 43 | 42466 | 10090 | 0.012424 | 52556 | 117444 |
-| qwen/qwen3.8-27b | 40 | 23059 | 2777 | 0.029555 | 25836 | 144164 |
+| label | answered | abstained | refused | error |
+|---|---|---|---|---|
+| retrieval_miss | 1 | 1 | 0 | 0 |
+| ranking_miss | 0 | 5 | 0 | 0 |
+| context_overflow | 1 | 4 | 0 | 0 |
+| context_distraction | 1 | 0 | 0 | 0 |
+| missed_refusal | 0 | 2 | 0 | 0 |
+| unfaithful | 1 | 0 | 0 | 0 |
+| incorrect | 1 | 0 | 0 | 0 |
+| no label (passed) | 15 | 11 | 1 | 0 |
 
-## Five worst answered items
+## Worst five answered items
 
 Ranked by the lower of faithfulness and correctness, then by item id.
 
-1. gi-039 (multi_chunk), label context_overflow: correctness 0.00 (0 covered, 2 missing, 0 contradicted), faithfulness 1.00 (3 supported of 3 claims), recall@5 1.00, 2 chunks in the prompt, 1 cited.
-2. gi-047 (multi_chunk), label retrieval_miss: correctness 0.00 (0 covered, 2 missing, 0 contradicted), faithfulness 1.00 (13 supported of 13 claims), recall@5 0.50, 3 chunks in the prompt, 3 cited.
-3. gi-017 (single_fact), label incorrect: correctness 0.50 (1 covered, 1 missing, 0 contradicted), faithfulness 1.00 (3 supported of 3 claims), recall@5 1.00, 5 chunks in the prompt, 1 cited.
-4. gi-032 (single_fact), label context_distraction: correctness 0.50 (1 covered, 1 missing, 0 contradicted), faithfulness 1.00 (1 supported of 1 claims), recall@5 1.00, 2 chunks in the prompt, 1 cited.
-5. gi-044 (multi_chunk), label unfaithful: correctness 1.00 (2 covered, 0 missing, 0 contradicted), faithfulness 0.67 (2 supported of 3 claims), recall@5 1.00, 4 chunks in the prompt, 2 cited.
+1. gi-039 (multi_chunk), label context_overflow: correctness 0.00 (0 covered, 2 missing, 0 contradicted), faithfulness 1.00 (3 of 3 claims supported), recall@k 1.00, 2 chunks in the prompt, 1 cited.
+2. gi-047 (multi_chunk), label retrieval_miss: correctness 0.00 (0 covered, 2 missing, 0 contradicted), faithfulness 1.00 (13 of 13 claims supported), recall@k 0.50, 3 chunks in the prompt, 3 cited.
+3. gi-017 (single_fact), label incorrect: correctness 0.50 (1 covered, 1 missing, 0 contradicted), faithfulness 1.00 (3 of 3 claims supported), recall@k 1.00, 5 chunks in the prompt, 1 cited.
+4. gi-032 (single_fact), label context_distraction: correctness 0.50 (1 covered, 1 missing, 0 contradicted), faithfulness 1.00 (1 of 1 claims supported), recall@k 1.00, 2 chunks in the prompt, 1 cited.
+5. gi-044 (multi_chunk), label unfaithful: correctness 1.00 (2 covered, 0 missing, 0 contradicted), faithfulness 0.67 (2 of 3 claims supported), recall@k 1.00, 4 chunks in the prompt, 2 cited.
 
 ## Not run
 
-gi-079 (injected instruction, needs T122) is the only dev item not run. Dev has 45 verified items, not 60.
+- gi-079: not run, needs T122
