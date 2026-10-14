@@ -96,3 +96,10 @@ def test_ac_evl_06_workflow_actions_are_pinned_to_a_version() -> None:
 def test_ac_evl_06_workflow_text_has_no_em_or_en_dash() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
     assert "\u2014" not in text and "\u2013" not in text
+
+
+def test_ci_runner_is_pinned_and_actions_are_node_24_majors() -> None:
+    """F11: no floating runner image, and no Node 20 action majors."""
+    text = WORKFLOW.read_text(encoding="utf-8")
+    assert "ubuntu-latest" not in text and "ubuntu-24.04" in text
+    assert "actions/checkout@v4" not in text and "actions/setup-python@v5" not in text
