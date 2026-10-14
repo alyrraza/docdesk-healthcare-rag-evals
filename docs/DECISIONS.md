@@ -583,3 +583,26 @@ Choices made while building the eval runner that the task text did not fix.
   one plain sentence at the top that the agreement numbers measure the judge against Claude drafted labels.
 - When Ali finishes the review, `reviewed_by` becomes `ali`, changed labels keep the draft value in the git history,
   and T100 is re-run.
+
+## 2026-10-14: judge calibration agreement, how T100 measures (AC-EVL-07)
+- Two sets, two reports, no pooled number. Each set is shown for all outputs and again without its borderline outputs
+  (natural 8, 16, 20, 22, 25, 27 and synthetic 7, 8, by the sheet number).
+- Faithfulness item level: reference faithful means no unsupported claim and no contradiction; judge faithful means
+  score 1.0. An output with no judge score (zero claims) is listed and left out of every faithfulness measure. Bad output
+  recall and precision are read from that same 2 by 2 table, as counts, with no interval of their own.
+- Correctness: key point level in three classes and as covered or not, and item level, where correct means every key
+  point covered and none contradicted. Judge labels are matched to key points by number.
+- Kappa is reported as "undefined, single class" when the reference or the judge uses one class only (the brief named the
+  reference side; the judge side is the same problem). The counts and raw agreement are shown instead. A note is added
+  when one class has more than 90 percent of the labels on either side.
+- Interval: percentile bootstrap, 95 percent, 2000 resamples, seed 0 (the harness defaults), resampling whole outputs, so
+  the key points of one output stay together. A resample where one side has a single class has no kappa and is left out;
+  the report shows how many resamples were valid out of 2000.
+- Synthetic judge labels: made with the runner's judge functions, the pinned judge model and prompts, through the cache,
+  budget guard, pacer and client. The parent's packed context is rebuilt from the stored used chunk ids in the runner's
+  format. `scripts/calibration_judge.py --check` proves the rebuild is exact with no tokens: the judge call the original
+  run made for each parent must be found in the cache under the rebuilt context. `--run` refuses to start unless that
+  check passes and unless the stored judge model and prompt hashes equal the ones in use. A parse failure or provider
+  error stops the run; a budget stop exits 2 and a rerun continues from the cache.
+- The report is generated (`scripts/calibration_report.py`), repeatable byte for byte, and em or en dashes in label text
+  become hyphens in the markdown and the json. It states the provenance sentence first and gives no pass or fail verdict.
