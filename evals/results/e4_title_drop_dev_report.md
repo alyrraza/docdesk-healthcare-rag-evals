@@ -74,7 +74,6 @@ Milliseconds per item. An item with any cached model call is left out of the gen
 |---|---|---|---|
 | retrieval | 43 | 669 | 1591 |
 | generation | 3 | 1083 | 1589 |
-| judge | 4 | 0 | 0 |
 | total | 4 | 1874 | 2594 |
 
 ## Where answerable items fail

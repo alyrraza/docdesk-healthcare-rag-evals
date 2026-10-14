@@ -219,7 +219,7 @@
   ],
   "p95_total_ms": {
     "baseline": null,
-    "candidate": 3045.8422850000716
+    "candidate": "too few non cached items"
   },
   "rule": {
     "faithfulness_lowered": false,

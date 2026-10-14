@@ -21,16 +21,6 @@
     "faithfulness": {}
   },
   "latency_ms": {
-    "generation_ms": {
-      "n": 9,
-      "p50": 0.0,
-      "p95": 0.0
-    },
-    "judge_ms": {
-      "n": 10,
-      "p50": 0.0,
-      "p95": 0.0
-    },
     "retrieval_ms": {
       "n": 43,
       "p50": 576.8,

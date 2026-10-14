@@ -73,8 +73,6 @@ Milliseconds per item. An item with any cached model call is left out of the gen
 | stage | items | p50 ms | p95 ms |
 |---|---|---|---|
 | retrieval | 43 | 577 | 1344 |
-| generation | 9 | 0 | 0 |
-| judge | 10 | 0 | 0 |
 | total | 10 | 495 | 1001 |
 
 ## Where answerable items fail

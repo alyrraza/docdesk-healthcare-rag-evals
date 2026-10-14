@@ -6,7 +6,7 @@ Strict pass on answerable items: baseline 15 of 30, candidate 15 of 30. Gained: 
 
 Rule for the final config: at least one item more than the baseline on the strict rate (not met) and faithfulness not lowered (not lowered). Result: not kept.
 
-Wrong abstains (answerable items declined): baseline 10, candidate 10. Tokens billed: baseline not recorded, candidate 0. p95 total latency over non cached items, ms: baseline not recorded, candidate 0.
+Wrong abstains (answerable items declined): baseline 10, candidate 10. Tokens billed: baseline not recorded, candidate 0. p95 total latency over non cached items, ms: baseline not recorded, candidate too few non cached items.
 
 ## Overall
 
