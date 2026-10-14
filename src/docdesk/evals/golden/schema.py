@@ -8,6 +8,14 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
+from docdesk.evals.golden.behavior import (
+    ExpectedBehavior,
+    FixtureDocument,
+    behavior_problems,
+    injection_problems,
+    resolve_behavior,
+)
+
 MAX_QUOTE_CHARS = 300
 SOURCE_KEY = re.compile(r"seed:[a-z]+:\S+")
 
@@ -80,6 +88,9 @@ class GoldenItem(BaseModel):
     gold_sql: str | None = None
     gold_result: list[Any] | None = None
     adversarial_kind: AdversarialKind = "none"
+    expected_behavior: ExpectedBehavior | None = None
+    canary: str | None = None
+    fixture_documents: list[FixtureDocument] = []
     verified: bool = False
     verified_by: str | None = Field(default=None, min_length=1)
     verified_on: date | None = None
@@ -91,12 +102,19 @@ class GoldenItem(BaseModel):
             *self.answer_problems(),
             *self.evidence_problems(),
             *self.absence_problems(),
+            *behavior_problems(self),
+            *injection_problems(self),
             *self.sql_problems(),
             *self.verification_problems(),
         ]
         if problems:
             raise ValueError("; ".join(problems))
         return self
+
+    @property
+    def behavior(self) -> ExpectedBehavior:
+        """What a correct system does with this item, the default filled in from answerable."""
+        return resolve_behavior(self.expected_behavior, self.answerable)
 
     def answer_problems(self) -> list[str]:
         """Rules tying type, answerable, facts and adversarial_kind together."""

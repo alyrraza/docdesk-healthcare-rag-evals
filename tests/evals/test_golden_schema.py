@@ -180,5 +180,7 @@ def test_ac_evl_01_adversarial_kind_must_match_the_type() -> None:
         GoldenItem.model_validate(unanswerable(type="adversarial"))
     with pytest.raises(ValidationError, match="adversarial_kind"):
         GoldenItem.model_validate(single_fact(adversarial_kind="dose_request"))
-    refused = unanswerable(type="adversarial", adversarial_kind="dose_request")
+    refused = unanswerable(
+        type="adversarial", adversarial_kind="dose_request", expected_behavior="refuse"
+    )
     assert GoldenItem.model_validate(refused)
