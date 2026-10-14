@@ -41,3 +41,9 @@ docs/REFERENCES.md
 INSTALL.md
 docs/golden_review/
 docs/calibration/
+
+# Databases and keys (review finding F19)
+*.db
+*.sqlite
+*.pem
+*.key
