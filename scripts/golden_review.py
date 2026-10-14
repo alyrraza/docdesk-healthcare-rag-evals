@@ -2,6 +2,8 @@
 
 Usage:
     python scripts/golden_review.py evals/golden/batch1.yaml      write docs/golden_review/batch1.md
+    python scripts/golden_review.py FILE --only gi-003,gi-005 --name batch1_changed
+                                        a sheet for chosen items only, under another name
     python scripts/golden_review.py --apply docs/golden_review/batch1.md [--by ali]
 
 In the sheet the owner writes OK, FIX: <note> or DROP after each item. Apply sets verified
@@ -18,6 +20,7 @@ from pathlib import Path
 
 from docdesk.evals.golden.loader import GoldenValidationError, count_found, read_file
 from docdesk.evals.golden.review import SheetError, apply_decisions, parse_sheet, render_sheet
+from docdesk.evals.golden.schema import GoldenItem
 
 ROOT = Path(__file__).resolve().parents[1]
 CORPORA = ("openfda", "medlineplus")
@@ -34,13 +37,28 @@ def load_titles(corpus_root: Path) -> dict[str, str]:
     return titles
 
 
-def write_sheet(batch_file: Path, project_root: Path) -> int:
+def pick_items(mine: list[GoldenItem], only: str | None) -> list[GoldenItem]:
+    """Keep the requested ids, in the order asked; an id that is not in the file is an error."""
+    if only is None:
+        return mine
+    wanted = [item_id.strip() for item_id in only.split(",") if item_id.strip()]
+    by_id = {item.id: item for item in mine}
+    missing = [item_id for item_id in wanted if item_id not in by_id]
+    if missing:
+        raise SystemExit(f"--only names items that are not in the batch file: {', '.join(missing)}")
+    return [by_id[item_id] for item_id in wanted]
+
+
+def write_sheet(
+    batch_file: Path, project_root: Path, only: str | None = None, name: str | None = None
+) -> int:
     """Validate this batch file's schema, then write its review sheet under docs/golden_review/."""
-    mine, problems = read_file(batch_file)
-    if problems or not mine:
+    found, problems = read_file(batch_file)
+    if problems or not found:
         raise SystemExit("\n".join(problems) or f"no items found in {batch_file}")
+    mine = pick_items(found, only)
     titles = load_titles(project_root / "data" / "corpus")
-    target = project_root / "docs" / "golden_review" / f"{batch_file.stem}.md"
+    target = project_root / "docs" / "golden_review" / f"{name or batch_file.stem}.md"
     target.parent.mkdir(parents=True, exist_ok=True)
     try:
         shown = batch_file.resolve().relative_to(project_root.resolve()).as_posix()
@@ -77,11 +95,13 @@ def main(argv: list[str] | None = None, project_root: Path = ROOT) -> int:
     parser.add_argument("file", type=Path, help="a batch YAML file, or a sheet with --apply")
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--by", default="ali", help="name stored as verified_by")
+    parser.add_argument("--only", help="comma separated item ids for a partial sheet")
+    parser.add_argument("--name", help="sheet file name without .md, default is the batch name")
     args = parser.parse_args(argv)
     try:
         if args.apply:
             return apply_sheet(args.file, args.by, project_root)
-        return write_sheet(args.file, project_root)
+        return write_sheet(args.file, project_root, args.only, args.name)
     except (SheetError, GoldenValidationError) as error:
         raise SystemExit(str(error)) from error
 

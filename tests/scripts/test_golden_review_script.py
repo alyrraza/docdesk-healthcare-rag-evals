@@ -6,6 +6,7 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
 import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
@@ -68,3 +69,22 @@ def test_ac_evl_01_the_script_reads_only_the_batch_file_it_is_given(tmp_path: Pa
     sheet = tmp_path / "docs" / "golden_review" / "batch1.md"
     sheet.write_text(text.replace("Decision:\n", "Decision: OK\n", 1), encoding="utf-8")
     assert main(["--apply", str(sheet)], project_root=tmp_path) == 0
+
+
+def test_ac_evl_01_the_script_can_write_a_sheet_for_chosen_items_under_another_name(
+    tmp_path: Path,
+) -> None:
+    batch = project(tmp_path)
+    second = dict(ITEM, id="gi-002")
+    batch.write_text(yaml.safe_dump([ITEM, second], sort_keys=False), encoding="utf-8")
+    args = [str(batch), "--only", "gi-002", "--name", "batch1_changed"]
+    assert main(args, project_root=tmp_path) == 0
+    text = (tmp_path / "docs" / "golden_review" / "batch1_changed.md").read_text(encoding="utf-8")
+    assert "## gi-002" in text and "## gi-001" not in text
+    assert "Batch file: evals/golden/batch1.yaml" in text
+
+
+def test_ac_evl_01_an_unknown_item_id_in_only_is_an_error(tmp_path: Path) -> None:
+    batch = project(tmp_path)
+    with pytest.raises(SystemExit, match="gi-404"):
+        main([str(batch), "--only", "gi-404"], project_root=tmp_path)
