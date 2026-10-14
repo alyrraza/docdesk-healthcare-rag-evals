@@ -16,7 +16,7 @@ from dataclasses import replace
 from datetime import date
 from pathlib import Path
 
-from docdesk.evals.golden.loader import GoldenValidationError, count_items, read_items
+from docdesk.evals.golden.loader import GoldenValidationError, count_found, read_file
 from docdesk.evals.golden.review import SheetError, apply_decisions, parse_sheet, render_sheet
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -35,9 +35,8 @@ def load_titles(corpus_root: Path) -> dict[str, str]:
 
 
 def write_sheet(batch_file: Path, project_root: Path) -> int:
-    """Validate the batch's schema, then write its review sheet under docs/golden_review/."""
-    items, problems = read_items(batch_file.parent)
-    mine = [item for path, item in items if path.resolve() == batch_file.resolve()]
+    """Validate this batch file's schema, then write its review sheet under docs/golden_review/."""
+    mine, problems = read_file(batch_file)
     if problems or not mine:
         raise SystemExit("\n".join(problems) or f"no items found in {batch_file}")
     titles = load_titles(project_root / "data" / "corpus")
@@ -65,7 +64,10 @@ def apply_sheet(sheet_file: Path, by: str, project_root: Path) -> int:
         print(f"DROP {item_id}: still in the file, unverified; remove it or replace it")
     if result.undecided:
         print(f"undecided: {', '.join(result.undecided)}")
-    print(count_items(Path(sheet.batch_file).parent).summary())
+    items, problems = read_file(Path(sheet.batch_file))
+    if problems:
+        raise GoldenValidationError(problems)
+    print(count_found(items).summary())
     return 0
 
 

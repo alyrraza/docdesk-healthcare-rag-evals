@@ -54,3 +54,17 @@ def test_ac_evl_01_the_script_writes_a_sheet_and_apply_verifies_the_ok_items(
     saved = yaml.safe_load(batch.read_text(encoding="utf-8"))[0]
     assert saved["verified"] is True
     assert saved["verified_by"] == "ali"
+
+
+def test_ac_evl_01_the_script_reads_only_the_batch_file_it_is_given(tmp_path: Path) -> None:
+    batch = project(tmp_path)
+    (batch.parent / "broken.yaml").write_text("- id: nope\n", encoding="utf-8")
+    other = dict(ITEM, id="gi-002")
+    (batch.parent / "batch2.yaml").write_text(yaml.safe_dump([other]), encoding="utf-8")
+    assert main([str(batch)], project_root=tmp_path) == 0
+    text = (tmp_path / "docs" / "golden_review" / "batch1.md").read_text(encoding="utf-8")
+    assert "## gi-001" in text
+    assert "gi-002" not in text
+    sheet = tmp_path / "docs" / "golden_review" / "batch1.md"
+    sheet.write_text(text.replace("Decision:\n", "Decision: OK\n", 1), encoding="utf-8")
+    assert main(["--apply", str(sheet)], project_root=tmp_path) == 0
