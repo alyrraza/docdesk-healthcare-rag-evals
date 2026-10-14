@@ -8,7 +8,7 @@ nothing this run, so its tokens count as saved, not billed.
 from __future__ import annotations
 
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
@@ -27,6 +27,8 @@ class ModelUsage:
     tokens_saved: int
     cost_usd: Decimal
     cost_billed: Decimal
+    # Billed tokens per key slot of the pool; empty for runs made without a pool.
+    billed_by_slot: dict[int, int] = field(default_factory=dict)
 
 
 def usage_from_records(records: list[ResultRecord]) -> list[ModelUsage] | None:
@@ -37,7 +39,7 @@ def usage_from_records(records: list[ResultRecord]) -> list[ModelUsage] | None:
     ran = [r for r in records if r.metrics.get("status") == "ok"]
     if any(r.usage is None for r in ran):
         return None
-    totals: dict[str, list] = defaultdict(lambda: [0, 0, 0, 0, Decimal(0), Decimal(0)])
+    totals: dict[str, list] = defaultdict(lambda: [0, 0, 0, 0, Decimal(0), Decimal(0), {}])
     for record in ran:
         for call in record.usage or []:
             row = totals[call["model"]]
@@ -50,5 +52,8 @@ def usage_from_records(records: list[ResultRecord]) -> list[ModelUsage] | None:
             else:
                 row[2] += tokens
                 row[5] += cost
-    return [ModelUsage(m, int(v[0]), int(v[1]), int(v[2]), int(v[3]), Decimal(v[4]), Decimal(v[5]))
+                if call.get("slot") is not None:
+                    row[6][call["slot"]] = row[6].get(call["slot"], 0) + tokens
+    return [ModelUsage(m, int(v[0]), int(v[1]), int(v[2]), int(v[3]), Decimal(v[4]), Decimal(v[5]),
+                       dict(sorted(v[6].items())))
             for m, v in sorted(totals.items())]

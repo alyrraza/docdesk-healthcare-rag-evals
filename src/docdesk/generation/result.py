@@ -31,6 +31,8 @@ class CallUsage:
     tokens_out: int
     cost_usd: Decimal
     cache_hit: bool
+    # Key slot of the pool that served the call, None without a pool or on a cache hit.
+    slot: int | None = None
 
 
 @dataclass

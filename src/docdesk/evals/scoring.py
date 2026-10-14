@@ -143,15 +143,20 @@ def usage_entries(
     out: PipelineOutput, faith: Any, correct: Any, kit: JudgeKit | None
 ) -> list[dict[str, Any]]:
     """Every model call of this item, one dict each, so a run's tokens can be added up exactly."""
-    def entry(role: str, model: str, tokens_in: int, tokens_out: int, cost: Decimal, hit: bool):
-        return {"role": role, "model": model, "tokens_in": tokens_in, "tokens_out": tokens_out,
-                "cost_usd": str(cost), "cache_hit": hit}
-    found = [entry("generator", c.model, c.tokens_in, c.tokens_out, c.cost_usd, c.cache_hit)
-             for c in out.calls]
+    def entry(role: str, model: str, tokens_in: int, tokens_out: int, cost: Decimal, hit: bool,
+              slot: int | None):
+        found = {"role": role, "model": model, "tokens_in": tokens_in, "tokens_out": tokens_out,
+                 "cost_usd": str(cost), "cache_hit": hit}
+        if slot is not None:
+            found["slot"] = slot
+        return found
+    found = [entry("generator", c.model, c.tokens_in, c.tokens_out, c.cost_usd, c.cache_hit,
+                   c.slot) for c in out.calls]
     for role, result in (("faithfulness", faith), ("correctness", correct)):
         if result is not None and result.usage.calls and kit is not None:
             u = result.usage
-            found.append(entry(role, kit.model, u.tokens_in, u.tokens_out, u.cost_usd, u.cache_hit))
+            found.append(entry(role, kit.model, u.tokens_in, u.tokens_out, u.cost_usd, u.cache_hit,
+                               u.slot))
     return found
 
 

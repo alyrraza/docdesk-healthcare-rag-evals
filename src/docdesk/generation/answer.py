@@ -143,7 +143,9 @@ def account(result: AnswerResult, attempts: list[Attempt]) -> None:
         result.llm_calls += 1
         llm = attempt.llm
         result.calls.append(
-            CallUsage(llm.model, llm.tokens_in, llm.tokens_out, llm.cost_usd, llm.cache_hit)
+            CallUsage(
+                llm.model, llm.tokens_in, llm.tokens_out, llm.cost_usd, llm.cache_hit, llm.slot
+            )
         )
         result.tokens_in += attempt.llm.tokens_in
         result.tokens_out += attempt.llm.tokens_out

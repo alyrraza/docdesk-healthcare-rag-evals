@@ -84,7 +84,18 @@ def usage_lines(report: Report) -> list[str]:
         "calls.", "",
         *table(["model", "calls", "cached calls", "tokens billed", "tokens saved",
                 "cost billed USD"], rows), "",
+        *slot_lines(report),
     ]
+
+
+def slot_lines(report: Report) -> list[str]:
+    """Billed tokens per key slot of the pool; empty when the run used no pool."""
+    rows = [[u.model, str(slot), str(tokens)]
+            for u in report.model_usage or [] for slot, tokens in u.billed_by_slot.items()]
+    if not rows:
+        return []
+    return ["Billed tokens per key slot of the key pool (slot numbers only, never keys).", "",
+            *table(["model", "key slot", "tokens billed"], rows), ""]
 
 
 def worst_lines(report: Report) -> list[str]:

@@ -142,3 +142,29 @@ def test_ac_evl_04_usage_15_stored_usage_is_loaded_back_into_the_run_data(
     data = load_run_data(db_session, summary.run_id)
     first = next(r for r in data.records if r.item_id == "gi-001")
     assert [c["role"] for c in first.usage][-2:] == ["faithfulness", "correctness"]
+
+
+def test_ac_evl_pool_11_usage_names_the_key_slot_that_served_each_call() -> None:
+    result = AnswerResult("", abstain_output("no_evidence"))
+    served = replace(llm_result(100, 20, False), slot=2)
+    account(result, [Attempt(llm=served)])
+    assert result.calls[0].slot == 2
+
+
+def test_ac_evl_pool_12_billed_tokens_are_split_per_slot_in_the_report() -> None:
+    slotted = {"slot": 1}, {"slot": 2}, {"slot": 2}
+    calls = [{**entry("generator", "gen", 100, 20, False), **slotted[0]},
+             {**entry("generator", "gen", 10, 5, False), **slotted[1]},
+             {**entry("generator", "gen", 1, 1, False), **slotted[2]},
+             {**entry("generator", "gen", 7, 7, True)}]
+    (gen,) = usage_from_records([record("a", calls)])
+    assert gen.billed_by_slot == {1: 120, 2: 17}
+    text = report_markdown(build_report(RunData("r", "b0", "dev", "full", [record("a", calls)])))
+    assert "| gen | 2 | 17 |" in text and "| gen | 1 | 120 |" in text
+
+
+def test_ac_evl_pool_13_a_run_without_slots_has_no_slot_table() -> None:
+    records = [record("a", [entry("generator", "gen", 100, 20, False)])]
+    assert usage_from_records(records)[0].billed_by_slot == {}
+    assert "per key slot" not in report_markdown(build_report(
+        RunData("r", "b0", "dev", "full", records)))

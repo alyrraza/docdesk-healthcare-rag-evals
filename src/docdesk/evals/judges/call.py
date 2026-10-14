@@ -26,6 +26,7 @@ class JudgeUsage:
     tokens_out: int = 0
     cost_usd: Decimal = Decimal("0")
     cache_hit: bool = False
+    slot: int | None = None
 
 
 NO_USAGE = JudgeUsage()
@@ -48,5 +49,6 @@ def call_judge(
         tokens_out=result.tokens_out,
         cost_usd=result.cost_usd,
         cache_hit=result.cache_hit,
+        slot=result.slot,
     )
     return parser.parse(result.text), usage

@@ -19,7 +19,9 @@ def summary_of(report: Report) -> dict[str, Any]:
     usage = None
     if report.model_usage is not None:
         usage = {u.model: {"calls": u.calls, "cached_calls": u.cached_calls,
-                           "tokens_billed": u.tokens_billed, "tokens_saved": u.tokens_saved}
+                           "tokens_billed": u.tokens_billed, "tokens_saved": u.tokens_saved,
+                           **({"billed_by_slot": {str(s): t for s, t in u.billed_by_slot.items()}}
+                              if u.billed_by_slot else {})}
                  for u in report.model_usage}
     return {
         "run_id": report.run.run_id,
