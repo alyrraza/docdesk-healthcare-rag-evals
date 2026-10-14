@@ -8,6 +8,8 @@ Usage:
                                         also show the top 3 dense and keyword chunks (B0) of each
                                         item without an answer; needs the database and the model
     python scripts/golden_review.py --apply docs/golden_review/batch1.md [--by ali]
+    python scripts/golden_review.py FILE --verify gi-023,gi-030 [--by ali]
+                                        mark exactly these items OK without a sheet
 
 In the sheet the owner writes OK, FIX: <note> or DROP after each item. Apply sets verified
 true only for OK items; FIX and DROP items are listed and left in the file for you to act on.
@@ -30,7 +32,14 @@ from docdesk.embeddings.encoder import Encoder
 from docdesk.evals.config import load_eval_config
 from docdesk.evals.golden.loader import GoldenValidationError, count_found, read_file
 from docdesk.evals.golden.probe import Probe, probe_question
-from docdesk.evals.golden.review import SheetError, apply_decisions, parse_sheet, render_sheet
+from docdesk.evals.golden.review import (
+    Decision,
+    ParsedSheet,
+    SheetError,
+    apply_decisions,
+    parse_sheet,
+    render_sheet,
+)
 from docdesk.evals.golden.schema import GoldenItem
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -124,6 +133,19 @@ def apply_sheet(sheet_file: Path, by: str, project_root: Path) -> int:
     return 0
 
 
+def verify_ids(batch_file: Path, ids: str, by: str) -> int:
+    """Mark the listed items verified when the owner's OK was given outside a sheet."""
+    wanted = [item_id.strip() for item_id in ids.split(",") if item_id.strip()]
+    sheet = ParsedSheet(str(batch_file), {item_id: Decision("OK") for item_id in wanted})
+    result = apply_decisions(sheet, by, date.today())
+    print(f"verified: {', '.join(result.verified) or 'none'}")
+    items, problems = read_file(batch_file)
+    if problems:
+        raise GoldenValidationError(problems)
+    print(count_found(items).summary())
+    return 0
+
+
 def main(
     argv: list[str] | None = None, project_root: Path = ROOT, probe: ProbeBuilder = build_probes
 ) -> int:
@@ -132,11 +154,14 @@ def main(
     parser.add_argument("file", type=Path, help="a batch YAML file, or a sheet with --apply")
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--probe", action="store_true", help="add B0 top 3 chunks per question")
+    parser.add_argument("--verify", help="comma separated item ids to mark verified in FILE")
     parser.add_argument("--by", default="ali", help="name stored as verified_by")
     parser.add_argument("--only", help="comma separated item ids for a partial sheet")
     parser.add_argument("--name", help="sheet file name without .md, default is the batch name")
     args = parser.parse_args(argv)
     try:
+        if args.verify:
+            return verify_ids(args.file, args.verify, args.by)
         if args.apply:
             return apply_sheet(args.file, args.by, project_root)
         return write_sheet(
