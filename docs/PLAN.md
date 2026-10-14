@@ -135,7 +135,7 @@ no eval run is safe without them (see "Eval budget and pacing" in `docs/modules/
 - [x] T087 `evals/metrics/retrieval.py` recall@k, MRR, hit rate (AC-EVL-02)
 - [x] T088 `evals/stats.py` bootstrap and paired comparison (AC-EVL-05)
 - [x] T089 moved to T079b (the disk cache is built first). Unit coverage of AC-EVL-04 is done there; wiring the cache into the real runner (cache outside budget outside pacer outside client) belongs to T094.
-- [ ] T090 `evals/judges/faithfulness.py` labels, code computes score
+- [x] T090 `evals/judges/faithfulness.py` labels, code computes score
 - [ ] T091 `evals/judges/correctness.py`
 - [ ] T092 `evals/metrics/citation.py` and `abstention.py`
 - [ ] T093 `evals/labeler.py` failure labels (AC-EVL-03)
