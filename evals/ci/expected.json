@@ -1,0 +1,10 @@
+{
+  "config_id": "b0",
+  "config_hash": "ec66619a5a99a1adb5968b76526e76d0e12e967ebd4e1874b6c13a1a5b7c19a6",
+  "items": 14,
+  "tolerance": 0.04,
+  "numbers": {
+    "recall@5": 1.0,
+    "mrr": 0.9166666666666667
+  }
+}
