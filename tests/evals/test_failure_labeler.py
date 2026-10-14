@@ -31,7 +31,13 @@ def test_ac_evl_03_label_01_a_passing_item_has_no_label() -> None:
     assert labeled() is None
     assert labeled(behavior="abstain", outcome="abstained", gold_sets=[]) is None
     assert labeled(behavior="refuse", outcome="refused", retrieval_ran=False) is None
-    assert labeled(faithfulness=None, correctness=None) is None
+    assert labeled(faithfulness=1.0, correctness=1.0, contradicted=0) is None
+
+
+def test_ac_evl_03_label_01b_an_answer_with_missing_judge_scores_is_not_a_pass() -> None:
+    # F1 of the phase 4 review: the old test here let a judge failure count as a pass.
+    assert labeled(faithfulness=None, correctness=None) == "other"
+    assert labeled(faithfulness=None, correctness=None, judge_failed=True) == "judge_failure"
 
 
 def test_ac_evl_03_label_02_retrieval_miss_gold_not_among_the_candidates() -> None:
@@ -115,7 +121,7 @@ def test_ac_evl_03_order_02_the_order_is_the_documented_one() -> None:
     assert LABEL_ORDER == (
         "retrieval_miss", "ranking_miss", "context_overflow", "context_distraction",
         "wrong_abstain", "missed_abstain", "wrong_refusal", "missed_refusal",
-        "unfaithful", "incorrect", "other",
+        "judge_failure", "unfaithful", "incorrect", "other",
     )
     text = (ROOT / "docs" / "modules" / "evals.md").read_text(encoding="utf-8")
     section = text.split("### First match order", 1)[1].split("\n\n", 1)[0]
