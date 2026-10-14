@@ -25,6 +25,10 @@ class GoldenCorpus(Protocol):
         """The document text as ingestion cleaned it."""
         ...
 
+    def source_titles(self) -> dict[str, str]:
+        """Source key to title for every corpus document, for the duplicate evidence check."""
+        ...
+
     def chunks(self, document_id: uuid.UUID) -> list[tuple[str, str]]:
         """The stored chunks as (id, text), in document order."""
         ...
@@ -41,6 +45,13 @@ class DatabaseCorpus:
         """Look a document up by its seed key, which is stable across re-ingests."""
         query = select(DocumentRow.id).where(DocumentRow.source == source)
         return self._session.execute(query).scalar_one_or_none()
+
+    def source_titles(self) -> dict[str, str]:
+        """Every seed document by its stable key, so quotes can be searched across the corpus."""
+        query = select(DocumentRow.source, DocumentRow.title).where(
+            DocumentRow.source.like("seed:%")
+        )
+        return {source: title for source, title in self._session.execute(query)}
 
     def cleaned_text(self, document_id: uuid.UUID) -> str:
         """Re-parse and re-clean the stored file, so quotes are checked against current rules."""

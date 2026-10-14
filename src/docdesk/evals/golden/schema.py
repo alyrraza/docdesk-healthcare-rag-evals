@@ -32,6 +32,7 @@ class Evidence(BaseModel):
 
     source: str
     text: str = Field(min_length=1, max_length=MAX_QUOTE_CHARS)
+    alt_sources: list[str] = []
 
     @field_validator("source")
     @classmethod
@@ -40,6 +41,16 @@ class Evidence(BaseModel):
         if not SOURCE_KEY.fullmatch(value):
             raise ValueError("source must look like seed:<corpus>:<source id>")
         return value
+
+    @model_validator(mode="after")
+    def alternates_are_other_documents(self) -> Evidence:
+        """Alternates are other documents with the same words, each given by its stable key."""
+        for key in self.alt_sources:
+            if not SOURCE_KEY.fullmatch(key):
+                raise ValueError("alt_sources must look like seed:<corpus>:<source id>")
+        if self.source in self.alt_sources or len(set(self.alt_sources)) != len(self.alt_sources):
+            raise ValueError("alt_sources must be other documents, each listed once")
+        return self
 
     @field_validator("text")
     @classmethod

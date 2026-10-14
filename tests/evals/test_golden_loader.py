@@ -49,6 +49,9 @@ class FakeCorpus:
     def cleaned_text(self, document_id: uuid.UUID) -> str:
         return self.texts[document_id]
 
+    def source_titles(self) -> dict[str, str]:
+        return {SOURCE: "Example label"}
+
     def chunks(self, document_id: uuid.UUID) -> list[tuple[str, str]]:
         return [
             ("c0", "Take with food."),
