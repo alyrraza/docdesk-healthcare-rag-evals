@@ -12,9 +12,9 @@ Unanswerable items pass by abstaining, so they raise the overall pass rate. The 
 
 | category | items | pass rate | recall@k | hit | MRR | context precision | citation precision | citation recall | faithfulness | correctness |
 |---|---|---|---|---|---|---|---|---|---|---|
-| single_fact | 19 | 0.74 [0.53, 0.95] | 0.84 [0.68, 1.00] | 0.84 [0.68, 1.00] | 0.76 [0.58, 0.92] | 0.18 [0.14, 0.22] | 0.88 [0.72, 1.00] (n=16) | 0.79 [0.58, 0.95] | 1.00 [1.00, 1.00] (n=16) | 0.79 [0.61, 0.95] |
-| multi_chunk | 11 | 0.09 [0.00, 0.27] | 0.83 [0.70, 0.95] | 1.00 [1.00, 1.00] | 0.88 [0.70, 1.00] | 0.38 [0.33, 0.44] | 0.58 [0.17, 1.00] (n=4) | 0.23 [0.00, 0.45] | 0.92 [0.75, 1.00] (n=4) | 0.18 [0.00, 0.45] |
-| unanswerable | 11 | 1.00 [1.00, 1.00] | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| single_fact | 19 | 0.74 [0.53, 0.95] | 0.84 [0.68, 1.00] | 0.84 [0.68, 1.00] | 0.76 [0.58, 0.92] | 0.18 [0.14, 0.22] | 0.88 [0.72, 1.00] (n=16) | 0.79 [0.58, 0.95] | 1.00 (all values equal) (n=16) | 0.79 [0.61, 0.95] |
+| multi_chunk | 11 | 0.09 [0.00, 0.27] | 0.83 [0.70, 0.95] | 1.00 (all values equal) | 0.88 [0.70, 1.00] | 0.38 [0.33, 0.44] | 0.58 [0.17, 1.00] (n=4) | 0.23 [0.00, 0.45] | 0.92 [0.75, 1.00] (n=4) | 0.18 [0.00, 0.45] |
+| unanswerable | 11 | 1.00 (all values equal) | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | adversarial | 3 | 0.33 [0.00, 1.00] | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
 | all | 44 | 0.61 [0.48, 0.75] | 0.84 [0.72, 0.94] (n=30) | 0.90 [0.80, 1.00] (n=30) | 0.81 [0.68, 0.92] (n=30) | 0.25 [0.21, 0.30] (n=30) | 0.82 [0.66, 0.95] (n=20) | 0.58 [0.40, 0.75] (n=30) | 0.98 [0.95, 1.00] (n=20) | 0.57 [0.38, 0.73] (n=30) |
 
@@ -29,6 +29,13 @@ Unanswerable items pass by abstaining, so they raise the overall pass rate. The 
 | wrong refusal | 0 |
 | missed refusal | 2 |
 | system errors | 0 |
+
+Abstention precision is the share of right abstains among abstains on items that are not refusal items. Abstention recall is the share of abstain items that abstained. The interval resamples items.
+
+| rate | items | value |
+|---|---|---|
+| abstention precision | 21 | 0.52 [0.33, 0.71] |
+| abstention recall | 11 | 1.00 (all values equal) |
 
 ## Failure labels
 
@@ -48,16 +55,15 @@ No judge parse failures or errors.
 
 ## Tokens and cost
 
-Tokens in 65525, tokens out 12867, cost 0.04197910 USD, model calls 83, cache hits 2. Cache hits count the judge calls only, because the generator cache hits are not recorded yet.
+Tokens in 65525, tokens out 12867, cost 0.04197910 USD, model calls 83, cache hits 2. Runs stored before T098b count judge cache hits only.
 
 ## Tokens and cost per model
 
-Counted from every entry in the cache folder, since a cache entry has no run id. Cost is the list price equivalent, not what was billed.
+The per run token numbers are not available for this run: it was stored before per call usage was recorded, and the cache folder cannot say which run a call belonged to.
 
-| model | calls | tokens in | tokens out | cost USD |
-|---|---|---|---|---|
-| openai/gpt-oss-120b | 43 | 42466 | 10090 | 0.012424 |
-| qwen/qwen3.8-27b | 40 | 23059 | 2777 | 0.029555 |
+## Latency
+
+Latency: not recorded for this run (it was stored before per item timings existed, and old runs are not backfilled).
 
 ## Where answerable items fail
 

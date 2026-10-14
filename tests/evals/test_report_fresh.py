@@ -31,3 +31,14 @@ def test_ac_evl_05_fresh_02_the_summary_comes_from_code_and_is_stable() -> None:
     assert summary["tokens_by_model"] is None  # no per call usage: never a guess
     assert summary_json(report) == summary_json(build_report(run()))
     assert json.loads(summary_json(report)) == summary
+
+
+def test_ac_evl_05_fresh_03_answerable_labels_leave_out_the_unanswerable_items() -> None:
+    answerable = ResultRecord("gi-001", {"status": "ok", "type": "single_fact",
+                                         "behavior": "answer", "outcome": "abstained",
+                                         "group": "a", "passed": False}, "wrong_abstain")
+    refuse = ResultRecord("gi-002", {"status": "ok", "type": "adversarial", "behavior": "refuse",
+                                     "outcome": "answered", "group": "b", "passed": False},
+                          "missed_refusal")
+    data = RunData("r", "b0", "dev", "full", [answerable, refuse])
+    assert summary_of(build_report(data))["answerable_labels"] == {"wrong_abstain": 1}

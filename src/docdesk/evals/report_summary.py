@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 from typing import Any
 
 from docdesk.evals.report_data import Report
@@ -34,9 +35,8 @@ def summary_of(report: Report) -> dict[str, Any]:
         "overall_passed": sum(1 for r in records
                               if r.metrics.get("status") == "ok" and r.metrics.get("passed")),
         "stage_split": split.counts,
-        "answerable_labels": {
-            label: n for label, n in sorted(report.failure_labels.items())
-        },
+        "answerable_labels": dict(sorted(Counter(
+            r.failure_label for r in answerable_records(records) if r.failure_label).items())),
         "judge_failures": report.judge_failures,
         "tokens_by_model": usage,
         "latency_ms": {stage: {"n": s.n, "p50": round(s.p50, 1), "p95": round(s.p95, 1)}

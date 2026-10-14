@@ -1,0 +1,39 @@
+{
+  "answerable_labels": {},
+  "answerable_pass_strict": 0,
+  "answerable_ran": 30,
+  "config": "b0",
+  "identity_legacy": false,
+  "items_not_run": [
+    "gi-079"
+  ],
+  "items_not_scored": [],
+  "items_ran": 44,
+  "judge_failures": {
+    "correctness": {},
+    "faithfulness": {}
+  },
+  "latency_ms": {
+    "retrieval_ms": {
+      "n": 44,
+      "p50": 843.6,
+      "p95": 5435.9
+    },
+    "total_ms": {
+      "n": 44,
+      "p50": 1089.2,
+      "p95": 7965.4
+    }
+  },
+  "mode": "retrieval_only",
+  "overall_passed": 0,
+  "run_id": "532b63f3-a706-46f8-b548-43d145e4d15c",
+  "split": "dev",
+  "stage_split": {
+    "generation": 0,
+    "packing": 0,
+    "pass": 30,
+    "retrieval": 0
+  },
+  "tokens_by_model": {}
+}
