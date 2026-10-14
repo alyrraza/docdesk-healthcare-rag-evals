@@ -44,3 +44,11 @@ def test_ac_gen_01_the_api_keys_are_optional_and_never_appear_in_repr() -> None:
     assert "gsk_super_secret_value" not in repr(settings)
     assert settings.groq_api_key is not None
     assert settings.groq_api_key.get_secret_value() == "gsk_super_secret_value"
+
+
+def test_ac_evl_pool_14_the_second_groq_key_is_an_optional_secret() -> None:
+    assert build().groq_api_key_2 is None
+    settings = build(groq_api_key_2="abc-second")
+    assert settings.groq_api_key_2 is not None
+    assert "abc-second" not in repr(settings)
+    assert build(groq_api_key="one", groq_api_key_2="two").groq_api_keys == ["one", "two"]

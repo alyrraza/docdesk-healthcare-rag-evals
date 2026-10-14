@@ -50,6 +50,8 @@ class Settings(BaseSettings):
     max_upload_bytes: int = Field(default=5_000_000, gt=0)
     # Free-tier LLM keys; optional so the app and every test run without them.
     groq_api_key: SecretStr | None = None
+    # A second Groq account of the same owner; the eval key pool switches to it at the daily limit.
+    groq_api_key_2: SecretStr | None = None
     openrouter_api_key: SecretStr | None = None
     # Model ids are fixed here and logged with every result. Generator and judge must differ.
     generator_model: str = "openai/gpt-oss-120b"
@@ -62,6 +64,12 @@ class Settings(BaseSettings):
     # Only scripts/seed_admin.py uses these; checked here so a placeholder never gets seeded.
     admin_email: str | None = None
     admin_password: str | None = None
+
+    @property
+    def groq_api_keys(self) -> list[str]:
+        """Why: the eval key pool needs every configured Groq key, in slot order, as plain text."""
+        keys = (self.groq_api_key, self.groq_api_key_2)
+        return [k.get_secret_value() for k in keys if k is not None and k.get_secret_value()]
 
     @property
     def public_docs_enabled(self) -> bool:

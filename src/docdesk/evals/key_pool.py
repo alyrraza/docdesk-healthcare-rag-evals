@@ -31,6 +31,24 @@ def seed_pool_ledger(pool_path: Path, old_path: Path) -> None:
     write_json(pool_path, {slot_key(model, 1): entries for model, entries in old.items()})
 
 
+def pooled_daily_limit(per_slot_limit: int, slots: int) -> int:
+    """Why: the budget guard of a model must allow the room of every slot, not of slot 1 only."""
+    return per_slot_limit * slots
+
+
+def build_pool(
+    clients: list[LLMClient], daily_limits: dict[str, int], pool_path: Path, old_path: Path
+) -> KeyPoolClient:
+    """Why: one place builds the per slot ledger, so slot 1 always starts from the old spend."""
+    seed_pool_ledger(pool_path, old_path)
+    limits = {
+        slot_key(model, slot): limit
+        for model, limit in daily_limits.items()
+        for slot in range(1, len(clients) + 1)
+    }
+    return KeyPoolClient(clients, TokenLedger(pool_path, limits))
+
+
 class KeyPoolClient:
     """Sends each call with the first slot that still has room; the request is never changed."""
 

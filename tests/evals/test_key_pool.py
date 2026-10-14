@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import time
 from pathlib import Path
 
 import pytest
@@ -11,7 +12,13 @@ import pytest
 from docdesk.evals.budget import BudgetStop, TokenLedger
 from docdesk.evals.cache import cache_key
 from docdesk.evals.config import load_eval_config
-from docdesk.evals.key_pool import KeyPoolClient, seed_pool_ledger, slot_key
+from docdesk.evals.key_pool import (
+    KeyPoolClient,
+    build_pool,
+    pooled_daily_limit,
+    seed_pool_ledger,
+    slot_key,
+)
 from docdesk.llm.client import LLMRequest
 from docdesk.llm.errors import ProviderError, RateLimitedError
 from fakes.llm import FakeLLMClient
@@ -111,3 +118,17 @@ def test_ac_evl_pool_10_committed_config_hashes_are_unchanged() -> None:
     }
     for name, expected in pinned.items():
         assert load_eval_config(CONFIGS / name).values["content_hash"] == expected
+
+
+def test_ac_evl_pool_15_the_guard_limit_of_a_model_is_the_sum_of_the_slot_limits() -> None:
+    assert pooled_daily_limit(200_000, 2) == 400_000
+    assert pooled_daily_limit(200_000, 1) == 200_000
+
+
+def test_ac_evl_pool_16_build_pool_seeds_slot_one_and_names_every_slot(tmp_path: Path) -> None:
+    old = tmp_path / "ledger.json"
+    old.write_text(json.dumps({MODEL: [[time.time() - 10, 800]]}), encoding="utf-8")
+    pool_client = build_pool([FakeLLMClient(["a"]), FakeLLMClient(["b"])], {MODEL: 1000},
+                             tmp_path / "pool.json", old)
+    request = LLMRequest(system="s", user="u", model=MODEL, max_output_tokens=100)
+    assert pool_client.complete(request).slot == 2

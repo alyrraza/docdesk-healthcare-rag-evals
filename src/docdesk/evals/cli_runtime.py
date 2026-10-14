@@ -19,8 +19,9 @@ from docdesk.evals.cli import Runtime
 from docdesk.evals.config import EvalConfig
 from docdesk.evals.golden.corpus import DatabaseCorpus, GoldenCorpus
 from docdesk.evals.judges.kit import JudgeKit, load_judge_kit
+from docdesk.evals.key_pool import build_pool, pooled_daily_limit
 from docdesk.evals.live_pipeline import LivePipeline
-from docdesk.evals.paths import LEDGER_PATH, PROMPTS_DIR
+from docdesk.evals.paths import LEDGER_PATH, POOL_LEDGER_PATH, PROMPTS_DIR
 from docdesk.evals.pipeline import Pipeline
 from docdesk.evals.stack import build_llm_stack
 from docdesk.ingestion.filestore import LocalFileStore
@@ -49,14 +50,19 @@ def llm_stack_for(config: EvalConfig) -> LLMClient:
 
 def new_stack(config: EvalConfig) -> LLMClient:
     """Build the layers around the real Groq client; the one place a real model is reached."""
-    key = get_settings().groq_api_key
-    if key is None or not key.get_secret_value():
+    keys = get_settings().groq_api_keys
+    if not keys:
         raise SystemExit("GROQ_API_KEY is missing in .env, a full run cannot call a model")
     models = {config.values["models"]["generator"], config.values["models"]["judge"]}
     limits = {model: config.model_limits(model) for model in models}
-    ledger = TokenLedger(LEDGER_PATH, {model: daily for model, (daily, _) in limits.items()})
+    per_slot = {model: daily for model, (daily, _) in limits.items()}
+    # The guard allows the room of every slot; the pool keeps the per slot limits.
+    ledger = TokenLedger(
+        LEDGER_PATH, {m: pooled_daily_limit(d, len(keys)) for m, d in per_slot.items()}
+    )
     pacer = Pacer({model: per_minute for model, (_, per_minute) in limits.items()})
-    return build_llm_stack(build_llm(key.get_secret_value()), ledger=ledger, pacer=pacer)
+    pool = build_pool([build_llm(k) for k in keys], per_slot, POOL_LEDGER_PATH, LEDGER_PATH)
+    return build_llm_stack(pool, ledger=ledger, pacer=pacer)
 
 
 def pipeline_for(

@@ -7,6 +7,7 @@ from pathlib import Path
 # src/docdesk/evals/paths.py -> the project root is three folders up.
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 LEDGER_PATH = PROJECT_ROOT / ".cache" / "ledger.json"
+POOL_LEDGER_PATH = PROJECT_ROOT / ".cache" / "pool_ledger.json"
 LLM_CACHE_DIR = PROJECT_ROOT / ".cache" / "llm"
 GOLDEN_DIR = PROJECT_ROOT / "evals" / "golden"
 PROMPTS_DIR = PROJECT_ROOT / "prompts"
