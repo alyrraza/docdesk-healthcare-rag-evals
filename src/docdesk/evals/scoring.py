@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import logging
+import time
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import Any
 
@@ -15,7 +16,7 @@ from docdesk.evals.judges.faithfulness import judge_faithfulness
 from docdesk.evals.judges.kit import JudgeKit
 from docdesk.evals.labeler import LabelInput, label_failure
 from docdesk.evals.metrics import retrieval as rm
-from docdesk.evals.metrics.citation import citation_scores
+from docdesk.evals.metrics.citation import CitationScores, citation_scores
 from docdesk.evals.pipeline import PipelineOutput
 from docdesk.llm.errors import LLMError
 
@@ -30,6 +31,8 @@ class ItemScore:
     failure_label: str | None
     trace: dict[str, Any]
     usage: list[dict[str, Any]]
+    # Judge time and whether any call was cached; the runner adds the total.
+    latency: dict[str, Any] = field(default_factory=dict)
 
 
 def retrieval_block(out: PipelineOutput, gold: list[frozenset[str]], k: int) -> dict[str, Any]:
@@ -67,6 +70,13 @@ def run_judges(item: ResolvedItem, out: PipelineOutput, kit: JudgeKit, ctx: dict
         answered=answered))
 
 
+def judge_failed(ctx: dict[str, Any], faith: Any, correct: Any) -> bool:
+    """True when a judge errored or its reply could not be parsed; no_claims is not a failure."""
+    errored = "faithfulness_error" in ctx or "correctness_error" in ctx
+    parse = any(r is not None and r.status == "parse_failed" for r in (faith, correct))
+    return errored or parse
+
+
 def score_item(
     item: ResolvedItem,
     gold: list[frozenset[str]],
@@ -76,11 +86,15 @@ def score_item(
 ) -> ItemScore:
     """Build the metrics dict for one item; judges run only when a kit is given."""
     ctx: dict[str, Any] = {}
+    judge_started = time.perf_counter()
     if kit is not None and out.outcome is not None:
         run_judges(item, out, kit, ctx)
+    judge_ms = (time.perf_counter() - judge_started) * 1000.0
     faith, correct = ctx.get("faithfulness"), ctx.get("correctness")
     usage = [r.usage for r in (faith, correct) if r is not None]
-    cites = citation_scores(out.cited_ids, gold)
+    # No answer was generated in retrieval only mode, so there is nothing to cite: None, not 0.
+    cites = CitationScores(None, None) if out.outcome is None else citation_scores(
+        out.cited_ids, gold)
     label = None
     if out.outcome is not None:
         label = label_failure(LabelInput(
@@ -89,7 +103,8 @@ def score_item(
             retrieved_ids=out.retrieved_ids, used_ids=out.used_ids,
             faithfulness=faith.score if faith else None,
             correctness=correct.score if correct else None,
-            contradicted=correct.contradicted if correct else 0))
+            contradicted=correct.contradicted if correct else 0,
+            judge_failed=judge_failed(ctx, faith, correct)))
     metrics: dict[str, Any] = {
         "status": "ok",
         "mode": "retrieval_only" if out.outcome is None else "full",
@@ -114,7 +129,14 @@ def score_item(
         "faithfulness_labels": [x.model_dump() for x in faith.labels] if faith else [],
         "correctness_labels": [x.model_dump() for x in correct.labels] if correct else [],
     }
-    return ItemScore(metrics, label, trace, usage_entries(out, faith, correct, kit))
+    entries = usage_entries(out, faith, correct, kit)
+    latency = {
+        "retrieval_ms": out.timings_ms.get("retrieval"),
+        "generation_ms": out.timings_ms.get("generation"),
+        "judge_ms": judge_ms if kit is not None and out.outcome is not None else None,
+        "cache_hit": any(e["cache_hit"] for e in entries),
+    }
+    return ItemScore(metrics, label, trace, entries, latency)
 
 
 def usage_entries(

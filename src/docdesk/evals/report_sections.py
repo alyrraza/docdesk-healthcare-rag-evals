@@ -6,6 +6,7 @@ from collections import Counter
 from dataclasses import dataclass
 
 from docdesk.evals.labeler import LABEL_ORDER
+from docdesk.evals.passing import scores_pass
 from docdesk.evals.report_data import MetricCell, ResultRecord, cell
 
 STAGES = ("retrieval", "packing", "generation", "pass")
@@ -51,8 +52,11 @@ def answerable_records(records: list[ResultRecord]) -> list[ResultRecord]:
 
 
 def is_strict_pass(record: ResultRecord) -> bool:
-    """Faithfulness 1.0 and correctness 1.0; a missing score (an abstain) is not a pass."""
-    return record.metrics.get("faithfulness") == 1.0 and record.metrics.get("correctness") == 1.0
+    """The shared pass rule on stored scores; a missing score (abstain, judge failure) fails."""
+    metrics = record.metrics
+    return scores_pass(
+        metrics.get("faithfulness"), metrics.get("correctness"), metrics.get("contradicted", 0)
+    )
 
 
 def strict_pass_rate(records: list[ResultRecord]) -> StrictPass:

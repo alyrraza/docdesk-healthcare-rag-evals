@@ -26,6 +26,9 @@ class PipelineOutput:
     answer: str = ""
     context: str = ""
     abstain_reason: str | None = None
+    # Set when the typed system_error fallback was returned: llm_timeout, llm_rate_limited,
+    # llm_error (the provider call failed) or output_invalid (the model replied badly twice).
+    error_code: str | None = None
     tokens_in: int = 0
     tokens_out: int = 0
     cost_usd: Decimal = Decimal("0")
@@ -33,6 +36,8 @@ class PipelineOutput:
     llm_calls: int = 0
     # Generator calls one by one, for the per run token accounting.
     calls: list[CallUsage] = field(default_factory=list)
+    # Milliseconds per stage as measured by the pipeline: retrieval, generation.
+    timings_ms: dict[str, float] = field(default_factory=dict)
 
 
 class Pipeline(Protocol):

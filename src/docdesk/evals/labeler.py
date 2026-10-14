@@ -10,10 +10,7 @@ from collections.abc import Callable, Sequence, Set
 from dataclasses import dataclass
 
 from docdesk.evals.outcome import Behavior, Cell, Outcome, outcome_cell
-
-# An answer passes only when every claim is supported and every key point is covered.
-FAITHFUL_AT = 1.0
-CORRECT_AT = 1.0
+from docdesk.evals.passing import CORRECT_AT, FAITHFUL_AT, scores_pass
 
 
 @dataclass(frozen=True)
@@ -33,22 +30,15 @@ class LabelInput:
     faithfulness: float | None = None
     correctness: float | None = None
     contradicted: int = 0
-
-
-def answer_quality_failed(item: LabelInput) -> tuple[bool, bool]:
-    """Whether the judged scores say unfaithful, and whether they say incorrect."""
-    unfaithful = item.faithfulness is not None and item.faithfulness < FAITHFUL_AT
-    incorrect = item.contradicted > 0 or (
-        item.correctness is not None and item.correctness < CORRECT_AT
-    )
-    return unfaithful, incorrect
+    # True when a judge call failed (parse failure or provider error) for this answered item.
+    judge_failed: bool = False
 
 
 def is_failed(item: LabelInput, cell: Cell) -> bool:
-    """A wrong outcome fails the item; a right answer also needs good judged scores."""
+    """A wrong outcome fails the item; a right answer also needs full judged scores."""
     if cell != "correct_answer":
         return not cell.startswith("correct_")
-    return any(answer_quality_failed(item))
+    return not scores_pass(item.faithfulness, item.correctness, item.contradicted)
 
 
 def missing_from(item: LabelInput, found: Sequence[str]) -> bool:
@@ -89,14 +79,24 @@ def context_distraction(item: LabelInput, cell: Cell) -> bool:
     return item.used_ids[0] not in gold and cell in ("wrong_abstain", "correct_answer")
 
 
+def judge_failure(item: LabelInput, cell: Cell) -> bool:
+    """A judge failed on an answered item, so the answer cannot be called good."""
+    return cell == "correct_answer" and item.judge_failed
+
+
 def unfaithful(item: LabelInput, cell: Cell) -> bool:
     """The answer has a claim that the evidence does not support."""
-    return cell == "correct_answer" and answer_quality_failed(item)[0]
+    return cell == "correct_answer" and (item.faithfulness or 0.0) < FAITHFUL_AT and (
+        item.faithfulness is not None
+    )
 
 
 def incorrect(item: LabelInput, cell: Cell) -> bool:
     """The answer misses or contradicts a reference key point."""
-    return cell == "correct_answer" and answer_quality_failed(item)[1]
+    if cell != "correct_answer":
+        return False
+    low = item.correctness is not None and item.correctness < CORRECT_AT
+    return item.contradicted > 0 or low
 
 
 def is_cell(name: Cell) -> Callable[[LabelInput, Cell], bool]:
@@ -113,6 +113,7 @@ RULES: tuple[tuple[str, Callable[[LabelInput, Cell], bool]], ...] = (
     ("missed_abstain", is_cell("missed_abstain")),
     ("wrong_refusal", is_cell("wrong_refusal")),
     ("missed_refusal", is_cell("missed_refusal")),
+    ("judge_failure", judge_failure),
     ("unfaithful", unfaithful),
     ("incorrect", incorrect),
 )

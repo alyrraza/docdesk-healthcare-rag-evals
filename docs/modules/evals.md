@@ -186,14 +186,16 @@ list above, in the same root cause first spirit. The labeler runs only on a fail
 6. `missed_abstain`
 7. `wrong_refusal`
 8. `missed_refusal`
-9. `unfaithful`
-10. `incorrect`
-11. `other`
+9. `judge_failure`
+10. `unfaithful`
+11. `incorrect`
+12. `other`
 
 A failed item is one with a wrong outcome (see the cells in the section on citation and abstention
 metrics) or a correct outcome of "answer" whose judged scores are below 1.0. A system error answer is a
-failure with a wrong outcome. Judged scores that are missing (a parse failure) do not fail an item; the
-report counts them separately.
+failure with a wrong outcome. Judged scores that are missing (a parse failure or a judge error) also fail an answered
+item, with the label `judge_failure` (changed 2026-10-14, review finding F1; before that a missing score
+counted as a pass). The report shows the judge failure counts in their own table.
 
 | Label | Exact condition (all must hold) |
 |---|---|
@@ -205,6 +207,7 @@ report counts them separately.
 | missed_abstain | abstain expected, the system answered |
 | wrong_refusal | the system gave the policy refusal where it was not expected |
 | missed_refusal | refuse expected, the system answered or abstained |
+| judge_failure | answered, and a judge call failed (parse failure or provider error), so a score is missing |
 | unfaithful | answered, faithfulness below 1.0 (some claim unsupported or contradicted) |
 | incorrect | answered, correctness below 1.0 or any contradicted key point |
 | other | failed, nothing above matched, for example a system error answer |
