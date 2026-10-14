@@ -27,6 +27,18 @@ def judge_failed(metrics: dict[str, Any]) -> bool:
     return any(metrics.get(f"{j}_status") not in clean for j in ("faithfulness", "correctness"))
 
 
+def no_citation_scores(
+    metrics: dict[str, Any], label: str | None, trace: dict[str, Any]
+) -> Rescored:
+    """F9: a retrieval only row has no answer, so its citation scores are None, not 0.0."""
+    keys = ("citation_precision", "citation_recall")
+    if all(metrics.get(k) is None for k in keys):
+        return Rescored(metrics, label, trace, False)
+    note = {"rule": "F9 citation scores are None without an answer",
+            "old": {k: metrics.get(k) for k in keys}}
+    return Rescored({**metrics, **dict.fromkeys(keys)}, label, {**trace, "rescored": note}, True)
+
+
 def rescored(metrics: dict[str, Any], label: str | None, trace: dict[str, Any]) -> Rescored:
     """Only an answered answerable item that passed under the old rule can change.
 
@@ -35,7 +47,11 @@ def rescored(metrics: dict[str, Any], label: str | None, trace: dict[str, Any]) 
     now fails: judge_failure when a judge failed, otherwise other (for example no claims).
     """
     unchanged = Rescored(metrics, label, trace, False)
-    if metrics.get("status") != "ok" or label is not None:
+    if metrics.get("status") != "ok":
+        return unchanged
+    if metrics.get("mode") == "retrieval_only":
+        return no_citation_scores(metrics, label, trace)
+    if label is not None:
         return unchanged
     if metrics.get("behavior") != "answer" or metrics.get("outcome") != "answered":
         return unchanged

@@ -40,3 +40,12 @@ def test_ac_evl_08_rescore_05_abstains_and_not_run_rows_are_left_alone() -> None
     abstain = row(behavior="abstain", outcome="abstained", faithfulness=None, correctness=None)
     assert not rescored(abstain, None, {}).changed
     assert not rescored({"status": "not_run"}, None, {}).changed
+
+
+def test_ac_evl_02_rescore_06_a_retrieval_only_row_loses_its_zero_citation_scores() -> None:
+    old = {"status": "ok", "mode": "retrieval_only", "citation_precision": None,
+           "citation_recall": 0.0, "recall": 1.0}
+    result = rescored(old, None, {})
+    assert result.changed and result.metrics["citation_recall"] is None
+    assert result.metrics["recall"] == 1.0
+    assert not rescored(result.metrics, None, result.trace).changed  # a second pass changes nothing
