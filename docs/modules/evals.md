@@ -389,6 +389,12 @@ failed, 2 stopped by the daily token guard (progress is saved, run the same comm
   298 document corpus. It gates recall@5 and MRR over all 14 items with an absolute tolerance of 0.04 against
   `evals/ci/expected.json`. The numbers come from `scripts/b0_summary.py`, the same code as the B0 report. Reasoning,
   limits and what was not verified are in `DECISIONS.md` (2026-10-14, the CI retrieval gate).
+  What it is: a smoke test for retrieval pipeline regressions of one config (B0). It is not a quality drift detector. It
+  cannot see a changed prompt, a changed corpus, a different config or a slow decline that stays inside the tolerance.
+  Proof that it can fail (F12, 2026-10-15): `scripts/ci_gate.py --baseline FILE` ran on a scratch database against a
+  copy of the stored baseline with both numbers raised by 0.1. It exited 1 and printed `GATE FAIL recall@5: 1.0000 is
+  below the stored 1.1000 by more than the tolerance 0.04` and the same for mrr. The real baseline exited 0 on the same
+  code. `tests/scripts/test_ci_gate_compare.py` keeps the same proof on a small synthetic baseline.
 - Full gate (manual or nightly): schema validity at least 99 percent, zero critical failures on the adversarial and policy slices, zero access leaks, faithfulness and correctness within tolerance of baseline, tokens per query within about 20 percent.
 - Tolerances are starting values. Choose them after seeing the intervals, record them in `DECISIONS.md`.
 - Gating compares to a stored baseline run, not to an absolute number, because absolute scores drift with the judge and dataset.

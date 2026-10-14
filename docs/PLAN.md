@@ -156,7 +156,7 @@ no eval run is safe without them (see "Eval budget and pacing" in `docs/modules/
 
 ## Backlog from the phase 4 review (2026-10-14, not fixed in Phase 5 lite)
 Source: `docs/reviews/phase4_review.md`. F1 to F9, F13, F14, F17 to F19 and F21 are fixed in Phase 5 Step 1.
-- [ ] F12 REQUIRED BEFORE DEPLOYMENT: run the CI gate once against a deliberately corrupted baseline and show that it fails end to end. Call it a smoke test in the docs and add a baseline per technique config.
+- [x] F12 REQUIRED BEFORE DEPLOYMENT: done 2026-10-15. The gate failed (exit 1, clear message) against a corrupted copy of the baseline and passed against the real one, see `docs/modules/evals.md`. Called a smoke test in the docs. Not done: a baseline per technique config (the gate covers B0 only, and the docs say so).
 - [ ] F10 rename tests that carry the wrong AC id (judge tests use AC-EVL-07, runner tests use AC-EVL-03 and AC-EVL-04, two pyproject tests use AC-EVL-06). AC-EVL-08 now exists for run identity. Needed before T118.
 - [ ] F11 rest: pin the service images (`pgvector/pgvector:pg16`, `redis:7`) by digest, add a constraints file, pin actions by commit sha, add a pip cache. The runner pin and the action major bumps are done.
 - [ ] F15 `load_golden` validates the whole directory including test items on every dev load; make validation of other splits a flag, remove or test `include_drafts`.
