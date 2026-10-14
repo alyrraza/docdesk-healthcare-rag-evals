@@ -47,9 +47,10 @@ def test_ac_evl_01_both_splits_hold_every_kind_of_unanswerable_question() -> Non
     assert all(kinds[(split, wide)] >= 2 for split in ("dev", "test") for wide in (True, False))
 
 
-def test_ac_evl_01_batch_four_items_are_drafts_with_a_reason_and_terms() -> None:
+def test_ac_evl_01_batch_four_items_are_owner_verified_with_a_reason_and_terms() -> None:
     for item in batch():
-        assert item.verified is False
+        assert item.verified is True
+        assert item.verified_by == "ali"
         assert item.no_evidence_reason.strip().endswith(".")
         assert item.absent_terms
 
