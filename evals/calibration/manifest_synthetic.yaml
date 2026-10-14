@@ -1,0 +1,122 @@
+created_on: '2026-10-14'
+seed: 20261014
+sample_size: 10
+counts:
+  insertion: 5
+  omission: 5
+outputs:
+- n: 1
+  synthetic_id: syn-01
+  parent_item_id: gi-003
+  parent_run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  parent_answer_hash: 93fdb2e36a63091203f90612e7dceebda853b9028bc4039097a55b649926e982
+  perturbation: insertion
+  answer: "Metoprolol tartrate tablets are available in 25\u202Fmg, 50\u202Fmg, and\
+    \ 100\u202Fmg strengths. In addition, the maintenance dose ranged from 12 mcg\
+    \ to 2,003 mcg per day."
+  answer_hash: 0a3ffc655b2001c7b24646314959b23038c2e50e3bf9f3eae3868c1e8e3a2918
+  key_points: 1
+  source_document: seed:openfda:00d3e846-dd92-448d-9ab8-6a07be823cc1
+- n: 2
+  synthetic_id: syn-02
+  parent_item_id: gi-027
+  parent_run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  parent_answer_hash: 11a43638e3602acb16060cff62fe1aeb65886b942fac3ac5a3677c86514f50d2
+  perturbation: insertion
+  answer: "A person about to faint typically feels dizzy, light\u2011headed or nauseous,\
+    \ may see their vision \u201Cwhite\u2011out\u201D or \u201Cblack\u2011out,\u201D\
+    \ notice cold, clammy skin, and lose muscle control as they are about to lose\
+    \ consciousness. In addition, the usual initial dosage is 100 mg daily, given\
+    \ in two divided doses."
+  answer_hash: a35ec18d359b5dea92c7b48b2c1f7cfbb0102ee6bec76719a0d4f63fee5ae5aa
+  key_points: 3
+  source_document: seed:openfda:00940cc5-d2eb-4841-9138-de97d7b1c674
+- n: 3
+  synthetic_id: syn-03
+  parent_item_id: gi-001
+  parent_run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  parent_answer_hash: 85d8e3ad2281149389ee7eca4381fe0c55cae506effbeaaec080c1fa4a65365e
+  perturbation: insertion
+  answer: When rubella causes symptoms, it typically includes a rash that begins on
+    the face and spreads to the body, a mild fever, aching joints (especially in young
+    women), and swollen glands. In addition, the total daily dose should not exceed
+    36 mg.
+  answer_hash: 4b8162b36fd1af85111da7bdcb9624184cf74556e9137d410bd58384722cf8a7
+  key_points: 4
+  source_document: seed:openfda:03fa03a6-fd05-4f17-872a-3c123330935d
+- n: 4
+  synthetic_id: syn-04
+  parent_item_id: gi-039
+  parent_run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  parent_answer_hash: 1adef2d9412b7c71bce2fdce5119f060ba1f91b5113458dfe244f31c683f3f52
+  perturbation: omission
+  answer: "Sudden cardiac arrest can be caused by problems in the heart\u2019s electrical\
+    \ system that produce arrhythmias, by diseases or conditions that affect that\
+    \ system, and it can occur after or during recovery from a heart attack."
+  answer_hash: 65ff1d109ce4e22c84ced3572ffd77cd20e4de5aa761975715b08b83af2c2543
+  key_points: 2
+- n: 5
+  synthetic_id: syn-05
+  parent_item_id: gi-042
+  parent_run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  parent_answer_hash: dd24270b3bc658397000d698bd4bffb9c1c7a33a8bfea4a0e92b698e572c462f
+  perturbation: omission
+  answer: "Answer \"yes\" to two or more of the self\u2011check questions may indicate\
+    \ an alcohol use disorder."
+  answer_hash: 60ead932d26748e00075a3406de0364c1f6a29b215073531ff9b8716af08b56c
+  key_points: 2
+- n: 6
+  synthetic_id: syn-06
+  parent_item_id: gi-021
+  parent_run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  parent_answer_hash: ef3fc3576cc9a9a4a0bb6a84d130c362dead2f00e2282631f48fac7eb88b1478
+  perturbation: insertion
+  answer: Lazy eye. In addition, the mean minimum lithium concentration increased
+    15%, and the renal clearance decreased by approximately 20%.
+  answer_hash: b0737f171fc8a0b7ff9711fd8cfb7f79d244fec41e50717f7e29518b760342ad
+  key_points: 1
+  source_document: seed:openfda:06a401f0-4380-4081-86ed-a309a25abf6b
+- n: 7
+  synthetic_id: syn-07
+  parent_item_id: gi-047
+  parent_run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  parent_answer_hash: 76567e407405b190572c7fccdd1f5737c4182ccee53cb56ba59f443cf4909c60
+  perturbation: omission
+  answer: The lithium carbonate label warns of lithium toxicity (including acute toxicity),
+    polyuria, hyponatremia, chronic kidney disease, encephalopathic syndrome, serotonin
+    syndrome, thyroid disorders, hypercalcemia, Brugada syndrome and pseudotumor cerebri.
+  answer_hash: 2902741191d41b95bc6b981f234a6fa6007321a1080ccfe2c5a5501dac943ea1
+  key_points: 2
+- n: 8
+  synthetic_id: syn-08
+  parent_item_id: gi-035
+  parent_run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  parent_answer_hash: 47e1d5506ce28253ec611e3657e49c8769ef93bc9fbef07a01ac7b5d1bbe4eb1
+  perturbation: omission
+  answer: "Infectious mononucleosis is most often caused by the Epstein\u2011Barr\
+    \ virus (EBV)."
+  answer_hash: c602e364879b56056aaaff9a6ab6ac9acbb80b1c7085521434e58dd8b31995ca
+  key_points: 2
+- n: 9
+  synthetic_id: syn-09
+  parent_item_id: gi-041
+  parent_run_id: 80c1977c-a2fb-4792-91cc-c2c44b775a2a
+  parent_answer_hash: 00a5bed07419a88fbf59c09a34114e34a39a013e8fcb8fc3873e2403281dd238
+  perturbation: insertion
+  answer: "Essential tremor is the most common type, and tremor is most common in\
+    \ middle\u2011aged and older adults. In addition, dosage can be increased by 25\
+    \ to 50 mg/day each subsequent week as tolerated."
+  answer_hash: b9243d40744e812bdbfe0107e784fdbf10f42c03e3e7f34a3e1b0b837ea110fe
+  key_points: 2
+  source_document: seed:openfda:021005ab-6a00-40d8-9aee-20c91613b4d5
+- n: 10
+  synthetic_id: syn-10
+  parent_item_id: gi-046
+  parent_run_id: dfaad803-c59e-466c-8e2e-609471d82cee
+  parent_answer_hash: 933568a78ef1deef38e7600c361f70975ed2a2c6ff8a73cca265d97f4c6afd26
+  perturbation: omission
+  answer: Apixaban is indicated to reduce the risk of stroke and systemic embolism
+    in patients with nonvalvular atrial fibrillation.
+  answer_hash: 131486d7ace004df215022c5a86f78d4aa795274f0be7ec8d2a9484bd98e62e3
+  key_points: 2
+natural_manifest_seed: 20261014
