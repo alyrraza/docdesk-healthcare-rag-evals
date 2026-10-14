@@ -30,3 +30,27 @@ CI job image-build -> F12 gate proof -> readme_results.py -> README + architectu
 
 ## Log
 - 2026-10-15: pushed e145fd9, CI green (test, retrieval-gate, image-build, image pushed). 2 pushes used, 1 failure fixed.
+
+## Web interface (started 2026-10-15, unattended)
+Precondition checked: `git pull` clean, `.github/workflows/ci.yml` has the split `build-smoke` and `image-push` jobs.
+
+Inspection of the API:
+- `POST /query` needs a bearer JWT (`require_user`). Tokens come from `POST /auth/login` (public) after `POST /auth/register`.
+- Response: `{"data": {answer, disclaimer, confidence, abstained, abstain_reason, citations[label, chunk_id, document_id, document_title, text, page]}, "trace_id"}`.
+- Outcome states: `abstained=false` is Answered; `abstained=true` with `abstain_reason="unsafe_request"` is Refused (dose or diagnosis policy, no model call); any other abstain reason is Abstained.
+- Retrieved chunks and scores are NOT in the `/query` response, and no retrieval-only route exists (only `scripts/demo_retrieve.py`).
+- Errors use `{"error": {code, message, trace_id}}`. A missing Groq key gives 503 `llm_not_configured`; a missing active prompt gives 503 `prompt_not_active`.
+
+Plan (tests first for each step):
+1. New authenticated `POST /retrieve` (same retrieval as `/query`, no model call), so the UI can show chunks and scores and still be useful when generation is unavailable.
+2. New package `docdesk.web`: `GET /` serves the page, `GET /static/{name}` serves files from a fixed name list (no path traversal, no mount). Both are added to the public allowlist on purpose; the page holds no data.
+3. Static files: `index.html`, `style.css`, `api.js`, `dom.js`, `render.js`, `main.js` (each under 200 lines, no external requests, text set with textContent only).
+4. Tests: page and static served, grep test for external URLs and innerHTML, `/retrieve` auth and result.
+5. CI: one extra `GET /` step in `build-smoke`. Dockerfile already copies `src`, so the static files are in the image; a test pins that.
+6. Screenshots with headless Edge against a scratch database, at most 6 generator calls. README, modules docs, notes.
+
+- [ ] Step A /retrieve route
+- [ ] Step B web package and static files
+- [ ] Step C CI smoke step and image check
+- [ ] Step D screenshots
+- [ ] Step E docs, scans, push
