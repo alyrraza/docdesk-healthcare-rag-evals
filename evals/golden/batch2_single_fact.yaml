@@ -1,0 +1,266 @@
+- id: gi-014
+  type: single_fact
+  split: dev
+  question: What tablet strengths do propranolol hydrochloride tablets come in?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - 10 mg, 20 mg, 40 mg, 60 mg and 80 mg
+  gold_evidence:
+  - source: seed:openfda:013a485a-4227-46ae-b19f-c550302fcb96
+    text: Propranolol Hydrochloride Tablets, USP are available as tablets for oral administration containing either 10 mg, 20 mg, 40 mg, 60 mg, or 80 mg of propranolol hydrochloride, USP.
+  verified: false
+- id: gi-015
+  type: single_fact
+  split: test
+  question: What does chronic kidney disease mean?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - The kidneys are damaged
+  - They cannot filter blood as they should
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-5987
+    text: Chronic kidney disease (CKD) means that your kidneys are damaged and can't filter blood as they should.
+  verified: false
+- id: gi-016
+  type: single_fact
+  split: dev
+  question: Potassium chloride is contraindicated in patients taking which drugs?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Triamterene
+  - Amiloride
+  gold_evidence:
+  - source: seed:openfda:00615fad-ad3b-46e8-a89d-48290d937ae2
+    text: Potassium chloride is contraindicated in patients on triamterene and amiloride.
+  verified: false
+- id: gi-017
+  type: single_fact
+  split: dev
+  question: What causes Cushing's syndrome?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Long-term exposure to too much cortisol
+  - Cortisol is a hormone that the adrenal gland makes
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-4318
+    text: Cushing's syndrome is a hormonal disorder. The cause is long-term exposure to too much cortisol, a hormone that your adrenal gland makes.
+  verified: false
+- id: gi-018
+  type: single_fact
+  split: test
+  question: What are nitroglycerin sublingual tablets indicated for?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Acute relief of an attack of angina pectoris due to coronary artery disease
+  - Acute prophylaxis of angina pectoris due to coronary artery disease
+  gold_evidence:
+  - source: seed:openfda:041f127e-5166-4484-bc1a-0a373d1187ae
+    text: Nitroglycerin sublingual tablets are indicated for the acute relief of an attack or acute prophylaxis of angina pectoris due to coronary artery disease.
+  verified: false
+- id: gi-019
+  type: single_fact
+  split: dev
+  question: What are antioxidants?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Man-made or natural substances
+  - They may prevent or delay some types of cell damage
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-1590
+    text: Antioxidants are man-made or natural substances that may prevent or delay some types of cell damage.
+  verified: false
+- id: gi-020
+  type: single_fact
+  split: test
+  question: What condition is donepezil hydrochloride tablet indicated to treat?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Dementia of the Alzheimer's type
+  gold_evidence:
+  - source: seed:openfda:03e26183-3e07-45e8-a414-a8bad32483e2
+    text: Donepezil hydrochloride tablet is an acetylcholinesterase inhibitor indicated for the treatment of dementia of the Alzheimer's type.
+  verified: false
+- id: gi-021
+  type: single_fact
+  split: dev
+  question: What is another name for amblyopia?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Lazy eye
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-6189
+    text: Amblyopia, or "lazy eye," is the most common cause of visual impairment in children.
+  verified: false
+- id: gi-022
+  type: single_fact
+  split: dev
+  question: Promethazine hydrochloride tablets are contraindicated in pediatric patients younger than what age?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Less than two years of age
+  gold_evidence:
+  - source: seed:openfda:05907a49-537f-4bf2-8a5f-5e905f19fece
+    text: Promethazine Hydrochloride Tablets, USP are contraindicated for use in pediatric patients less than two years of age.
+  verified: false
+- id: gi-023
+  type: single_fact
+  split: test
+  question: What makes Listeria unlike many other germs?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - It can grow even in the cold temperature of the refrigerator
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-1241
+    text: Listeria is unlike many other germs because it can grow even in the cold temperature of the refrigerator.
+  verified: false
+- id: gi-024
+  type: single_fact
+  split: dev
+  question: According to the oxycodone hydrochloride drug label, which controlled substance schedule is oxycodone in?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Schedule II
+  gold_evidence:
+  - source: seed:openfda:01db4606-d49c-4b10-a78a-1cf41880a9fb
+    text: Oxycodone hydrochloride tablets contains oxycodone, a Schedule II controlled substance.
+  verified: false
+- id: gi-025
+  type: single_fact
+  split: test
+  question: What are common tics in Tourette syndrome?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Throat-clearing
+  - Blinking
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-442
+    text: If you have Tourette syndrome, you make unusual movements or sounds, called tics. You have little or no control over them. Common tics are throat-clearing and blinking.
+  verified: false
+- id: gi-026
+  type: single_fact
+  split: dev
+  question: In which patients are furosemide tablets contraindicated?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Patients with anuria
+  - Patients with a history of hypersensitivity to furosemide
+  gold_evidence:
+  - source: seed:openfda:01a5f094-b473-4e46-9e61-69d5ec6dd766
+    text: Furosemide tablets are contraindicated in patients with anuria and in patients with a history of hypersensitivity to furosemide.
+  verified: false
+- id: gi-027
+  type: single_fact
+  split: dev
+  question: What does a person usually feel when they are about to faint?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Dizzy
+  - Lightheaded
+  - Nauseous
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-1481
+    text: Fainting is a temporary loss of consciousness. If you're about to faint, you'll feel dizzy, lightheaded, or nauseous.
+  verified: false
+- id: gi-028
+  type: single_fact
+  split: test
+  question: Which allergy symptoms does the loratadine product temporarily relieve?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Runny nose
+  - Itchy, watery eyes
+  - Sneezing
+  - Itching of the nose or throat
+  gold_evidence:
+  - source: seed:openfda:0038bc38-c205-4d8d-ab78-1abbcd76829e
+    text: 'Uses temporarily relieves these symptoms due to hay fever or other upper respiratory allergies: • runny nose • itchy, watery eyes • sneezing • itching of the nose or throat'
+  verified: false
+- id: gi-029
+  type: single_fact
+  split: dev
+  question: What causes tension headaches?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Tight muscles in the shoulders, neck, scalp and jaw
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-273
+    text: The most common type of headache is a tension headache. Tension headaches are due to tight muscles in your shoulders, neck, scalp and jaw.
+  verified: false
+- id: gi-030
+  type: single_fact
+  split: dev
+  question: What does the boxed warning of levothyroxine sodium say about its use for obesity or weight loss?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Thyroid hormones, including levothyroxine, should not be used for the treatment of obesity or for weight loss
+  gold_evidence:
+  - source: seed:openfda:008de8fd-150f-4022-8ccb-c8bfa94875c7
+    text: Thyroid hormones, including levothyroxine sodium, either alone or with other therapeutic agents, should not be used for the treatment of obesity or for weight loss.
+  verified: false
+- id: gi-031
+  type: single_fact
+  split: test
+  question: What do canker sores look like?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Small, round sores in the mouth
+  - A red edge and a gray center
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-6053
+    text: Canker sores are small, round sores in your mouth. They can be on the inside of your cheek, under your tongue, or in the back of your throat. They usually have a red edge and a gray center.
+  verified: false
+- id: gi-032
+  type: single_fact
+  split: dev
+  question: What serious movement disorder can treatment with metoclopramide cause?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - Tardive dyskinesia
+  - It is often irreversible
+  gold_evidence:
+  - source: seed:openfda:0034a97a-fb05-418a-a234-de278907cd2a
+    text: Treatment with metoclopramide can cause tardive dyskinesia, a serious movement disorder that is often irreversible.
+  verified: false
+- id: gi-033
+  type: single_fact
+  split: test
+  question: What is often the first sign of melanoma?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - A change in the size, shape, color, or feel of a mole
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-321
+    text: Often the first sign of melanoma is a change in the size, shape, color, or feel of a mole.
+  verified: false
+- id: gi-034
+  type: single_fact
+  split: dev
+  question: Which vaccine can prevent mumps?
+  answerable: true
+  gold_route: documents
+  gold_facts:
+  - The measles-mumps-rubella (MMR) vaccine
+  gold_evidence:
+  - source: seed:medlineplus:medlineplus-334
+    text: There is no treatment for mumps, but the measles-mumps-rubella (MMR) vaccine can prevent it.
+  verified: false
