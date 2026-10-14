@@ -144,6 +144,7 @@ no eval run is safe without them (see "Eval budget and pacing" in `docs/modules/
 - [x] T096 `evals/cli.py`
 - [x] T097 run baseline B0 retrieval-only, commit numbers
 - [x] T098 run baseline B0 full on dev, commit numbers (44 of 45 dev items ran, gi-079 waits for T122; results in `evals/results/b0_dev_report.md`)
+- [ ] T098a move the T098 report extras (strict pass rate, stage split, label by outcome table, tokens and cost per model, worst five) into tested report code, add `run --items` and `--label`, and regenerate the B0 dev report with the CLI only; parked: generator cache hit flag if it stays inside the cache layer and the result dataclass
 - [ ] T099 build the judge calibration set, 40 outputs, hand labeled
 - [ ] T100 `evals/calibration.py` agreement, kappa, interval (AC-EVL-07)
 - [ ] T101 CI workflow: lint, test, retrieval-only gate (AC-EVL-06). Note: the gate must reuse the retrieval metric code of `scripts/b0_summary.py`, not a second copy.
