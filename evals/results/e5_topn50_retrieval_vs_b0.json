@@ -1,0 +1,212 @@
+{
+  "baseline_config": "b0",
+  "baseline_run": "532b63f3-a706-46f8-b548-43d145e4d15c",
+  "candidate_config": "e5_topn50",
+  "candidate_run": "67fe46ef-bf4f-455b-aa19-e20a7ada2c37",
+  "categories": [
+    {
+      "name": "single_fact",
+      "rows": [
+        {
+          "baseline": 0.0,
+          "candidate": 0.0,
+          "difference": 0.0,
+          "high": 0.0,
+          "low": 0.0,
+          "metric": "strict_pass",
+          "n": 19,
+          "verdict": "no clear difference"
+        },
+        {
+          "baseline": 0.8421052631578947,
+          "candidate": 0.8421052631578947,
+          "difference": 0.0,
+          "high": 0.0,
+          "low": 0.0,
+          "metric": "recall",
+          "n": 19,
+          "verdict": "no clear difference"
+        },
+        {
+          "baseline": 0.7631578947368421,
+          "candidate": 0.7631578947368421,
+          "difference": 0.0,
+          "high": 0.0,
+          "low": 0.0,
+          "metric": "mrr",
+          "n": 19,
+          "verdict": "no clear difference"
+        },
+        {
+          "metric": "faithfulness",
+          "n": 0
+        },
+        {
+          "metric": "correctness",
+          "n": 0
+        }
+      ]
+    },
+    {
+      "name": "multi_chunk",
+      "rows": [
+        {
+          "baseline": 0.0,
+          "candidate": 0.0,
+          "difference": 0.0,
+          "high": 0.0,
+          "low": 0.0,
+          "metric": "strict_pass",
+          "n": 11,
+          "verdict": "no clear difference"
+        },
+        {
+          "baseline": 0.8333333333333333,
+          "candidate": 0.8333333333333333,
+          "difference": 0.0,
+          "high": 0.0,
+          "low": 0.0,
+          "metric": "recall",
+          "n": 11,
+          "verdict": "no clear difference"
+        },
+        {
+          "baseline": 0.8787878787878789,
+          "candidate": 0.8787878787878789,
+          "difference": 0.0,
+          "high": 0.0,
+          "low": 0.0,
+          "metric": "mrr",
+          "n": 11,
+          "verdict": "no clear difference"
+        },
+        {
+          "metric": "faithfulness",
+          "n": 0
+        },
+        {
+          "metric": "correctness",
+          "n": 0
+        }
+      ]
+    },
+    {
+      "name": "unanswerable",
+      "rows": [
+        {
+          "metric": "strict_pass",
+          "n": 0
+        },
+        {
+          "metric": "recall",
+          "n": 0
+        },
+        {
+          "metric": "mrr",
+          "n": 0
+        },
+        {
+          "metric": "faithfulness",
+          "n": 0
+        },
+        {
+          "metric": "correctness",
+          "n": 0
+        }
+      ]
+    },
+    {
+      "name": "adversarial",
+      "rows": [
+        {
+          "metric": "strict_pass",
+          "n": 0
+        },
+        {
+          "metric": "recall",
+          "n": 0
+        },
+        {
+          "metric": "mrr",
+          "n": 0
+        },
+        {
+          "metric": "faithfulness",
+          "n": 0
+        },
+        {
+          "metric": "correctness",
+          "n": 0
+        }
+      ]
+    }
+  ],
+  "overall": [
+    {
+      "baseline": 0.0,
+      "candidate": 0.0,
+      "difference": 0.0,
+      "high": 0.0,
+      "low": 0.0,
+      "metric": "strict_pass",
+      "n": 30,
+      "verdict": "no clear difference"
+    },
+    {
+      "baseline": 0.8388888888888889,
+      "candidate": 0.8388888888888889,
+      "difference": 0.0,
+      "high": 0.0,
+      "low": 0.0,
+      "metric": "recall",
+      "n": 30,
+      "verdict": "no clear difference"
+    },
+    {
+      "baseline": 0.8055555555555555,
+      "candidate": 0.8055555555555555,
+      "difference": 0.0,
+      "high": 0.0,
+      "low": 0.0,
+      "metric": "mrr",
+      "n": 30,
+      "verdict": "no clear difference"
+    },
+    {
+      "metric": "faithfulness",
+      "n": 0
+    },
+    {
+      "metric": "correctness",
+      "n": 0
+    }
+  ],
+  "p95_total_ms": {
+    "baseline": 7965.437650000604,
+    "candidate": 2336.3992500004774
+  },
+  "rule": {
+    "faithfulness_lowered": false,
+    "improves_by_one_item": false,
+    "kept": false
+  },
+  "shared_items": 44,
+  "split": "dev",
+  "strict_pass": {
+    "answerable": 30,
+    "baseline": 0,
+    "candidate": 0,
+    "gained": [],
+    "lost": []
+  },
+  "technique": "e5_topn50_retrieval_only",
+  "tokens_billed": {
+    "baseline": 0,
+    "candidate": 0
+  },
+  "warnings": [],
+  "wrong_abstain": {
+    "baseline": 0,
+    "candidate": 0
+  }
+}

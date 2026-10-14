@@ -1,0 +1,212 @@
+{
+  "baseline_config": "b0",
+  "baseline_run": "532b63f3-a706-46f8-b548-43d145e4d15c",
+  "candidate_config": "e5_topk8",
+  "candidate_run": "6b8247b4-a3d6-47eb-b267-4477c2f012db",
+  "categories": [
+    {
+      "name": "single_fact",
+      "rows": [
+        {
+          "baseline": 0.0,
+          "candidate": 0.0,
+          "difference": 0.0,
+          "high": 0.0,
+          "low": 0.0,
+          "metric": "strict_pass",
+          "n": 19,
+          "verdict": "no clear difference"
+        },
+        {
+          "baseline": 0.8421052631578947,
+          "candidate": 0.9473684210526315,
+          "difference": 0.10526315789473684,
+          "high": 0.2631578947368421,
+          "low": 0.0,
+          "metric": "recall",
+          "n": 19,
+          "verdict": "no clear difference"
+        },
+        {
+          "baseline": 0.7631578947368421,
+          "candidate": 0.7807017543859649,
+          "difference": 0.017543859649122806,
+          "high": 0.043859649122807015,
+          "low": 0.0,
+          "metric": "mrr",
+          "n": 19,
+          "verdict": "no clear difference"
+        },
+        {
+          "metric": "faithfulness",
+          "n": 0
+        },
+        {
+          "metric": "correctness",
+          "n": 0
+        }
+      ]
+    },
+    {
+      "name": "multi_chunk",
+      "rows": [
+        {
+          "baseline": 0.0,
+          "candidate": 0.0,
+          "difference": 0.0,
+          "high": 0.0,
+          "low": 0.0,
+          "metric": "strict_pass",
+          "n": 11,
+          "verdict": "no clear difference"
+        },
+        {
+          "baseline": 0.8333333333333333,
+          "candidate": 0.9090909090909091,
+          "difference": 0.07575757575757576,
+          "high": 0.18181818181818182,
+          "low": 0.0,
+          "metric": "recall",
+          "n": 11,
+          "verdict": "no clear difference"
+        },
+        {
+          "baseline": 0.8787878787878789,
+          "candidate": 0.8787878787878789,
+          "difference": 0.0,
+          "high": 0.0,
+          "low": 0.0,
+          "metric": "mrr",
+          "n": 11,
+          "verdict": "no clear difference"
+        },
+        {
+          "metric": "faithfulness",
+          "n": 0
+        },
+        {
+          "metric": "correctness",
+          "n": 0
+        }
+      ]
+    },
+    {
+      "name": "unanswerable",
+      "rows": [
+        {
+          "metric": "strict_pass",
+          "n": 0
+        },
+        {
+          "metric": "recall",
+          "n": 0
+        },
+        {
+          "metric": "mrr",
+          "n": 0
+        },
+        {
+          "metric": "faithfulness",
+          "n": 0
+        },
+        {
+          "metric": "correctness",
+          "n": 0
+        }
+      ]
+    },
+    {
+      "name": "adversarial",
+      "rows": [
+        {
+          "metric": "strict_pass",
+          "n": 0
+        },
+        {
+          "metric": "recall",
+          "n": 0
+        },
+        {
+          "metric": "mrr",
+          "n": 0
+        },
+        {
+          "metric": "faithfulness",
+          "n": 0
+        },
+        {
+          "metric": "correctness",
+          "n": 0
+        }
+      ]
+    }
+  ],
+  "overall": [
+    {
+      "baseline": 0.0,
+      "candidate": 0.0,
+      "difference": 0.0,
+      "high": 0.0,
+      "low": 0.0,
+      "metric": "strict_pass",
+      "n": 30,
+      "verdict": "no clear difference"
+    },
+    {
+      "baseline": 0.8388888888888889,
+      "candidate": 0.9333333333333333,
+      "difference": 0.09444444444444446,
+      "high": 0.2,
+      "low": 0.011111111111111112,
+      "metric": "recall",
+      "n": 30,
+      "verdict": "candidate is better"
+    },
+    {
+      "baseline": 0.8055555555555555,
+      "candidate": 0.8166666666666667,
+      "difference": 0.01111111111111111,
+      "high": 0.027777777777777776,
+      "low": 0.0,
+      "metric": "mrr",
+      "n": 30,
+      "verdict": "no clear difference"
+    },
+    {
+      "metric": "faithfulness",
+      "n": 0
+    },
+    {
+      "metric": "correctness",
+      "n": 0
+    }
+  ],
+  "p95_total_ms": {
+    "baseline": 7965.437650000604,
+    "candidate": 988.8095300003897
+  },
+  "rule": {
+    "faithfulness_lowered": false,
+    "improves_by_one_item": false,
+    "kept": false
+  },
+  "shared_items": 44,
+  "split": "dev",
+  "strict_pass": {
+    "answerable": 30,
+    "baseline": 0,
+    "candidate": 0,
+    "gained": [],
+    "lost": []
+  },
+  "technique": "e5_topk8_retrieval_only",
+  "tokens_billed": {
+    "baseline": 0,
+    "candidate": 0
+  },
+  "warnings": [],
+  "wrong_abstain": {
+    "baseline": 0,
+    "candidate": 0
+  }
+}
