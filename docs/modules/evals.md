@@ -260,6 +260,22 @@ Rules for a full run (added 2026-10-13, tasks T079a to T079e):
   block, because a judge can wrap its answer even when told not to. Every parse failure is counted and
   shown in the report as `judge_error`; none is hidden or silently retried into a pass.
 
+## Report (T095, added 2026-10-14)
+`evals/report_data.py` aggregates, `evals/report.py` writes markdown, `evals/report_compare.py` pairs two runs.
+- **Per category tables** for single_fact, multi_chunk, unanswerable and adversarial (structured and mixed
+  appear once those items can run), plus an `all` row. Columns: pass rate, recall@k, hit, MRR, context
+  precision, citation precision, citation recall, faithfulness, correctness. Each cell is the mean with a 95
+  percent percentile bootstrap interval: 2000 resamples, seed 0 (`DEFAULT_RESAMPLES` and `DEFAULT_SEED` in
+  `stats.py`). Items that share a source document (the first gold evidence source) are resampled together.
+  Items with no value for a metric are left out of that cell, never counted as 0, and the cell shows its n.
+- **Failure label counts**, **abstain and refusal counts** (separate cells), **judge failures** (parse
+  failures and judge errors per judge), **tokens, cost and cache hits**.
+- **Not run** items are listed in their own section. They are not in any n, any interval or any failure count.
+- **Compare** pairs two runs by item id on the items both have a value for, and reports candidate minus
+  baseline with an interval. If the interval holds 0 the verdict is "no clear difference". Items present in
+  only one run are named and left out.
+- Reports contain no em or en dash; the docs style hook enforces it.
+
 ## Statistics
 - Every headline metric has a bootstrap confidence interval (AC-EVL-05). Resample items; if items
   share a source document, resample by document.

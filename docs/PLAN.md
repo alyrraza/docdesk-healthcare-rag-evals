@@ -140,7 +140,7 @@ no eval run is safe without them (see "Eval budget and pacing" in `docs/modules/
 - [x] T092 `evals/metrics/citation.py` and `abstention.py`
 - [x] T093 `evals/labeler.py` failure labels (AC-EVL-03)
 - [x] T094 `evals/runner.py` resumable, uses the pacer, cache and budget guard, with a fake pipeline test. The runner reads the corpus fingerprint (T080a) and refuses to start when it differs from the config it was given. It also wires the LLM cache around every call in this order, outermost first: cache, then budget guard, then pacer, then client, so a cache hit costs no budget and no wait (AC-EVL-04).
-- [ ] T095 `evals/report.py` tables with intervals
+- [x] T095 `evals/report.py` tables with intervals
 - [ ] T096 `evals/cli.py`
 - [ ] T097 run baseline B0 retrieval-only, commit numbers
 - [ ] T098 run baseline B0 full on dev, commit numbers
