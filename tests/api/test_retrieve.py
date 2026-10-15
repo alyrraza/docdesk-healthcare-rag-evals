@@ -23,6 +23,23 @@ def test_ac_web_01_retrieve_needs_a_login(client: TestClient) -> None:
     assert post(client, None).status_code == 401
 
 
+def test_ac_web_01b_retrieve_without_a_token_makes_no_model_call(client: TestClient) -> None:
+    calls: list[list[str]] = []
+
+    class RecordingEncoder(FixedEncoder):
+        """Remember every encode call, so the test can prove none happened."""
+
+        def encode(self, texts: list[str]):
+            calls.append(texts)
+            return super().encode(texts)
+
+    client.app.dependency_overrides[get_encoder] = lambda: RecordingEncoder(0)  # type: ignore[attr-defined]
+    response = post(client, {"authorization": "Bearer not-a-real-token"})
+    assert response.status_code in (401, 403)
+    assert post(client, None).status_code in (401, 403)
+    assert calls == []
+
+
 def test_ac_web_02_retrieve_returns_chunks_with_title_and_score_and_no_model_call(
     client: TestClient, me: dict[str, str], seed
 ) -> None:
