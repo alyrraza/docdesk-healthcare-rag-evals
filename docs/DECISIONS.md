@@ -906,3 +906,10 @@ strict pass on answerable dev items. Every config tried is in `evals/results/pha
   attempts, two were retakes of the same questions with the retrieval panel closed to keep the PNGs short. Tokens from the trace rows:
   4 calls, 1390 in each (5560 in), 261 + 220 + 234 + 220 = 935 out, model openai/gpt-oss-120b. The three refused requests made no model call.
   PNG sizes are 51 KB, 93 KB and 51 KB.
+
+## 2026-10-15: failure label count is 11, not 8
+- The runner labeler has 11 outcome labels: retrieval_miss, ranking_miss, context_overflow, context_distraction, wrong_abstain,
+  missed_abstain, wrong_refusal, missed_refusal, unfaithful, incorrect, other. Seven of them occurred on the B0 dev run.
+- `judge_failure` is a twelfth entry in the labeler order. It only marks a missing judge score and is reported in its own table,
+  so it is not counted in the 11. The old "8 failure labels" wording in the local notes was wrong and is replaced.
+- Unattended resume session: no question was asked, this reading follows the label list in `docs/modules/evals.md`.

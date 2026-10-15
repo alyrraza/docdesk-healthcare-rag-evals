@@ -191,6 +191,9 @@ list above, in the same root cause first spirit. The labeler runs only on a fail
 11. `incorrect`
 12. `other`
 
+That is 11 outcome labels (`judge_failure` is the 12th entry and only marks a missing judge score). Seven of the
+11 occurred on the B0 dev run.
+
 A failed item is one with a wrong outcome (see the cells in the section on citation and abstention
 metrics) or a correct outcome of "answer" whose judged scores are below 1.0. A system error answer is a
 failure with a wrong outcome. Judged scores that are missing (a parse failure or a judge error) also fail an answered
