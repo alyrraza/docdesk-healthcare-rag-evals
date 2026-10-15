@@ -61,3 +61,4 @@ Resume session notes (2026-10-15, unattended):
 - Checks: ruff, file length, docs style and `b0_regression.py` all ok. Secret scan found only the repo name `docdesk-healthcare-rag-evals` (matches `sk-`). The three screenshots show only the page, the example questions and the answers, with no key, token or personal data.
 - Errors hit: the first full run took longer than the 10 minute tool limit and was moved to the background, nothing failed.
 - CI: see the last line of this file once the run finishes.
+- CI run 38659334667 on 7aa4ede: test, retrieval-gate, build-smoke (GET / step passed) all green, image-push started after them and passed.
