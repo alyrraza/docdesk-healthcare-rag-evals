@@ -53,4 +53,11 @@ Plan (tests first for each step):
 - [x] Step B web package and static files
 - [x] Step C CI smoke step and image check
 - [x] Step D screenshots (4 generator calls, scratch database dropped)
-- [ ] Step E docs, scans, push
+- [x] Step E docs, scans, push (done 2026-10-15, see the resume notes below)
+
+Resume session notes (2026-10-15, unattended):
+- The earlier full suite log was cut off with no summary line. No test process was running, so the full suite was run once alone: 1268 tests, no failures, exit 0. The pytest config already has -q, so the summary line is not printed. One more test was added afterwards (`/retrieve` without a token makes no model call) and passes.
+- Wording fix: the failure taxonomy has 11 labels, 7 of them seen on the B0 dev run (not 8). Changed in evals.md, README and the local notes, entry in DECISIONS.md.
+- Checks: ruff, file length, docs style and `b0_regression.py` all ok. Secret scan found only the repo name `docdesk-healthcare-rag-evals` (matches `sk-`). The three screenshots show only the page, the example questions and the answers, with no key, token or personal data.
+- Errors hit: the first full run took longer than the 10 minute tool limit and was moved to the background, nothing failed.
+- CI: see the last line of this file once the run finishes.
